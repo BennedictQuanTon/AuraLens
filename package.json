@@ -4,6 +4,8 @@
   "description": "AuraLens — Personalized AI Stylist & Experience Map for Gen Z (Google Cloud & Gemini Multimodal)",
   "private": true,
   "scripts": {
+    "start": "bash start.sh",
+    "stop": "bash stop.sh",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
     "dev": "concurrently -n \"SERVER,CLIENT\" -c \"magenta,cyan\" \"npm run dev:server\" \"npm run dev:client\"",
