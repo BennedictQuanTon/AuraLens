@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="100%" height="100%">
+  <!-- Top Tech Header -->
+  <rect x="0" y="0" width="1080" height="180" fill="rgba(10,10,15,0.85)"/>
+  <text x="50" y="80" font-family="'Space Grotesk', monospace" font-size="32" font-weight="700" fill="#00F5FF">[SYS_TARGET: OOTD_SCAN_LOCKED]</text>
+  <text x="50" y="125" font-family="'Space Grotesk', monospace" font-size="24" font-weight="500" fill="#D4FF00">LAT: 10.7769° N // LNG: 106.7009° E // SGN</text>
+  <text x="1030" y="90" font-family="'Space Grotesk', monospace" font-size="36" font-weight="900" fill="#FF2E93" text-anchor="end">99.4% MATCH</text>
+
+  <!-- Laser Grid Corners -->
+  <line x1="40" y1="220" x2="160" y2="220" stroke="#00F5FF" stroke-width="4"/>
+  <line x1="40" y1="220" x2="40" y2="340" stroke="#00F5FF" stroke-width="4"/>
+  <line x1="1040" y1="220" x2="920" y2="220" stroke="#00F5FF" stroke-width="4"/>
+  <line x1="1040" y1="220" x2="1040" y2="340" stroke="#00F5FF" stroke-width="4"/>
+  <line x1="40" y1="1700" x2="160" y2="1700" stroke="#00F5FF" stroke-width="4"/>
+  <line x1="40" y1="1700" x2="40" y2="1580" stroke="#00F5FF" stroke-width="4"/>
+  <line x1="1040" y1="1700" x2="920" y2="1700" stroke="#00F5FF" stroke-width="4"/>
+  <line x1="1040" y1="1700" x2="1040" y2="1580" stroke="#00F5FF" stroke-width="4"/>
+
+  <!-- Center HUD brackets -->
+  <path d="M 340 900 L 300 900 L 300 1020 L 340 1020" stroke="#D4FF00" stroke-width="4" fill="none"/>
+  <path d="M 740 900 L 780 900 L 780 1020 L 740 1020" stroke="#D4FF00" stroke-width="4" fill="none"/>
+
+  <!-- Bottom System Terminal -->
+  <rect x="0" y="1740" width="1080" height="180" fill="rgba(10,10,15,0.9)"/>
+  <text x="50" y="1810" font-family="'Space Grotesk', monospace" font-size="28" font-weight="700" fill="#00F5FF">> AI RECOGNITION: COMPLETE</text>
+  <text x="50" y="1855" font-family="'Space Grotesk', monospace" font-size="22" font-weight="500" fill="#FFFFFF">> ENTITY GRAPH: LINKED TO 15 F&amp;B SPOTS &amp; 20 BRANDS</text>
+</svg>
