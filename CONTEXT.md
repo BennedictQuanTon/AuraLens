@@ -5,10 +5,22 @@
 
 ## PHẦN 1 — TỔNG QUAN DỰ ÁN
 
-### 1.1 Branding
+### 1.1 Branding & Visual Identity
 - **Tên:** AuraLens — *"Thấu Kính Khí Chất - Bắt Trọn Vibe Của Riêng Bạn"*
 - **Định vị:** Một Stylist Số & Bản đồ Trải nghiệm Cá nhân hóa (Personalized Stylist & Experience Map) dành riêng cho Gen Z. Nó không chỉ đánh giá trang phục bạn đang mặc, mà còn thiết kế nguyên một buổi đi chơi dựa trên phong cách đó.
-- **Nhận diện:** Giao diện camera tràn viền mang âm hưởng Y2K / Cyberpunk; nhân vật ảo (AI Persona) tên là **Lumi** — một trợ lý ảo siêu "trendy", nói chuyện với ngôn ngữ mạng xã hội hóm hỉnh; bảng màu Neon và Dark Mode.
+- **Trợ lý ảo đại diện:** Nhân vật ảo (AI Persona) tên là **Lumi** — một trợ lý ảo siêu "trendy", nói chuyện với ngôn ngữ mạng xã hội hóm hỉnh, am hiểu thời trang và tràn đầy năng lượng tích cực.
+- **Nhận diện & Bảng màu (Vibrant Cyber-Pop & Neo-Y2K Glassmorphism):**
+  - Giao diện camera tràn viền mang âm hưởng Y2K / Cyber-Pop tươi sáng, rực rỡ, loại bỏ cảm giác u tối nhàm chán.
+  - **Bảng màu Dopamine & Radiant Palette:**
+    - **Electric Lime / Cyber Acid:** `#D4FF00` (Năng lượng, điểm số cao, CTA bùng nổ).
+    - **Candy Pink / Y2K Bubblegum:** `#FF2E93` (Điểm nhấn thời trang, fashion highlight).
+    - **Vibrant Cyber Cyan / Aqua Glow:** `#00F5FF` (Quét camera WebRTC, tia laser scanner).
+    - **Ultra Violet / Lavender Pop:** `#7C3AED` & `#C084FC` (Màu đại diện của Lumi AI).
+    - **Nền chủ đạo (Fresh Light / Glass Neutral):** Gradient trắng sữa pha ánh tím ngọc trai (`#FAFAFC` $\rightarrow$ `#F0F3FF`) kết hợp các thẻ kính mờ nhiều màu sắc (*Frosted Glassmorphism with Colorful Blurs & Holographic Borders*).
+  - **Typography (Dynamic & Trendsetting):**
+    - Headings/Brand: `Syne` / `Clash Display` (Đậm nét, High-Fashion, cá tính).
+    - Body UI: `Plus Jakarta Sans` / `Outfit` (Hiện đại, siêu rõ nét trên mobile).
+    - Metrics/Scores: `Space Grotesk` / `JetBrains Mono` (Công nghệ, dứt khoát).
 
 ### 1.2 Lý do kết hợp các chủ đề gốc
 AuraLens là sự giao thoa hoàn hảo của 4 bài toán từ đối tác chương trình:
@@ -36,7 +48,7 @@ AuraLens là sự giao thoa hoàn hảo của 4 bài toán từ đối tác chư
 ### 1.5 Giá trị mang lại
 - **Cho Gen Z:** Giải quyết triệt để câu hỏi *"Hôm nay mặc gì?"* và *"Mặc bộ này thì đi đâu chụp ảnh?"*.
 - **Cho Doanh nghiệp:** Nền tảng quảng cáo (Targeted Ads) chính xác nhất — gợi ý trực tiếp sản phẩm local brand hoặc địa điểm F&B vào đúng lúc người dùng đang lên đồ đi chơi.
-- **Đạt tiêu chí cuộc thi:** Sử dụng mạnh mẽ Gemini Multimodal (Thị giác máy tính) và hệ sinh thái Google (Cloud Run, Cloud SQL) hoàn toàn ở định mức Zero-Cost.
+- **Đạt tiêu chí cuộc thi:** Sử dụng mạnh mẽ Gemini Multimodal (Thị giác máy tính) và hệ sinh thái Google (Cloud Run, Cloud SQL / Firestore) hoàn toàn ở định mức Zero-Cost.
 
 ### 1.6 Nghiên cứu tính khả thi
 - Thị trường thời trang và ăn uống của giới trẻ tại TP.HCM là khổng lồ. Tuy nhiên, giới trẻ đang mệt mỏi với các bài review ẩm thực "seeding" (quảng cáo giả tạo) trên Facebook/TikTok. AuraLens cung cấp gợi ý cá nhân hóa dựa trên dữ liệu thật.
@@ -46,8 +58,8 @@ AuraLens là sự giao thoa hoàn hảo của 4 bài toán từ đối tác chư
 
 ### 1.7 Yêu cầu phi chức năng (NFR)
 - Xử lý hình ảnh (Computer Vision) qua Gemini API phải trả kết quả dưới 3 giây.
-- Gợi ý F&B không được phép sai lệch thực tế (Không được gợi ý quán đã đóng cửa hoặc địa điểm ảo) $\rightarrow$ Giải quyết bằng GraphRAG.
-- Chi phí hạ tầng = 0. Tận dụng gói Starter Tier cho phép 2 ứng dụng Full-stack trên Cloud Run và Firestore/Cloud SQL miễn phí.
+- Gợi ý F&B không được phép sai lệch thực tế (Không được gợi ý quán đã đóng cửa hoặc địa điểm ảo) $\rightarrow$ Giải quyết bằng GraphRAG & Grounding.
+- Chi phí hạ tầng = 0. Tận dụng gói Starter Tier cho phép các ứng dụng Full-stack trên Cloud Run và Firestore/Cloud SQL miễn phí.
 
 ### 1.8 Yêu cầu chức năng (FR)
 - Giao diện Camera (WebRTC) để chụp outfit trực tiếp trên trình duyệt.
@@ -57,8 +69,38 @@ AuraLens là sự giao thoa hoàn hảo của 4 bài toán từ đối tác chư
 - Canvas Editor (Photobooth): Chụp ảnh, chèn lớp phủ (overlay), sticker và xuất file PNG/JPG.
 - Cổng thông tin (Merchant Portal) cho Local Brand cập nhật quần áo và quán cafe cập nhật giờ mở cửa.
 
-### 1.9 Danh sách trang (10 trang)
-*(Danh mục các màn hình chức năng và luồng tương tác người dùng của hệ thống)*
+### 1.9 Kiến trúc Trải nghiệm & Điều hướng (Senior UI/UX Architecture)
+Thay vì chia thành 10 trang web riêng biệt gây rời rạc và load chậm, AuraLens được thiết kế theo **Kiến trúc Trải nghiệm Liền mạch (App-like Continuous Flow + Interactive Subpages / Bottom Sheets / Drawers / Modals)**:
+
+```mermaid
+graph TD
+    subgraph MainFlow ["🔄 Main Continuous Flow (Luồng Trải Nghiệm Chính)"]
+        Hero["1. Hero & Lumi Vibe Gate<br/>(Lumi Chào Đón & Chọn Ngữ Cảnh)"]
+        Scanner["2. Smart WebRTC Viewfinder<br/>(Camera Tràn Viền & Laser Scan)"]
+        FitScore["3. Drip Matrix & Stylist Dashboard<br/>(Chấm Điểm & Phối Đồ Local Brand)"]
+        VibeMap["4. Smart Vibe Map & Itinerary<br/>(Gợi Ý Quán Theo Thời Tiết & Giờ)"]
+        Photobooth["5. Aura Photobooth Studio<br/>(Lồng Khung Trend, Chụp & Tải 9:16)"]
+        
+        Hero --> Scanner
+        Scanner --> FitScore
+        FitScore --> VibeMap
+        VibeMap --> Photobooth
+    end
+
+    subgraph SubPages ["📱 Subpages / Dynamic Sheets / Modals (Mở Tại Chỗ)"]
+        BrandSheet["🛍️ Local Brand Drawer (Bottom Sheet)<br/>Chi tiết món đồ, size, giá, nút mua"]
+        WeatherDetail["🌦️ Weather & Vibe Breakdown Modal<br/>Thông số thời tiết, nhiệt độ, vibe match"]
+        PlaceDetail["📍 Place Experience Modal<br/>Menu, góc photospot, Google Maps link"]
+        MerchantPortal["🏢 B2B Merchant Portal (Slide-over Panel)<br/>Local Brand & Quán cập nhật đồ/giờ"]
+        OOTDHistory["🗄️ Tủ Đồ Số & History Drawer<br/>Nhật ký outfit & kho ảnh photobooth"]
+    end
+
+    FitScore -.->|Chạm vào đồ gợi ý| BrandSheet
+    VibeMap -.->|Bấm vào widget thời tiết| WeatherDetail
+    VibeMap -.->|Bấm vào thẻ quán cafe| PlaceDetail
+    Hero -.->|Icon góc phải| OOTDHistory
+    Hero -.->|Nút B2B góc trên| MerchantPortal
+```
 
 ---
 
@@ -68,20 +110,20 @@ AuraLens là sự giao thoa hoàn hảo của 4 bài toán từ đối tác chư
 
 ```mermaid
 graph TD
-    UserDevice["Thiết bị người dùng<br/>(WebApp ReactJS Camera)"]
+    Client["📱 Thiết bị người dùng<br/>(WebApp ReactJS Camera WebRTC + Canvas)"]
     
-    Orchestrator["Cloud Run: Trình Quản Lý Aura<br/>(Orchestrator)"]
+    Orchestrator["🚀 Cloud Run: Trình Quản Lý Aura<br/>(Orchestrator FastAPI / Node.js)"]
     
-    VisionAgent["Vision Agent<br/>(Gemini 3 Pro)<br/>Phân tích ảnh"]
-    StylistAgent["Stylist Agent<br/>(Lumi Persona)<br/>Chấm điểm Outfit"]
+    VisionAgent["👁️ Vision Agent<br/>(Gemini Multimodal)<br/>Phân tích ảnh Outfit"]
+    StylistAgent["✨ Stylist Agent<br/>(Lumi Persona Engine)<br/>Chấm điểm Outfit"]
     
-    GuardrailAgent["Guardrail & Graph Retrieval Agent<br/>(Kiểm duyệt & Truy xuất Đồ thị chống AI Slop)"]
+    GuardrailAgent["🛡️ Guardrail & Graph Retrieval Agent<br/>(Kiểm duyệt & Truy xuất Đồ thị chống AI Slop)"]
     
-    KnowledgeGraph[("AURA KNOWLEDGE GRAPH<br/>(Cloud SQL pgvector)<br/>[Outfit/Style] ↔ [F&B Location] ↔ [Weather]")]
+    KnowledgeGraph[("💾 AURA KNOWLEDGE GRAPH<br/>(Cloud SQL pgvector / Cloud Firestore)<br/>[Outfit/Style] ↔ [F&B Location] ↔ [Weather]")]
     
-    PhotoboothEngine["Photobooth Engine (Trình duyệt) + Cloud Storage<br/>Render khung ảnh, kết hợp overlay PNG & Camera"]
+    PhotoboothEngine["🎨 Photobooth Engine (Trình duyệt) + Cloud Storage<br/>Render khung ảnh, kết hợp overlay PNG & Camera"]
 
-    UserDevice -->|HTTPS / JSON| Orchestrator
+    Client -->|HTTPS / JSON| Orchestrator
     Orchestrator --> VisionAgent
     Orchestrator --> StylistAgent
     VisionAgent --> GuardrailAgent
@@ -89,13 +131,13 @@ graph TD
     GuardrailAgent --> KnowledgeGraph
     KnowledgeGraph --> PhotoboothEngine
 
-    classDef client fill:#1e1e2e,stroke:#a6e3a1,stroke-width:2px,color:#cdd6f4;
-    classDef server fill:#181825,stroke:#89b4fa,stroke-width:2px,color:#cdd6f4;
-    classDef agent fill:#313244,stroke:#f38ba8,stroke-width:2px,color:#cdd6f4;
-    classDef db fill:#11111b,stroke:#fab387,stroke-width:2px,color:#cdd6f4;
-    classDef engine fill:#181825,stroke:#cba6f7,stroke-width:2px,color:#cdd6f4;
+    classDef client fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#14532d;
+    classDef server fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a;
+    classDef agent fill:#fdf4ff,stroke:#d946ef,stroke-width:2px,color:#701a75;
+    classDef db fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#78350f;
+    classDef engine fill:#faf5ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95;
 
-    class UserDevice client;
+    class Client client;
     class Orchestrator,GuardrailAgent server;
     class VisionAgent,StylistAgent agent;
     class KnowledgeGraph db;
@@ -105,7 +147,7 @@ graph TD
 > **Ghi chú:** Để chống ảo giác (AI Slop) - việc LLM tự sinh ra một quán cafe hoặc một nhãn hàng không tồn tại, Guardrail Agent ép mô hình Gemini chỉ được phép sinh câu trả lời bằng cách nối các Node thực tế lưu trong GraphRAG.
 
 ### 2.2 Mô hình dữ liệu (Entity Graph Schema)
-Dùng **PostgreSQL** với extension `pgvector` trên Cloud SQL:
+Dùng **PostgreSQL** với extension `pgvector` trên Cloud SQL (hoặc Cloud Firestore Vector Search):
 
 - **BẢNG `user_profile`:**  
   `id (uuid)`, `name`, `dob`, `preferred_vibes`, `tenant_id`
@@ -132,10 +174,10 @@ sequenceDiagram
     participant Stylist as Stylist Agent (Lumi)
     participant DB as Cloud SQL (pgvector)
 
-    User->>App: Mở Trang 2 (Lumi's Room)
+    User->>App: Mở View 1 (Lumi Vibe Gate)
     App->>User: Lumi hỏi: "Đi đâu đấy?"
     User->>App: Trả lời: "Đi hẹn hò"
-    User->>App: Mở Trang 3, chụp ảnh outfit
+    User->>App: Mở View 2, chụp ảnh outfit qua WebRTC
     App->>CS: Tải ảnh lên Cloud Storage
     CS-->>App: Trả về Image URL
     App->>Orch: Gửi Image URL + Context (Hẹn hò)
@@ -150,8 +192,8 @@ sequenceDiagram
         Stylist-->>App: Khen ngợi & đề xuất phụ kiện hoàn thiện
     end
 ```
-- Người dùng mở Trang 2 (Lumi's Room), Lumi hỏi: "Đi đâu đấy?" $\rightarrow$ Người dùng: "Đi hẹn hò".
-- Người dùng mở Trang 3, chụp ảnh outfit. Ảnh được đẩy lên Cloud Storage, URL gửi về Vision Agent (Cloud Run).
+- Người dùng mở View 1 (Lumi Vibe Gate), Lumi hỏi: "Đi đâu đấy?" $\rightarrow$ Người dùng: "Đi hẹn hò".
+- Người dùng mở View 2, chụp ảnh outfit. Ảnh được đẩy lên Cloud Storage, URL gửi về Vision Agent (Cloud Run).
 - Vision Agent gọi Gemini Multimodal bóc tách: `[Màu: Đen, Trắng]`, `[Style: Minimalist]`, `[Item: Áo thun, Quần âu]`.
 - Stylist Agent (Lumi) tính điểm dựa trên sự phù hợp giữa Outfit và Mục đích (Hẹn hò).
 - Nếu thiếu điểm nhấn (vd: 65 điểm), Lumi truy xuất bảng `fashion_item` tìm một chiếc áo khoác Blazer hoặc vòng cổ (Alternative) và sinh câu trả lời: *"Mặc vầy hơi an toàn quá! Khoác thêm cái Blazer này của hãng X vào là lên 90 điểm ngay, trông trưởng thành lắm!"*.
@@ -189,12 +231,12 @@ sequenceDiagram
 sequenceDiagram
     autonumber
     actor User as Người dùng
-    participant App as WebApp (Trang 7)
+    participant App as WebApp (View 5)
     participant Cam as WebRTC Camera
     participant CS as Cloud Storage (Assets)
     participant Canvas as HTML5 Canvas Engine
 
-    User->>App: Mở Trang 7 (Photobooth) khi đến quán
+    User->>App: Mở View 5 (Photobooth) khi đến quán
     App->>Cam: Kích hoạt Camera trước qua WebRTC
     App->>CS: Tải các file khung ảnh tĩnh (PNG transparent theo Vibe Y2K, Cyberpunk)
     CS-->>App: Trả về danh sách Frames & Stickers
@@ -204,7 +246,7 @@ sequenceDiagram
     Canvas-->>App: Xuất ảnh hợp nhất (PNG/JPG)
     App-->>User: Cho phép tải về máy để up Story / TikTok
 ```
-- Khi đến quán, người dùng mở Trang 7. WebRTC gọi lại Camera trước.
+- Khi đến quán, người dùng mở View 5. WebRTC gọi lại Camera trước.
 - WebApp tải xuống các file khung ảnh tĩnh (PNG transparent) từ Cloud Storage được phân loại theo Vibe (vd: khung Y2K, khung Cyberpunk).
 - Người dùng chọn khung, thêm sticker.
 - Tính năng Canvas (HTML5) mix lớp ảnh Camera và lớp Frame lại thành một tấm ảnh hợp nhất $\rightarrow$ Lưu về máy.
@@ -220,11 +262,11 @@ sequenceDiagram
 | Giai đoạn | Thời lượng | Nội dung công việc |
 | :--- | :--- | :--- |
 | **Giai đoạn 0 — Chuẩn bị** | 1 ngày | - Kích hoạt Google Cloud Project (Starter Tier), Cloud Run, Cloud SQL Admin, Cloud Storage, Firebase, Vertex AI/Gemini API.<br/>- Thiết kế nhân vật Lumi (Viết prompt "Persona" cho System Instruction của Gemini). |
-| **Giai đoạn 1 — Dựng Schema & Data** | 1 ngày | - Khởi tạo Cloud SQL PostgreSQL, bật pgvector.<br/>- Nhập dữ liệu mồi (Mock Data): 20 món đồ local brand, 15 quán cafe, 10 khung ảnh Photobooth đẩy lên Cloud Storage. |
-| **Giai đoạn 2 — Xây dựng Core Agents** | 3 ngày | - Xây `vision-service`: Gọi Gemini 3 Pro Vision để đọc ảnh Outfit.<br/>- Xây `stylist-service`: Xử lý logic chấm điểm (Score 0-100) và tìm Alternative items.<br/>- Xây `location-service`: Query Graph DB kiểm tra thời tiết + giờ mở cửa để đề xuất F&B. |
-| **Giai đoạn 3 — Giao diện WebApp (Vibe-Coding)** | 3 ngày | - Dùng AI Studio sinh giao diện Camera (WebRTC).<br/>- Giao diện chat của Lumi (hiệu ứng gõ chữ, bong bóng chat).<br/>- Giao diện Photobooth (HTML5 Canvas). |
+| **Giai đoạn 1 — Dựng Schema & Data** | 1 ngày | - Khởi tạo Cloud SQL PostgreSQL (bật `pgvector`) hoặc Cloud Firestore.<br/>- Nhập dữ liệu mồi (Mock Data): 20 món đồ local brand, 15 quán cafe, 10 khung ảnh Photobooth đẩy lên Cloud Storage. |
+| **Giai đoạn 2 — Xây dựng Core Agents** | 3 ngày | - Xây `vision-service`: Gọi Gemini Multimodal để đọc ảnh Outfit.<br/>- Xây `stylist-service`: Xử lý logic chấm điểm (Score 0-100) và tìm Alternative items.<br/>- Xây `location-service`: Query Graph DB kiểm tra thời tiết + giờ mở cửa để đề xuất F&B. |
+| **Giai đoạn 3 — Giao diện WebApp (Vibe-Coding)** | 3 ngày | - Dùng AI Studio sinh giao diện Camera (WebRTC).<br/>- Giao diện chat của Lumi (hiệu ứng gõ chữ, bong bóng chat).<br/>- Giao diện Photobooth (HTML5 Canvas) & các Subpage Bottom Sheets. |
 | **Giai đoạn 4 — Tích hợp & Kiểm thử** | 1.5 ngày | - Nối API Backend vào Frontend. Kiểm tra độ trễ (Latency).<br/>- Test các kịch bản thời tiết (Cố tình set thời tiết giả lập là Mưa để xem Lumi có gợi ý quán ngoài trời không). |
-| **Giai đoạn 5 — Triển khai & Demo** | 0.5 ngày | - Deploy lên Cloud Run. Đăng ký Domain miễn phí.<br/>- Quay video demo thực tế ngoài trời (sử dụng điện thoại quay trực tiếp). |
+| **Giai đoạn 5 — Triển khai & Demo** | 0.5 ngày | - Deploy lên Cloud Run. Đăng ký Domain miễn phí / Firebase Hosting.<br/>- Quay video demo thực tế ngoài trời (sử dụng điện thoại quay trực tiếp). |
 
 ---
 
@@ -238,25 +280,22 @@ Bạn là một kỹ sư phần mềm full-stack cấp cao. Xây dựng cho tôi
 1. BỐI CẢNH & BÀI TOÁN
 Người dùng cần một ứng dụng WebApp để chấm điểm trang phục (Fit Check), nhận gợi ý phối đồ, tìm địa điểm quán cafe/nhà hàng phù hợp với phong cách đó, và chụp ảnh Photobooth với khung ảnh theo chủ đề. Nhân vật AI dẫn dắt toàn bộ app là "Lumi" - một Gen Z ảo hóm hỉnh.
 
-2. KIẾN TRÚC HỆ THỐNG
-- Frontend: ReactJS, TailwindCSS. Thiết kế Mobile-first (Mobile-web), tông màu Neon / Dark Mode (Cyberpunk).
-- Cần sử dụng HTML5 WebRTC API để truy cập Camera thiết bị.
-- Backend giả lập (hoặc chuẩn bị sẵn cho FastAPI): Xử lý luồng Multi-Agent. Mọi phản hồi AI phải kèm theo JSON có cấu trúc (ví dụ: { "score": 85, "comment": "...", "recommendation": [...] }).
+2. PHONG CÁCH THẨM MỸ (GEN Z VIBRANT & CYBER-POP)
+- Tông màu: Sáng, rực rỡ, năng động (Dopamine Palette): Electric Lime (#D4FF00), Candy Pink (#FF2E93), Cyber Cyan (#00F5FF), Violet Glow (#7C3AED), nền kính mờ ngọc trai sáng (#FAFAFC -> #F0F3FF).
+- Typography: Tiêu đề dùng font Syne/Clash Display cá tính, nội dung dùng Plus Jakarta Sans, số liệu dùng Space Grotesk.
+- Hiệu ứng: Glassmorphism mờ viền phát sáng, Hologram laser scan, micro-animations cực mượt.
 
-3. DANH SÁCH TRANG CẦN DỰNG (Các Component chính)
-- Splash Screen: Logo AuraLens, hiệu ứng glitch, nút "Bắt đầu".
-- Lumi's Room (Chat): Giao diện chat giống iMessage nhưng nền tối. Lumi hỏi ngữ cảnh đi chơi.
-- Camera Scanner: Màn hình camera full-screen, có khung viền quét (scanning animation), nút chụp ảnh.
-- Fit Check Result:
-  * Điểm số to ở giữa (Score vòng tròn).
-  * Dòng nhận xét của Lumi.
-  * Nếu điểm < 70: Hiện thanh trượt (carousel) các món đồ "Gợi ý thay đổi".
-  * Nếu điểm >= 70: Hiện nút "Tìm địa điểm đi chơi".
-- Vibe Map: Danh sách (Card) các quán cafe. Trên mỗi Card phải hiển thị: Tên, Hình ảnh, "Đang mở cửa", nhãn "Có máy lạnh" (Indoor).
-- Aura Photobooth:
-  * Khung hình camera ở dưới.
-  * Các nút chọn Frame (Khung ảnh) ở dưới cùng (dạng filter picker của Instagram).
-  * Nút chụp -> Chụp xong áp Overlay và hiện nút "Tải ảnh về máy".
+3. KIẾN TRÚC HỆ THỐNG & ĐIỀU HƯỚNG
+- Frontend: ReactJS, TailwindCSS. Thiết kế Mobile-first (Mobile-web).
+- Sử dụng HTML5 WebRTC API để truy cập Camera thiết bị và HTML5 Canvas cho Photobooth.
+- Backend giả lập (hoặc chuẩn bị sẵn cho FastAPI): Xử lý luồng Multi-Agent. Mọi phản hồi AI phải kèm theo JSON có cấu trúc (ví dụ: { "score": 85, "comment": "...", "recommendation": [...] }).
+- Cấu trúc màn hình dạng Continuous Flow + Interactive Subpage Drawers/Modals:
+  * View 1 (Hero & Lumi Vibe Gate): Logo phát sáng, Lumi hỏi ngữ cảnh đi chơi, nút bắt đầu.
+  * View 2 (Smart Camera Scanner): Camera tràn viền, khung quét laser scanning animation, nút chụp & upload.
+  * View 3 (Drip Matrix Dashboard): Vòng tròn điểm số 3D neon, phân tích màu/chất liệu/style, nhận xét Lumi, Carousel đồ Local Brand + Bottom Sheet chi tiết món đồ.
+  * View 4 (Vibe Map & Smart Feed): Widget thời tiết real-time (mưa/nắng), danh sách quán cafe đồng điệu, Modal xem góc chụp & link Google Maps.
+  * View 5 (Aura Photobooth Studio): Chọn khung Y2K/Tạp chí, chụp selfie qua Canvas, áp overlay và tải ảnh Story 9:16.
+  * Subpage (B2B Merchant Portal Drawer): Quản lý đồ & quán cafe cho đối tác.
 
 4. RÀNG BUỘC KỸ THUẬT
 - Giao diện phải cực kỳ mượt mà, nhiều animation (dùng Framer Motion nếu được).
@@ -276,8 +315,8 @@ $$\text{Ảnh đầu vào} \longrightarrow \text{Phân tích được Vibe} \lon
 
 | ID | Kịch bản kiểm thử | Dữ liệu đầu vào | Kỳ vọng kết quả |
 | :--- | :--- | :--- | :--- |
-| **TC01** | Fit Check - Điểm thấp (<70) | Ảnh mặc đồ xuề xòa (áo phông cũ, dép lê), bối cảnh "Đi tiệc tối" | Điểm < 70, Lumi nhận xét hóm hỉnh, gợi ý đổi sang Blazer / Quần âu từ Local Brand. |
-| **TC02** | Fit Check - Điểm cao (>=70) | Ảnh mặc đồ Y2K / Cyberpunk cực chất | Điểm > 70, Lumi khen "cháy", gợi ý phụ kiện kính râm, mở khóa nút tìm địa điểm. |
+| **TC01** | Fit Check - Điểm thấp (<70) | Ảnh mặc đồ xuề xòa (áo phông cũ, dép lê), bối cảnh "Đi tiệc tối" | Điểm < 70, Lumi nhận xét hóm hỉnh, gợi ý đổi sang Blazer / Quần âu từ Local Brand trong Bottom Sheet. |
+| **TC02** | Fit Check - Điểm cao (>=70) | Ảnh mặc đồ Y2K / Cyber-Pop cực chất | Điểm > 70, Lumi khen "cháy", gợi ý phụ kiện kính râm, mở khóa nút tìm địa điểm. |
 | **TC03** | Lọc địa điểm theo thời tiết Mưa | Vibe "Minimalist", Giờ 19h00, Thời tiết: "Trời mưa" | Chỉ hiện các quán có `is_indoor = True` và đang trong giờ mở cửa. Không hiện quán rooftop/ngoài trời. |
 | **TC04** | Lọc địa điểm theo thời tiết Nắng/Mát | Vibe "Streetwear", Giờ 15h00, Thời tiết: "Trời nắng đẹp" | Ưu tiên các quán cafe ngoài trời, photospot có ánh sáng tự nhiên tốt. |
 | **TC05** | Photobooth Composite | Ảnh camera + Khung Frame PNG Y2K + Sticker | Canvas render mượt, xuất file PNG kích thước chuẩn story (9:16), tải về điện thoại thành công. |
@@ -291,10 +330,10 @@ $$\text{Ảnh đầu vào} \longrightarrow \text{Phân tích được Vibe} \lon
 
 | Thời lượng | Phân cảnh | Nội dung / Thao tác |
 | :--- | :--- | :--- |
-| **0:00 - 0:20** | Mở đầu (Hook) | Giới thiệu bài toán: Gen Z phân vân "Hôm nay mặc gì & đi đâu?". Mở WebApp AuraLens trên điện thoại. |
-| **0:20 - 0:50** | Chat Lumi & Drip Check | Lumi hỏi mục đích đi chơi. Chụp outfit 1 (chưa đẹp) $\rightarrow$ Lumi chấm 60đ, gợi ý thay áo/thêm phụ kiện. Thay đồ & chụp lại $\rightarrow$ Chấm 92đ cực cháy! |
-| **0:50 - 1:20** | Vibe Map & Smart F&B | Hệ thống bắt thời tiết mưa $\rightarrow$ Gợi ý quán cafe tone xám trong nhà mở cửa đến khuya phù hợp đúng outfit. |
-| **1:20 - 1:50** | Aura Photobooth | Đến quán, mở Photobooth, chọn khung Y2K mang vibe quán, chụp ảnh kỷ niệm, tải về máy. |
+| **0:00 - 0:20** | Mở đầu (Hook) | Giới thiệu bài toán: Gen Z phân vân "Hôm nay mặc gì & đi đâu?". Mở WebApp AuraLens trên điện thoại với giao diện Cyber-Pop bừng sáng. |
+| **0:20 - 0:50** | Chat Lumi & Drip Check | Lumi hỏi mục đích đi chơi. Chụp outfit 1 (chưa đẹp) $\rightarrow$ Lumi chấm 60đ, kéo Bottom Sheet gợi ý thay Blazer local brand. Thay đồ & chụp lại $\rightarrow$ Chấm 92đ cực cháy! |
+| **0:50 - 1:20** | Vibe Map & Smart F&B | Hệ thống bắt thời tiết mưa $\rightarrow$ Gợi ý quán cafe tone xám trong nhà mở cửa đến khuya phù hợp đúng outfit. Mở Modal xem góc sống ảo. |
+| **1:20 - 1:50** | Aura Photobooth | Đến quán, mở Photobooth, chọn khung Y2K mang vibe quán, chụp ảnh kỷ niệm, tải ảnh story 9:16 về máy. |
 | **1:50 - 2:00** | Kết thúc | Tóm tắt giá trị: Zero-Cost architecture, Google Gemini Multimodal, GraphRAG chống AI Slop, kết nối F&B & Local Brands. |
 
 ---
@@ -304,7 +343,7 @@ $$\text{Ảnh đầu vào} \longrightarrow \text{Phân tích được Vibe} \lon
 - **Frontend (ReactJS/HTML5 Canvas):** Tận dụng tối đa trình duyệt di động. API WebRTC hỗ trợ truy cập camera siêu mượt; HTML5 Canvas cho phép trộn (composite) ảnh chụp với Frame PNG để tạo tính năng Photobooth mà không cần server xử lý hình ảnh, giúp hệ thống nhanh và rẻ.
 - **Backend (Cloud Run - Zero Cost):** Cloud Run tự động scale về 0 khi ứng dụng nghỉ. Có thể chứa toàn bộ logic Multi-Agent (Orchestrator, Vision, Stylist, Graph Retrieval).
 - **Core AI (Gemini 3 Pro Multimodal):** Có khả năng hiểu cả văn bản và hình ảnh cùng lúc. Đây là lõi sức mạnh để bóc tách thông tin màu sắc, chất liệu và "vibe" của một bức ảnh thời trang.
-- **Database (Cloud SQL PostgreSQL + pgvector):** Lưu trữ tập trung Profile, Tủ đồ, Danh sách Quán ăn. Các logic truy vấn kinh điển (Giờ, Thời tiết) dùng SQL thuần, kết hợp `pgvector` để tìm kiếm sự tương đồng về Vibe, chống AI Slop tuyệt đối.
+- **Database (Cloud SQL PostgreSQL + pgvector / Cloud Firestore):** Lưu trữ tập trung Profile, Tủ đồ, Danh sách Quán ăn. Các logic truy vấn kinh điển (Giờ, Thời tiết) dùng SQL thuần, kết hợp `pgvector` để tìm kiếm sự tương đồng về Vibe, chống AI Slop tuyệt đối.
 - **Lưu trữ (Cloud Storage):** Lưu ảnh gốc người dùng tải lên (để làm training data nội bộ nếu có chính sách) và lưu trữ các bộ Khung ảnh, Sticker (Assets) phân phối tốc độ cao cho Photobooth.
 
 ---
