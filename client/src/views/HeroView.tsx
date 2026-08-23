@@ -1,7 +1,6 @@
 import React from 'react';
-import { Sparkles, Camera, Heart, PartyPopper, Coffee, BookOpen, Compass, Zap, Flame, ShieldAlert } from 'lucide-react';
+import { Sparkles, ArrowRight, Heart, PartyPopper, Coffee, BookOpen, Compass, ChevronRight } from 'lucide-react';
 import type { EventContext } from '../types/entityGraph.js';
-import { LumiAvatar } from '../components/common/LumiAvatar.js';
 
 interface HeroViewProps {
   selectedContext: EventContext;
@@ -18,154 +17,156 @@ export const HeroView: React.FC<HeroViewProps> = ({
   onSelectMockScenario,
   onStartScanner,
 }) => {
-  const contexts: Array<{ id: EventContext; label: string; icon: React.ElementType; color: string }> = [
-    { id: 'Hẹn hò', label: 'Hẹn Hò Lãng Mạn', icon: Heart, color: 'text-[#FF2E93]' },
-    { id: 'Quẩy bar / Pub đêm', label: 'Quẩy Bar / Pub Đêm', icon: PartyPopper, color: 'text-[#7C3AED]' },
-    { id: 'Cafe sống ảo', label: 'Cafe Sống Ảo', icon: Coffee, color: 'text-amber-600' },
-    { id: 'Đi học / Đi làm năng động', label: 'Đi Học / Đi Làm', icon: BookOpen, color: 'text-blue-600' },
-    { id: 'Dạo phố cuối tuần', label: 'Dạo Phố Cuối Tuần', icon: Compass, color: 'text-emerald-600' },
+  const contexts: Array<{ id: EventContext; label: string; emoji: string; icon: React.ElementType; bg: string }> = [
+    { id: 'Hẹn hò', label: 'Hẹn Hò', emoji: '💖', icon: Heart, bg: 'bg-rose-50 border-rose-200 text-rose-600' },
+    { id: 'Quẩy bar / Pub đêm', label: 'Quẩy Bar', emoji: '⚡', icon: PartyPopper, bg: 'bg-purple-50 border-purple-200 text-purple-600' },
+    { id: 'Cafe sống ảo', label: 'Cafe Chill', emoji: '☕', icon: Coffee, bg: 'bg-amber-50 border-amber-200 text-amber-600' },
+    { id: 'Đi học / Đi làm năng động', label: 'Đi Học/Làm', emoji: '💼', icon: BookOpen, bg: 'bg-blue-50 border-blue-200 text-blue-600' },
+    { id: 'Dạo phố cuối tuần', label: 'Dạo Phố', emoji: '🚶', icon: Compass, bg: 'bg-emerald-50 border-emerald-200 text-emerald-600' },
   ];
 
   return (
-    <div className="space-y-5 animate-fadeIn">
-      {/* Hero Banner with Radiant Gradient */}
-      <div className="relative rounded-3xl p-5 overflow-hidden bg-gradient-to-br from-[#0A0A0F] via-[#1E1E2E] to-[#2E1065] text-white shadow-2xl border border-white/20">
-        {/* Ambient Glow Orbs */}
-        <div className="absolute top-0 right-0 w-44 h-44 bg-[#FF2E93]/30 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-44 h-44 bg-[#D4FF00]/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="space-y-6 animate-fadeIn pb-6">
+      {/* Centered Mascot Hero Stage */}
+      <div className="relative calm-card-elevated rounded-3xl p-6 overflow-hidden flex flex-col items-center text-center">
+        {/* Soft Background Radial Blurs */}
+        <div className="absolute top-0 right-0 w-36 h-36 bg-[#D4FF00]/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-36 h-36 bg-[#FF2E93]/15 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="relative z-10 space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-            <Sparkles className="w-3.5 h-3.5 text-[#D4FF00]" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#D4FF00]">
-              #BuildWithGoogleAI · AI Riser 2026
-            </span>
+        {/* Mascot Speech Bubble */}
+        <div className="relative mb-2 px-4 py-1.5 rounded-full bg-white border border-gray-200/80 shadow-xs flex items-center gap-1.5 animate-bounce [animation-duration:3s]">
+          <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
+          <span className="text-xs font-bold text-gray-800">
+            Start Your Aura Journey ✨
+          </span>
+        </div>
+
+        {/* Large Animated Lumi Mascot */}
+        <div className="relative w-44 h-44 my-1 animate-lumi-float">
+          <div className="w-full h-full rounded-full p-1 bg-gradient-to-tr from-[#D4FF00] via-[#FF2E93] to-[#7C3AED] shadow-xl overflow-hidden">
+            <img
+              src="/lumi.jpg"
+              alt="Lumi 3D Mascot"
+              className="w-full h-full object-cover rounded-full"
+            />
           </div>
+        </div>
 
-          <h1 className="text-2xl font-black tracking-tight leading-tight">
-            Thấu Kính Khí Chất <br />
-            <span className="bg-gradient-to-r from-[#D4FF00] via-[#00F5FF] to-[#FF2E93] bg-clip-text text-transparent">
-              Bắt Trọn Vibe Của Riêng Bạn
-            </span>
-          </h1>
-
-          <p className="text-xs text-gray-300 font-medium leading-relaxed">
-            Chấm điểm outfit tức thì với <span className="text-[#D4FF00] font-bold">Gemini Multimodal</span> &amp; tự động thiết kế lộ trình ăn chơi F&amp;B chuẩn xác chống AI Slop 100%.
+        {/* Big Editorial Heading */}
+        <div className="mt-4 space-y-1">
+          <h2 className="text-3xl font-black text-gray-900 tracking-tight leading-tight">
+            Step Into Your{' '}
+            <span className="highlight-circle font-black text-black">Aura</span>{' '}
+            Vibe
+          </h2>
+          <p className="text-xs text-gray-500 font-medium max-w-xs mx-auto pt-1 leading-relaxed">
+            AI Stylist &amp; Personalized Experience Map for Gen Z.
           </p>
         </div>
       </div>
 
-      {/* Lumi AI Persona Welcome */}
-      <LumiAvatar
-        comment="Hế nhô bà iu! Hôm nay lên đồ chuẩn bị đi đâu chơi thế? Chọn ngay mục tiêu bên dưới để Lumi bắt đúng sóng và chấm điểm chuẩn bài nha!"
-        isSpeaking={true}
-        size="md"
-      />
+      {/* Daily Vibe / Context Mood Picker */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between px-1">
+          <h3 className="text-xs font-black uppercase tracking-wider text-gray-500">
+            Select Your Mood &amp; Context
+          </h3>
+          <span className="text-[10px] text-gray-400 font-semibold">
+            {selectedContext}
+          </span>
+        </div>
 
-      {/* Event Context Selector Chips */}
-      <div className="space-y-2">
-        <label className="text-xs font-black uppercase tracking-wider text-gray-500 flex items-center gap-1.5 px-1">
-          <Zap className="w-3.5 h-3.5 text-[#FF2E93]" />
-          1. Hôm Nay Bạn Đi Đâu? (Chọn Ngữ Cảnh)
-        </label>
-
-        <div className="grid grid-cols-1 gap-2">
+        {/* Horizontal Smooth Mood Pills */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none snap-x">
           {contexts.map((ctx) => {
-            const Icon = ctx.icon;
             const isSelected = selectedContext === ctx.id;
 
             return (
               <button
                 key={ctx.id}
                 onClick={() => onSelectContext(ctx.id)}
-                className={`w-full p-3 rounded-2xl flex items-center justify-between transition-all duration-300 ${
+                className={`snap-start shrink-0 px-3.5 py-2.5 rounded-2xl flex items-center gap-2 transition-all duration-300 ${
                   isSelected
-                    ? 'bg-gradient-to-r from-white to-purple-50/80 border-2 border-[#7C3AED] shadow-md scale-101'
-                    : 'glass-card hover:bg-white/90 border border-white/80 active:scale-98'
+                    ? 'bg-gray-900 text-white shadow-md scale-103'
+                    : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-200/70 active:scale-95'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
-                      isSelected
-                        ? 'bg-[#7C3AED] text-white shadow-sm'
-                        : 'bg-gray-100 ' + ctx.color
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <span
-                    className={`text-xs font-extrabold ${
-                      isSelected ? 'text-gray-950 font-black' : 'text-gray-700'
-                    }`}
-                  >
-                    {ctx.label}
-                  </span>
-                </div>
-
-                {isSelected && (
-                  <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#D4FF00] text-black">
-                    ĐÃ CHỌN
-                  </span>
-                )}
+                <span className="text-base">{ctx.emoji}</span>
+                <span
+                  className={`text-xs font-bold ${
+                    isSelected ? 'text-[#D4FF00]' : 'text-gray-700'
+                  }`}
+                >
+                  {ctx.label}
+                </span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Quick Scenario Preset Switcher (Judge / Demo Fast Switch) */}
-      <div className="p-3.5 rounded-2xl bg-gray-100/80 border border-gray-200/80 space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-black uppercase text-gray-500 tracking-wider flex items-center gap-1">
-            <ShieldAlert className="w-3.5 h-3.5 text-[#7C3AED]" />
-            Demo Scenario (Ban Giám Khảo Test Nhanh):
-          </span>
-        </div>
-
-        <div className="grid grid-cols-3 gap-1.5">
+      {/* Demo Scenario Pill Selector (Calm & Clean) */}
+      <div className="p-3 bg-white/70 rounded-2xl border border-gray-200/60 flex items-center justify-between gap-2">
+        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+          Demo Preset:
+        </span>
+        <div className="flex items-center gap-1.5">
           <button
             onClick={() => onSelectMockScenario('low_score')}
-            className={`py-1.5 px-2 rounded-xl text-[10px] font-extrabold transition-all ${
+            className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all ${
               mockScenario === 'low_score'
-                ? 'bg-[#FF2E93] text-white shadow-sm'
-                : 'bg-white text-gray-600 hover:bg-gray-50'
+                ? 'bg-[#FF2E93] text-white shadow-xs'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            ⚠️ Điểm Thấp (58đ)
+            Low (58đ)
           </button>
-
           <button
             onClick={() => onSelectMockScenario('high_score')}
-            className={`py-1.5 px-2 rounded-xl text-[10px] font-extrabold transition-all ${
+            className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all ${
               mockScenario === 'high_score'
-                ? 'bg-[#D4FF00] text-black shadow-sm font-black'
-                : 'bg-white text-gray-600 hover:bg-gray-50'
+                ? 'bg-gray-900 text-[#D4FF00] shadow-xs'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            🔥 Điểm Cao (94đ)
+            High (94đ)
           </button>
-
           <button
             onClick={() => onSelectMockScenario('cyberpunk')}
-            className={`py-1.5 px-2 rounded-xl text-[10px] font-extrabold transition-all ${
+            className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition-all ${
               mockScenario === 'cyberpunk'
-                ? 'bg-[#00F5FF] text-black shadow-sm font-black'
-                : 'bg-white text-gray-600 hover:bg-gray-50'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            ⚡ Cyberpunk
+            Cyber-Pop
           </button>
         </div>
       </div>
 
-      {/* Big Master Action Button */}
+      {/* Calm, Sleek Pill CTA Button (Inspired by reference) */}
       <button
         onClick={onStartScanner}
-        className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#D4FF00] via-[#00F5FF] to-[#FF2E93] text-black font-black text-base shadow-xl hover:shadow-2xl hover:scale-101 active:scale-98 transition-all flex items-center justify-center gap-2.5"
+        className="w-full py-4 px-4 rounded-full bg-[#0F172A] hover:bg-black text-white font-extrabold text-sm shadow-xl active:scale-98 transition-all flex items-center justify-between group"
       >
-        <Camera className="w-5 h-5 fill-black" />
-        <span>Bật Thấu Kính (Drip Check) ⚡</span>
+        {/* Mascot Mini Orb Icon */}
+        <div className="w-9 h-9 rounded-full overflow-hidden bg-white p-0.5 shadow-sm">
+          <img
+            src="/lumi.jpg"
+            alt="Lumi"
+            className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform"
+          />
+        </div>
+
+        {/* Center Label */}
+        <span className="text-sm font-extrabold tracking-wide flex items-center gap-1.5 text-white">
+          Get Started &amp; Check Outfit
+        </span>
+
+        {/* Right Arrow */}
+        <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+          <ChevronRight className="w-4 h-4 text-[#D4FF00]" />
+        </div>
       </button>
     </div>
   );

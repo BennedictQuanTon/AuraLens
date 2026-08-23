@@ -13,16 +13,17 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
   hasScore,
 }) => {
   const navItems = [
-    { id: 1, label: 'Lumi Gate', icon: Home },
-    { id: 2, label: 'Camera Scan', icon: Camera },
-    { id: 3, label: 'Drip Score', icon: Sparkles, badge: hasScore ? 'HOT' : undefined },
-    { id: 4, label: 'Vibe Map', icon: MapPin },
-    { id: 5, label: 'Photobooth', icon: ImageIcon },
+    { id: 1, label: 'Lumi', icon: Home },
+    { id: 2, label: 'Camera', icon: Camera },
+    { id: 3, label: 'Score', icon: Sparkles, badge: hasScore },
+    { id: 4, label: 'Places', icon: MapPin },
+    { id: 5, label: 'Studio', icon: ImageIcon },
   ];
 
   return (
-    <div className="fixed bottom-3 left-0 right-0 z-40 px-4 max-w-md mx-auto pointer-events-none">
-      <nav className="pointer-events-auto bg-white/90 backdrop-blur-2xl border border-white/80 rounded-3xl p-1.5 shadow-2xl flex items-center justify-between">
+    <div className="fixed bottom-4 left-0 right-0 z-40 px-6 max-w-xs mx-auto pointer-events-none">
+      {/* Floating Dark Capsule Dock */}
+      <nav className="pointer-events-auto bg-[#0F172A] text-white rounded-full px-3 py-2 shadow-2xl flex items-center justify-around border border-gray-800/80">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeView === item.id;
@@ -31,29 +32,23 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
             <button
               key={item.id}
               onClick={() => onSelectView(item.id)}
-              className={`relative flex flex-col items-center justify-center py-2 px-3 rounded-2xl transition-all duration-300 ${
+              className={`relative p-2.5 rounded-full transition-all duration-300 ${
                 isActive
-                  ? 'bg-gradient-to-tr from-[#0A0A0F] to-[#1F1F2E] text-white shadow-lg scale-105'
-                  : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100/80 active:scale-95'
+                  ? 'bg-white/20 text-[#D4FF00] scale-110'
+                  : 'text-gray-400 hover:text-white active:scale-90'
               }`}
+              title={item.label}
             >
-              <Icon
-                className={`w-5 h-5 transition-transform duration-300 ${
-                  isActive ? 'text-[#D4FF00] scale-110' : ''
-                }`}
-              />
-              <span
-                className={`text-[10px] font-bold mt-1 tracking-tight ${
-                  isActive ? 'text-[#D4FF00]' : 'text-gray-500'
-                }`}
-              >
-                {item.label}
-              </span>
+              <Icon className="w-5 h-5" />
 
-              {item.badge && (
-                <span className="absolute -top-1 -right-1 px-1.5 py-0.2 bg-[#FF2E93] text-white text-[8px] font-black rounded-full shadow-sm animate-bounce">
-                  {item.badge}
-                </span>
+              {/* Active Dot indicator */}
+              {isActive && (
+                <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#D4FF00] rounded-full" />
+              )}
+
+              {/* Badge */}
+              {item.badge && !isActive && (
+                <span className="absolute top-1 right-1 w-2 h-2 bg-[#FF2E93] rounded-full" />
               )}
             </button>
           );
