@@ -11,7 +11,6 @@ export const MerchantDrawer: React.FC<MerchantDrawerProps> = ({ isOpen, onClose 
   const [activeTab, setActiveTab] = useState<'brand' | 'location'>('brand');
   const [submitted, setSubmitted] = useState(false);
 
-  // Form states
   const [name, setName] = useState('');
   const [brandName, setBrandName] = useState('');
   const [aestheticTag, setAestheticTag] = useState<VibeStyle>('Y2K');
@@ -30,24 +29,21 @@ export const MerchantDrawer: React.FC<MerchantDrawerProps> = ({ isOpen, onClose 
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-fadeIn">
-      {/* Click outside */}
       <div className="absolute inset-0" onClick={onClose} />
 
-      {/* Slide-over Drawer */}
       <div className="relative z-10 w-full max-w-md bg-white h-full shadow-2xl p-6 overflow-y-auto animate-slideLeft flex flex-col justify-between">
         <div>
-          {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-4">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-purple-100 text-[#7C3AED]">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-2xl bg-purple-50 text-purple-600">
                 <Store className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-extrabold text-base text-gray-900">
                   B2B Merchant Portal
                 </h3>
-                <p className="text-[11px] text-gray-500">
-                  Cổng kết nối Local Brand &amp; F&amp;B vào Knowledge Graph
+                <p className="text-[11px] text-gray-400">
+                  Connect Local Fashion &amp; F&amp;B into Knowledge Graph
                 </p>
               </div>
             </div>
@@ -56,44 +52,43 @@ export const MerchantDrawer: React.FC<MerchantDrawerProps> = ({ isOpen, onClose 
               onClick={onClose}
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Tab Selector */}
           <div className="flex p-1 bg-gray-100 rounded-2xl mb-5">
             <button
               onClick={() => setActiveTab('brand')}
               className={`flex-1 py-2 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all ${
                 activeTab === 'brand'
-                  ? 'bg-white text-[#7C3AED] shadow-sm'
+                  ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-500 hover:text-gray-900'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Thời Trang Local Brand</span>
+              <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
+              <span>Local Brand Fashion</span>
             </button>
             <button
               onClick={() => setActiveTab('location')}
               className={`flex-1 py-2 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all ${
                 activeTab === 'location'
-                  ? 'bg-white text-[#7C3AED] shadow-sm'
+                  ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-500 hover:text-gray-900'
               }`}
             >
-              <Building2 className="w-3.5 h-3.5" />
-              <span>Quán Cafe / Pub</span>
+              <Building2 className="w-3.5 h-3.5 text-blue-600" />
+              <span>Cafe / Bar Venue</span>
             </button>
           </div>
 
           {submitted ? (
-            <div className="p-8 text-center bg-green-50 rounded-2xl border border-green-200 flex flex-col items-center">
-              <CheckCircle2 className="w-12 h-12 text-green-500 mb-2 animate-bounce" />
-              <h4 className="font-extrabold text-base text-green-900 mb-1">
-                Thêm Vào Graph Thành Công!
+            <div className="p-8 text-center bg-emerald-50 rounded-3xl border border-emerald-200 flex flex-col items-center">
+              <CheckCircle2 className="w-12 h-12 text-emerald-500 mb-2 animate-bounce" />
+              <h4 className="font-extrabold text-base text-emerald-950 mb-1">
+                Added to Graph Successfully!
               </h4>
-              <p className="text-xs text-green-700">
-                AI Stylist Lumi đã nạp dữ liệu và sẽ gợi ý sản phẩm này khi người dùng check outfit.
+              <p className="text-xs text-emerald-700">
+                Lumi AI Stylist has ingested the data and will recommend it to relevant users.
               </p>
             </div>
           ) : (
@@ -102,41 +97,41 @@ export const MerchantDrawer: React.FC<MerchantDrawerProps> = ({ isOpen, onClose 
                 <>
                   <div>
                     <label className="text-xs font-bold text-gray-700 block mb-1">
-                      Tên Local Brand
+                      Local Brand Name
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="VD: LIDER, Dirty Coins, Hades..."
+                      placeholder="e.g. LIDER, Hades, Dirty Coins..."
                       value={brandName}
                       onChange={(e) => setBrandName(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-[#7C3AED] focus:outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-gray-900 focus:outline-none"
                     />
                   </div>
 
                   <div>
                     <label className="text-xs font-bold text-gray-700 block mb-1">
-                      Tên Sản Phẩm
+                      Product Name
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="VD: Cyber Structured Blazer..."
+                      placeholder="e.g. Cyber Structured Blazer..."
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-[#7C3AED] focus:outline-none"
+                      className="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-gray-900 focus:outline-none"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs font-bold text-gray-700 block mb-1">
-                        Phong Cách (Vibe)
+                        Aesthetic Vibe
                       </label>
                       <select
                         value={aestheticTag}
                         onChange={(e) => setAestheticTag(e.target.value as VibeStyle)}
-                        className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-[#7C3AED] focus:outline-none bg-white"
+                        className="w-full px-3 py-2.5 rounded-2xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-gray-900 focus:outline-none bg-white"
                       >
                         <option value="Y2K">Y2K</option>
                         <option value="Cyber-Pop">Cyber-Pop</option>
@@ -149,14 +144,14 @@ export const MerchantDrawer: React.FC<MerchantDrawerProps> = ({ isOpen, onClose 
 
                     <div>
                       <label className="text-xs font-bold text-gray-700 block mb-1">
-                        Giá Bán (VNĐ)
+                        Price (VND)
                       </label>
                       <input
                         type="number"
                         required
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-[#7C3AED] focus:outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-gray-900 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -165,78 +160,76 @@ export const MerchantDrawer: React.FC<MerchantDrawerProps> = ({ isOpen, onClose 
                 <>
                   <div>
                     <label className="text-xs font-bold text-gray-700 block mb-1">
-                      Tên Quán Cafe / Bar
+                      Venue / Cafe Name
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="VD: The Workshop Coffee..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-[#7C3AED] focus:outline-none"
+                      placeholder="e.g. The Workshop Coffee..."
+                      className="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-gray-900 focus:outline-none"
                     />
                   </div>
 
                   <div>
                     <label className="text-xs font-bold text-gray-700 block mb-1">
-                      Địa Chỉ &amp; Quận
+                      Address &amp; District
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="VD: 27 Ngô Đức Kế, Quận 1..."
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-[#7C3AED] focus:outline-none"
+                      placeholder="e.g. 27 Ngo Duc Ke, District 1..."
+                      className="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-gray-900 focus:outline-none"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs font-bold text-gray-700 block mb-1">
-                        Loại Không Gian
+                        Space Type
                       </label>
-                      <select className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-[#7C3AED] focus:outline-none bg-white">
-                        <option value="true">❄️ Có Máy Lạnh (Trong Nhà)</option>
-                        <option value="false">🌿 Rooftop / Ngoài Trời</option>
+                      <select className="w-full px-3 py-2.5 rounded-2xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-gray-900 focus:outline-none bg-white">
+                        <option value="true">❄️ Indoor Air-Conditioned</option>
+                        <option value="false">🌿 Outdoor / Rooftop</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="text-xs font-bold text-gray-700 block mb-1">
-                        Giờ Mở Cửa
+                        Open Hours
                       </label>
                       <input
                         type="text"
                         defaultValue="08:00 - 23:00"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-[#7C3AED] focus:outline-none"
+                        className="w-full px-3.5 py-2.5 rounded-2xl border border-gray-200 text-xs font-medium focus:ring-2 focus:ring-gray-900 focus:outline-none"
                       />
                     </div>
                   </div>
                 </>
               )}
 
-              {/* Upload image mockup box */}
-              <div className="p-4 border-2 border-dashed border-gray-200 rounded-2xl text-center hover:border-[#7C3AED] cursor-pointer transition-colors bg-gray-50/50">
+              <div className="p-4 border-2 border-dashed border-gray-200 rounded-3xl text-center hover:border-gray-900 cursor-pointer transition-colors bg-gray-50/50">
                 <Upload className="w-6 h-6 text-gray-400 mx-auto mb-1" />
                 <span className="text-xs font-bold text-gray-600 block">
-                  Tải Ảnh HD Lên Cloud Storage
+                  Upload HD Image to Cloud Storage
                 </span>
                 <span className="text-[10px] text-gray-400">
-                  Hỗ trợ PNG, JPG (Tối đa 5MB)
+                  Supports PNG, JPG (Max 5MB)
                 </span>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-2xl bg-[#7C3AED] text-white font-extrabold text-xs shadow-lg hover:bg-purple-800 active:scale-98 transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-3.5 px-4 rounded-full bg-gray-950 text-white font-extrabold text-xs shadow-lg hover:bg-black active:scale-98 transition-all flex items-center justify-center gap-1.5"
               >
-                <Plus className="w-4 h-4" />
-                <span>Nạp Vào Aura Knowledge Graph</span>
+                <Plus className="w-4 h-4 text-[#D4FF00]" />
+                <span>Add to Aura Knowledge Graph</span>
               </button>
             </form>
           )}
         </div>
 
-        {/* Footer info */}
         <div className="pt-4 border-t border-gray-100 text-[10px] text-gray-400 text-center">
-          Dữ liệu được lưu trữ tự động trên Google Cloud Firestore &amp; Vector Embeddings.
+          Data synchronized with Google Cloud Firestore &amp; Vector Embeddings.
         </div>
       </div>
     </div>

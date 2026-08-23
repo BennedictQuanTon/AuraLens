@@ -21,7 +21,6 @@ export const ScannerView: React.FC<ScannerViewProps> = ({
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isFlashActive, setIsFlashActive] = useState(false);
 
-  // Initialize WebRTC Camera Stream
   useEffect(() => {
     let stream: MediaStream | null = null;
 
@@ -42,7 +41,7 @@ export const ScannerView: React.FC<ScannerViewProps> = ({
         }
       } catch (err) {
         console.warn('Camera access error:', err);
-        setCameraError('Không thể mở Camera thiết bị. Vui lòng cấp quyền hoặc tải ảnh từ thư viện.');
+        setCameraError('Unable to access device camera. Please grant permission or upload a photo.');
       }
     };
 
@@ -55,16 +54,13 @@ export const ScannerView: React.FC<ScannerViewProps> = ({
     };
   }, [facingMode]);
 
-  // Flip Camera
   const toggleCamera = () => {
     setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
   };
 
-  // Capture current frame from WebRTC video
   const handleSnap = () => {
     if (!videoRef.current) return;
 
-    // Flash effect
     setIsFlashActive(true);
     setTimeout(() => setIsFlashActive(false), 250);
 
@@ -79,7 +75,6 @@ export const ScannerView: React.FC<ScannerViewProps> = ({
     }
   };
 
-  // Handle File Upload Fallback
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -95,12 +90,10 @@ export const ScannerView: React.FC<ScannerViewProps> = ({
 
   return (
     <div className="relative w-full aspect-[9/16] max-h-[82vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-black flex flex-col justify-between p-4 animate-fadeIn select-none">
-      {/* Flash overlay */}
       {isFlashActive && (
         <div className="absolute inset-0 bg-white z-50 animate-fadeOut" />
       )}
 
-      {/* Video Viewfinder */}
       <video
         ref={videoRef}
         autoPlay
@@ -111,7 +104,6 @@ export const ScannerView: React.FC<ScannerViewProps> = ({
         }`}
       />
 
-      {/* Fallback Display if Camera denied */}
       {cameraError && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 bg-gradient-to-b from-gray-900 via-purple-950 to-black text-white text-center">
           <AlertCircle className="w-12 h-12 text-[#FF2E93] mb-3" />
@@ -120,69 +112,67 @@ export const ScannerView: React.FC<ScannerViewProps> = ({
           </p>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="py-3 px-5 rounded-2xl bg-gradient-to-r from-[#D4FF00] to-[#00F5FF] text-black font-extrabold text-xs shadow-lg"
+            className="py-3 px-5 rounded-full bg-gradient-to-r from-[#D4FF00] to-[#00F5FF] text-black font-extrabold text-xs shadow-lg"
           >
-            Tải Ảnh OOTD Từ Thiết Bị
+            Upload OOTD Photo
           </button>
         </div>
       )}
 
-      {/* Cyber Laser Scanner Animation Overlay */}
+      {/* Cyber Laser Scanner Overlay */}
       <div className="absolute inset-0 pointer-events-none z-10">
         <div className="animate-scan-laser" />
 
-        {/* Cyber Viewfinder HUD Frame */}
         <div className="w-full h-full p-4 flex flex-col justify-between">
           <div className="flex justify-between">
-            <div className="w-8 h-8 border-t-4 border-l-4 border-[#00F5FF]" />
-            <div className="w-8 h-8 border-t-4 border-r-4 border-[#00F5FF]" />
+            <div className="w-8 h-8 border-t-3 border-l-3 border-[#00F5FF]" />
+            <div className="w-8 h-8 border-t-3 border-r-3 border-[#00F5FF]" />
           </div>
 
-          <div className="flex flex-col items-center justify-center text-center opacity-80">
+          <div className="flex flex-col items-center justify-center text-center opacity-85">
             <div className="w-48 h-64 border-2 border-dashed border-[#D4FF00]/60 rounded-3xl flex items-center justify-center">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#D4FF00] bg-black/60 px-3 py-1 rounded-full">
-                [ Căn Chỉnh Outfit Vào Khung ]
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#D4FF00] bg-black/70 px-3 py-1 rounded-full">
+                [ Align Outfit in Frame ]
               </span>
             </div>
           </div>
 
           <div className="flex justify-between">
-            <div className="w-8 h-8 border-b-4 border-l-4 border-[#D4FF00]" />
-            <div className="w-8 h-8 border-b-4 border-r-4 border-[#D4FF00]" />
+            <div className="w-8 h-8 border-b-3 border-l-3 border-[#D4FF00]" />
+            <div className="w-8 h-8 border-b-3 border-r-3 border-[#D4FF00]" />
           </div>
         </div>
       </div>
 
-      {/* Top Controls */}
+      {/* Top Bar */}
       <div className="relative z-20 flex items-center justify-between">
         <button
           onClick={onBack}
-          className="p-2.5 rounded-2xl bg-black/50 hover:bg-black/70 text-white backdrop-blur-md transition-all active:scale-95"
+          className="p-2.5 rounded-full bg-black/50 hover:bg-black/70 text-white backdrop-blur-md transition-all active:scale-95"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4" />
         </button>
 
-        <div className="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold">
-          ✨ Ngữ cảnh: <span className="text-[#D4FF00]">{context}</span>
+        <div className="px-3.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold">
+          Target: <span className="text-[#D4FF00]">{context}</span>
         </div>
 
         <button
           onClick={toggleCamera}
-          className="p-2.5 rounded-2xl bg-black/50 hover:bg-black/70 text-white backdrop-blur-md transition-all active:scale-95"
+          className="p-2.5 rounded-full bg-black/50 hover:bg-black/70 text-white backdrop-blur-md transition-all active:scale-95"
         >
-          <SwitchCamera className="w-5 h-5" />
+          <SwitchCamera className="w-4 h-4" />
         </button>
       </div>
 
       {/* Bottom Controls */}
       <div className="relative z-20 flex items-center justify-between gap-4 pt-4">
-        {/* Upload Fallback Button */}
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="p-3.5 rounded-2xl bg-black/60 hover:bg-black/80 text-white backdrop-blur-md active:scale-95 transition-all flex flex-col items-center gap-1"
+          className="p-3 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-md active:scale-95 transition-all flex flex-col items-center gap-0.5"
         >
-          <Upload className="w-5 h-5 text-[#00F5FF]" />
-          <span className="text-[9px] font-bold">Tải Ảnh</span>
+          <Upload className="w-4 h-4 text-[#00F5FF]" />
+          <span className="text-[9px] font-bold">Upload</span>
         </button>
 
         <input
@@ -193,24 +183,23 @@ export const ScannerView: React.FC<ScannerViewProps> = ({
           onChange={handleFileUpload}
         />
 
-        {/* Master Shutter Button */}
+        {/* Shutter Button */}
         <button
           onClick={handleSnap}
           disabled={isLoading}
-          className="w-20 h-20 rounded-full p-1.5 bg-gradient-to-tr from-[#FF2E93] via-[#D4FF00] to-[#00F5FF] shadow-2xl active:scale-90 transition-transform flex items-center justify-center"
+          className="w-20 h-20 rounded-full p-1 bg-gradient-to-tr from-[#FF2E93] via-[#D4FF00] to-[#00F5FF] shadow-2xl active:scale-90 transition-transform flex items-center justify-center"
         >
           <div className="w-full h-full rounded-full bg-white flex items-center justify-center shadow-inner">
             {isLoading ? (
               <Sparkles className="w-7 h-7 text-[#7C3AED] animate-spin" />
             ) : (
-              <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-[#111827] to-[#7C3AED] flex items-center justify-center">
+              <div className="w-14 h-14 rounded-full bg-gray-950 flex items-center justify-center">
                 <Camera className="w-6 h-6 text-[#D4FF00]" />
               </div>
             )}
           </div>
         </button>
 
-        {/* Placeholder spacer to balance layout */}
         <div className="w-12" />
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store, History } from 'lucide-react';
+import { Store, History, Zap } from 'lucide-react';
 import type { VibeStyle } from '../../types/entityGraph.js';
 
 interface HeaderProps {
@@ -17,51 +17,42 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectView,
 }) => {
   return (
-    <header className="sticky top-0 z-40 w-full px-5 py-3.5 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-xs">
+    <header className="sticky top-0 z-40 w-full px-5 py-3 bg-white/80 backdrop-blur-xl border-b border-gray-100/80 shadow-xs">
       <div className="max-w-md mx-auto flex items-center justify-between">
-        {/* Left: User Avatar & Welcoming Greeting */}
+        {/* Brand Logo & Current Vibe */}
         <div
           onClick={() => onSelectView(1)}
-          className="flex items-center gap-3 cursor-pointer select-none group"
+          className="flex items-center gap-2.5 cursor-pointer select-none group"
         >
-          <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-gray-900/10 p-0.5 bg-gradient-to-tr from-[#D4FF00] via-[#FF2E93] to-[#7C3AED]">
-            <img
-              src="/lumi.jpg"
-              alt="Lumi Mascot"
-              className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-300"
-            />
+          <div className="w-8 h-8 rounded-xl bg-gray-950 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+            <Zap className="w-4 h-4 text-[#D4FF00] fill-[#D4FF00]" />
           </div>
-          <div>
-            <span className="text-[11px] font-semibold text-gray-500 block leading-tight">
-              Hi 👋 Gen Z Stylist
-            </span>
-            <h1 className="text-base font-extrabold text-gray-900 tracking-tight flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-black tracking-tight text-gray-950">
               AuraLens
-              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-gray-900 text-[#D4FF00]">
-                {currentVibe}
-              </span>
-            </h1>
+            </span>
+            <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-gray-100 text-gray-800 border border-gray-200">
+              {currentVibe}
+            </span>
           </div>
         </div>
 
-        {/* Right: Calm Icons */}
+        {/* Action Controls */}
         <div className="flex items-center gap-2">
-          {/* History Icon */}
           <button
             onClick={onOpenHistory}
-            className="w-9 h-9 rounded-full bg-gray-50 hover:bg-gray-100 border border-gray-200/60 flex items-center justify-center text-gray-700 transition-colors active:scale-95"
-            title="Lịch sử OOTD"
+            className="w-9 h-9 rounded-full bg-gray-100/80 hover:bg-gray-200/80 text-gray-700 flex items-center justify-center transition-colors active:scale-95"
+            title="OOTD History & Vault"
           >
             <History className="w-4 h-4" />
           </button>
 
-          {/* B2B Merchant */}
           <button
             onClick={onOpenMerchant}
-            className="h-9 px-3 rounded-full bg-gray-900 hover:bg-black text-white text-xs font-bold transition-all active:scale-95 flex items-center gap-1.5 shadow-sm"
+            className="h-9 px-3.5 rounded-full bg-gray-950 hover:bg-black text-white text-xs font-bold transition-all active:scale-95 flex items-center gap-1.5 shadow-sm"
           >
             <Store className="w-3.5 h-3.5 text-[#D4FF00]" />
-            <span>B2B</span>
+            <span>B2B Portal</span>
           </button>
         </div>
       </div>
