@@ -1,19 +1,7 @@
 # ⚡ AuraLens — Personalized AI Stylist & Experience Map for Gen Z
 
-> **"Thấu Kính Khí Chất — Bắt Trọn Vibe Của Riêng Bạn"**  
+ 
 > 🏆 **AI Riser Vietnam 2026** · **#BuildWithGoogleAI Hackathon**  
-> 🎯 **Target Prize:** Gold / Platinum Tier
-
----
-
-[![#BuildWithGoogleAI](https://img.shields.io/badge/%23BuildWithGoogleAI-Hackathon_2026-blue?style=for-the-badge&logo=google)](https://aistudio.google.com)
-[![Google Cloud Run](https://img.shields.io/badge/Google_Cloud-Cloud_Run-4285F4?style=for-the-badge&logo=googlecloud)](https://cloud.google.com/run)
-[![Google Gemini API](https://img.shields.io/badge/Gemini_API-Multimodal_Vision-8E75FF?style=for-the-badge&logo=googlegemini)](https://ai.google.dev)
-[![Firebase Hosting](https://img.shields.io/badge/Firebase-Hosting-FFCA28?style=for-the-badge&logo=firebase)](https://firebase.google.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-React_19_+_Express-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
-[![Tests](https://img.shields.io/badge/Tests-15%2F15_Passed-00E676?style=for-the-badge&logo=vitest)](https://vitest.dev)
-
----
 
 ## 📖 1. Executive Summary & Problem Statement
 
