@@ -120,10 +120,10 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
   // 4 Contributing Pillars to Aura Score (92.4)
   const auraPillars = [
-    { name: isEn ? 'Color Harmony' : 'Hài hòa màu', score: 96, color: 'from-[#FF2E93] to-[#EC4899]' },
-    { name: isEn ? 'Silhouette & Cut' : 'Phom dáng tỉ lệ', score: 94, color: 'from-[#7C3AED] to-[#8B5CF6]' },
+    { name: isEn ? 'Color Harmony' : 'Hài hòa màu sắc', score: 96, color: 'from-[#FF2E93] to-[#EC4899]' },
+    { name: isEn ? 'Silhouette & Cut' : 'Phom dáng & Tỉ lệ', score: 94, color: 'from-[#7C3AED] to-[#8B5CF6]' },
     { name: isEn ? 'Vibe Match' : 'Độ chuẩn Vibe', score: 98, color: 'from-[#00F5FF] to-[#06B6D4]' },
-    { name: isEn ? 'Accessories & Details' : 'Chi tiết phụ kiện', score: 90, color: 'from-[#10B981] to-[#059669]' },
+    { name: isEn ? 'Accessories & Details' : 'Chi tiết & Phụ kiện', score: 90, color: 'from-[#10B981] to-[#059669]' },
   ];
 
   // Spot Categories contributing to 15 Spots
@@ -317,92 +317,52 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 2: AVERAGE AURA INDEX (Score Breakdown & 4 Contributing AI Pillars) */}
-        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5">
+        {/* CARD 2: AVERAGE AURA INDEX (Centered 92.4 & Sized Progress Chart with Global Tier) */}
+        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-6">
           
-          {/* Top Big Score & Tier Badge */}
-          <div className="space-y-3 pt-1">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black uppercase tracking-wider text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200/80">
-                {isEn ? 'Style Aura Engine' : 'Chỉ Số Khí Chất AI'}
-              </span>
-              <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80">
-                +6.8% vs last week
-              </span>
+          {/* Centered Big Number 92.4 & Title */}
+          <div className="flex flex-col items-center text-center space-y-1.5 pt-2">
+            <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
+              92.4
             </div>
-
-            <div className="flex items-baseline justify-between gap-2">
-              <div>
-                <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
-                  92.4
-                </div>
-                <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight mt-1">
-                  {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
-                </h3>
-              </div>
-
-              <div className="text-right">
-                <span className="text-xs font-bold text-gray-400 block uppercase">
-                  {isEn ? 'Global Tier' : 'Hạng Toàn Cầu'}
-                </span>
-                <span className="text-base font-black text-gray-900 flex items-center gap-1 justify-end">
-                  <Sparkles className="w-4 h-4 text-[#FF2E93]" />
-                  <span>Elite Top 3%</span>
-                </span>
-              </div>
-            </div>
+            <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
+              {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
+            </h3>
           </div>
 
-          {/* Contributing Fashion Pillars with Visual Gradient Bars */}
-          <div className="space-y-2.5 py-2 border-t border-gray-100">
-            <div className="text-[11px] font-black uppercase tracking-wider text-gray-400">
-              {isEn ? 'Contributing Fashion Pillars' : '4 Trọng Số Cấu Thành Điểm'}
-            </div>
-
-            {auraPillars.map((pillar, idx) => (
-              <div key={idx} className="space-y-1">
-                <div className="flex items-center justify-between text-xs font-extrabold">
-                  <span className="text-gray-700">{pillar.name}</span>
-                  <span className="text-gray-950 font-black">{pillar.score}%</span>
-                </div>
-                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full bg-gradient-to-r ${pillar.color} rounded-full transition-all duration-500`}
-                    style={{ width: `${pillar.score}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Embedded Sub-Card: "AI STRENGTHS & METRICS" */}
-          <div className="p-4 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-2.5">
-            <div className="text-center">
-              <span className="text-xs font-black uppercase tracking-widest text-gray-400">
-                {isEn ? 'KEY STYLE INSIGHT' : 'ĐIỂM MẠNH NỔI BẬT NHẤT'}
+          {/* 4 Fashion Pillars with Increased Font Sizes & Integrated Global Tier */}
+          <div className="space-y-4 py-2 border-t border-gray-100 flex-1 flex flex-col justify-center">
+            
+            {/* Header: Contributing Pillars + Integrated Global Tier */}
+            <div className="flex items-center justify-between pb-1">
+              <span className="text-xs font-black uppercase tracking-wider text-gray-400">
+                {isEn ? 'Contributing Fashion Pillars' : 'Trọng Số Cấu Thành Điểm'}
               </span>
+
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 border border-purple-200 text-xs font-black text-purple-700 rounded-full shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
+                <span>{isEn ? 'Global Tier: Elite Top 3%' : 'Hạng: Elite Top 3%'}</span>
+              </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-1 text-center py-1">
-              <div>
-                <span className="text-[10px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'Top Pillar' : 'Mạnh Nhất'}
-                </span>
-                <span className="text-sm lg:text-base font-black text-purple-600">Vibe 98%</span>
-              </div>
-              <div className="border-l border-gray-200">
-                <span className="text-[10px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'Palette' : 'Bảng Màu'}
-                </span>
-                <span className="text-sm lg:text-base font-black text-gray-950">Cyber Silver</span>
-              </div>
-              <div className="border-l border-gray-200">
-                <span className="text-[10px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'Consistency' : 'Độ Chuẩn'}
-                </span>
-                <span className="text-sm lg:text-base font-black text-emerald-600">99.2%</span>
-              </div>
+            {/* 4 Larger Progress Bars with Bold Labels */}
+            <div className="space-y-3.5">
+              {auraPillars.map((pillar, idx) => (
+                <div key={idx} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm sm:text-base font-extrabold">
+                    <span className="text-gray-800">{pillar.name}</span>
+                    <span className="text-gray-950 font-black">{pillar.score}%</span>
+                  </div>
+                  <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full bg-gradient-to-r ${pillar.color} rounded-full transition-all duration-500`}
+                      style={{ width: `${pillar.score}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
+
           </div>
 
         </div>
