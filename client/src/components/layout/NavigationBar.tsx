@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Camera, Sparkles, MapPin, Image as ImageIcon } from 'lucide-react';
+import { Home, Camera, Sparkles, MapPin, Image as ImageIcon, Settings } from 'lucide-react';
 
 interface NavigationBarProps {
   activeView: number;
@@ -18,10 +18,11 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
     { id: 3, label: 'Score', icon: Sparkles, badge: hasScore },
     { id: 4, label: 'Places', icon: MapPin },
     { id: 5, label: 'Studio', icon: ImageIcon },
+    { id: 6, label: 'Settings', icon: Settings },
   ];
 
   return (
-    <div className="md:hidden fixed bottom-4 left-0 right-0 z-40 px-6 max-w-xs mx-auto pointer-events-none">
+    <div className="md:hidden fixed bottom-4 left-0 right-0 z-40 px-4 max-w-sm mx-auto pointer-events-none">
       {/* Floating Dark Capsule Dock (Mobile Only) */}
       <nav className="pointer-events-auto bg-[#0F172A] text-white rounded-full px-3 py-2 shadow-2xl flex items-center justify-around border border-gray-800/80">
         {navItems.map((item) => {
@@ -32,14 +33,14 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
             <button
               key={item.id}
               onClick={() => onSelectView(item.id)}
-              className={`relative p-2.5 rounded-full transition-all duration-300 ${
+              className={`relative p-2 rounded-full transition-all duration-300 ${
                 isActive
                   ? 'bg-white/20 text-[#D4FF00] scale-110'
                   : 'text-gray-400 hover:text-white active:scale-90'
               }`}
               title={item.label}
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-4.5 h-4.5" />
 
               {/* Active Dot indicator */}
               {isActive && (
