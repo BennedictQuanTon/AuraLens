@@ -121,21 +121,21 @@ export const HeroView: React.FC<HeroViewProps> = ({
     <div className="space-y-8 animate-fadeIn pb-16">
       
       {/* ========================================================================= */}
-      {/* 1. TOP HERO SECTION: UNBOXED, "MY KING ALEX" ON SECOND LINE & ZERO-SHIFT BUBBLE */}
+      {/* 1. TOP HERO SECTION: "My King", GEN-Z SUBTITLE & TRANSPARENT LUMI MASCOT  */}
       {/* ========================================================================= */}
       <div className="relative pt-2 pb-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           
           {/* Left: Big Primary Heading & Action CTA */}
           <div className="lg:col-span-7 space-y-3">
-            {/* PRIMARY HEADING: "Welcome Back," on Top, "my King Alex" on Line 2 */}
+            {/* PRIMARY HEADING: "Welcome Back," + "My King Alex ✨" */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-[1.1]">
               <div className="text-gray-950">
                 {isEn ? 'Welcome Back,' : 'Chào mừng trở lại,'}
               </div>
               <div className="flex flex-wrap items-baseline gap-2 mt-1">
                 <span className="text-gray-900 font-extrabold text-3xl sm:text-4xl lg:text-5xl">
-                  {isEn ? `my ${genderTitle}` : genderTitle}
+                  {isEn ? `My ${genderTitle}` : `My ${genderTitle}`}
                 </span>
                 <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent font-black">
                   {userProfile.name}
@@ -144,10 +144,14 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </div>
             </h1>
 
-            {/* SECONDARY STATEMENT UNDERNEATH */}
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-extrabold text-gray-700 tracking-tight pt-1">
-              Ready to slay your{' '}
-              <span className="highlight-circle font-black text-black">vibe</span>{' '}
+            {/* GEN-Z HIGHLIGHTED SUBTITLE (NO BLACK CIRCLE) */}
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-800 tracking-tight pt-1">
+              Ready to{' '}
+              <span className="text-[#FF2E93] font-black">slay</span>{' '}
+              your{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#00F5FF] to-[#10B981] font-black underline decoration-[#FF2E93] decoration-wavy decoration-2 underline-offset-4">
+                vibe
+              </span>{' '}
               today?
             </h2>
 
@@ -164,10 +168,10 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
           </div>
 
-          {/* Right: Unboxed Seamless Mascot + ZERO LAYOUT SHIFT Comic Bubble */}
-          <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center relative min-h-[250px]">
+          {/* Right: 100% Transparent Cutout Lumi Mascot (Shifted Left & Zero Shift Bubble) */}
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-center justify-center relative min-h-[250px]">
             
-            {/* FIXED HEIGHT CONTAINER to prevent page jumping/layout shift */}
+            {/* FIXED HEIGHT CONTAINER (Zero layout shift on text change) */}
             <div className="h-16 flex items-center justify-center relative w-full mb-1">
               <div
                 key={currentSpeechIndex}
@@ -177,14 +181,14 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </div>
             </div>
 
-            {/* 100% Seamless Mascot Blending into Background (Pure white isolated image) */}
+            {/* 100% Transparent Cutout Lumi Mascot (NO square borders, NO off-white background) */}
             <div className="relative w-48 h-48 sm:w-56 sm:h-56 animate-lumi-sway flex items-center justify-center">
-              {/* Soft Radial Ambient Glow */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/40 to-[#FF2E93]/35 rounded-full blur-2xl pointer-events-none" />
+              {/* Soft Radiant Glow */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/30 via-[#FF2E93]/25 to-[#00F5FF]/20 rounded-full blur-2xl pointer-events-none" />
               <img
-                src="/lumi.jpg"
+                src="/lumi.png"
                 alt="Lumi AI Stylist"
-                className="w-full h-full object-contain mix-blend-multiply drop-shadow-xl"
+                className="w-full h-full object-contain drop-shadow-2xl z-10"
               />
             </div>
           </div>
