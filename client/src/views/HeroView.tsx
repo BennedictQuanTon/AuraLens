@@ -405,63 +405,63 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 3: CURATED SPOTS & CITY RADAR (SVG Donut Chart with Center Total & Large Legend) */}
+        {/* CARD 3: CURATED VIBE SPOTS (Expansive Donut Chart & Large Bold Legend, Matched Height) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Top Section: Donut Chart with Center Total 15 */}
+          {/* Top Section: Expansive Donut Chart with Center Total 15 */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
-            {/* SVG Donut Chart with Total Number in Center */}
-            <div className="relative w-36 h-36 flex items-center justify-center">
-              <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
+            {/* Enlarged SVG Donut Chart (Spacious & Clean) */}
+            <div className="relative w-40 h-40 sm:w-44 sm:h-44 flex items-center justify-center">
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 140 140">
                 {/* Background Ring */}
                 <circle
-                  cx="60"
-                  cy="60"
-                  r="48"
+                  cx="70"
+                  cy="70"
+                  r="56"
                   fill="transparent"
                   stroke="#F1F5F9"
-                  strokeWidth="14"
+                  strokeWidth="16"
                 />
 
-                {/* Segment 1: Aesthetic Cafes (8/15 = 53.3%) -> Stroke Amber-Orange */}
+                {/* Segment 1: Aesthetic Cafes (8/15 = 53.33%) -> Stroke Amber-Orange */}
                 <circle
-                  cx="60"
-                  cy="60"
-                  r="48"
+                  cx="70"
+                  cy="70"
+                  r="56"
                   fill="transparent"
                   stroke="#F59E0B"
-                  strokeWidth="14"
-                  strokeDasharray="160.8 301.6"
+                  strokeWidth="16"
+                  strokeDasharray="187.6 351.86"
                   strokeDashoffset="0"
                   strokeLinecap="round"
                   className="transition-all duration-700"
                 />
 
-                {/* Segment 2: Cocktail & Bars (4/15 = 26.7%) -> Stroke Blue-Indigo */}
+                {/* Segment 2: Cocktail & Bars (4/15 = 26.67%) -> Stroke Blue-Indigo */}
                 <circle
-                  cx="60"
-                  cy="60"
-                  r="48"
+                  cx="70"
+                  cy="70"
+                  r="56"
                   fill="transparent"
                   stroke="#2563EB"
-                  strokeWidth="14"
-                  strokeDasharray="80.4 301.6"
-                  strokeDashoffset="-164"
+                  strokeWidth="16"
+                  strokeDasharray="93.8 351.86"
+                  strokeDashoffset="-191.6"
                   strokeLinecap="round"
                   className="transition-all duration-700"
                 />
 
-                {/* Segment 3: Art & Concept (3/15 = 20.0%) -> Stroke Mint-Emerald */}
+                {/* Segment 3: Art & Concept (3/15 = 20.00%) -> Stroke Mint-Emerald */}
                 <circle
-                  cx="60"
-                  cy="60"
-                  r="48"
+                  cx="70"
+                  cy="70"
+                  r="56"
                   fill="transparent"
                   stroke="#10B981"
-                  strokeWidth="14"
-                  strokeDasharray="60.3 301.6"
-                  strokeDashoffset="-246"
+                  strokeWidth="16"
+                  strokeDasharray="70.4 351.86"
+                  strokeDashoffset="-287.4"
                   strokeLinecap="round"
                   className="transition-all duration-700"
                 />
@@ -469,101 +469,60 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
               {/* Center Metrics (Total 15 & Spots Label) */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-4xl font-black text-gray-950 tracking-tight leading-none">
+                <span className="text-5xl font-black text-gray-950 tracking-tight leading-none">
                   15
                 </span>
-                <span className="text-[10px] font-black uppercase tracking-wider text-gray-400 mt-0.5">
-                  {isEn ? 'Total Spots' : 'Tổng Điểm'}
+                <span className="text-[11px] font-black uppercase tracking-wider text-gray-400 mt-1">
+                  {isEn ? 'Spots Visited' : 'Điểm Đã Ghé'}
                 </span>
               </div>
             </div>
 
-            {/* Title & Short Description */}
-            <div className="space-y-0.5">
-              <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
-                {isEn ? 'Saigon Experience Map' : 'Bản Đồ Điểm Đến'}
-              </h3>
-              <p className="text-xs font-semibold text-gray-500">
-                {isEn
-                  ? 'Confirmed spots distribution across Saigon vibe categories'
-                  : 'Tỉ lệ phân bổ điểm check-in theo thể loại trải nghiệm tại TP.HCM'}
-              </p>
-            </div>
+            {/* Short Punchy Title */}
+            <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
+              {isEn ? 'Curated Vibe Spots' : 'Tọa Độ Săn Vibe'}
+            </h3>
 
           </div>
 
-          {/* Large Bold Legend for Current Experience Categories */}
-          <div className="space-y-2.5 py-2.5 border-t border-gray-100">
-            <div className="text-[11px] font-black uppercase tracking-wider text-gray-400">
-              {isEn ? 'Spots Breakdown by Category' : 'Phân Bổ Thể Loại Trải Nghiệm'}
+          {/* Expansive Bold Legend Filling the Card Naturally */}
+          <div className="space-y-3 py-3 border-t border-gray-100 flex-1 flex flex-col justify-around">
+            <div className="flex items-center justify-between pb-0.5">
+              <span className="text-xs font-black uppercase tracking-wider text-gray-400">
+                {isEn ? 'Spots Breakdown by Category' : 'Phân Bổ Thể Loại Trải Nghiệm'}
+              </span>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               {spotCategories.map((cat, idx) => {
                 const Icon = cat.icon;
                 return (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-2 rounded-2xl bg-gray-50/80 border border-gray-100 hover:bg-gray-100/70 transition-colors"
+                    className="flex items-center justify-between p-3.5 rounded-2xl bg-gray-50/90 border border-gray-100 hover:bg-gray-100/80 transition-colors"
                   >
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-3">
                       <div
-                        className="w-3.5 h-3.5 rounded-full flex items-center justify-center"
+                        className="w-4 h-4 rounded-full flex items-center justify-center shadow-xs"
                         style={{ backgroundColor: cat.dotColor }}
                       />
-                      <Icon className="w-4 h-4 text-gray-600" />
-                      <span className="text-xs sm:text-sm font-extrabold text-gray-900">
+                      <Icon className="w-5 h-5 text-gray-700" />
+                      <span className="text-sm sm:text-base font-extrabold text-gray-900">
                         {cat.name}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className="text-sm sm:text-base font-black text-gray-950">
+                      <span className="text-base sm:text-lg font-black text-gray-950">
                         {cat.count} {isEn ? 'Spots' : 'Quán'}
                       </span>
-                      <span className={`text-xs font-bold ${cat.textColor}`}>
+                      <span className={`text-xs sm:text-sm font-black ${cat.textColor}`}>
                         ({cat.percent})
                       </span>
                     </div>
                   </div>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Embedded Sub-Card: "DISTRICT RADAR & LOCAL BRANDS" */}
-          <div className="p-4 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-2.5">
-            <div className="text-center">
-              <span className="text-xs font-black uppercase tracking-widest text-gray-400">
-                {isEn ? 'DISTRICT RADAR & LOCAL BRANDS' : 'MẬT ĐỘ QUẬN & LOCAL BRAND'}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-4 gap-1 text-center py-1">
-              <div>
-                <span className="text-[10px] font-bold text-gray-400 block uppercase">
-                  Quận 1
-                </span>
-                <span className="text-sm lg:text-base font-black text-gray-950">6 Quán</span>
-              </div>
-              <div className="border-l border-gray-200">
-                <span className="text-[10px] font-bold text-gray-400 block uppercase">
-                  Thảo Điền
-                </span>
-                <span className="text-sm lg:text-base font-black text-gray-950">4 Quán</span>
-              </div>
-              <div className="border-l border-gray-200">
-                <span className="text-[10px] font-bold text-gray-400 block uppercase">
-                  Quận 3
-                </span>
-                <span className="text-sm lg:text-base font-black text-gray-950">3 Quán</span>
-              </div>
-              <div className="border-l border-gray-200">
-                <span className="text-[10px] font-bold text-gray-400 block uppercase">
-                  Brands
-                </span>
-                <span className="text-sm lg:text-base font-black text-purple-600">20 Món</span>
-              </div>
             </div>
           </div>
 
