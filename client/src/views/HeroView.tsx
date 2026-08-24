@@ -9,7 +9,9 @@ import {
   Square,
   Check,
   Sparkles,
-  ShieldCheck,
+  Coffee,
+  Wine,
+  Palette,
 } from 'lucide-react';
 import type { AppLanguage, UserProfileState } from '../types/settings.js';
 import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
@@ -116,6 +118,21 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { letter: 'S', completed: false, today: true, date: '24' },
   ];
 
+  // 4 Contributing Pillars to Aura Score (92.4)
+  const auraPillars = [
+    { name: isEn ? 'Color Harmony' : 'Hài hòa màu', score: 96, color: 'from-[#FF2E93] to-[#EC4899]' },
+    { name: isEn ? 'Silhouette & Cut' : 'Phom dáng tỉ lệ', score: 94, color: 'from-[#7C3AED] to-[#8B5CF6]' },
+    { name: isEn ? 'Vibe Match' : 'Độ chuẩn Vibe', score: 98, color: 'from-[#00F5FF] to-[#06B6D4]' },
+    { name: isEn ? 'Accessories & Details' : 'Chi tiết phụ kiện', score: 90, color: 'from-[#10B981] to-[#059669]' },
+  ];
+
+  // Spot Categories contributing to 15 Spots
+  const spotCategories = [
+    { name: isEn ? 'Aesthetic Cafes' : 'Cafe Check-in', count: 8, icon: Coffee, color: 'text-amber-500 bg-amber-50 border-amber-200' },
+    { name: isEn ? 'Cocktail & Bars' : 'Quán Bar & Pub', count: 4, icon: Wine, color: 'text-purple-500 bg-purple-50 border-purple-200' },
+    { name: isEn ? 'Art & Concept' : 'Không gian Art', count: 3, icon: Palette, color: 'text-teal-500 bg-teal-50 border-teal-200' },
+  ];
+
   const genderTitle = userProfile.genderTitle || 'King';
 
   return (
@@ -209,11 +226,11 @@ export const HeroView: React.FC<HeroViewProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. TOP KPI CARDS: 3 UNIFIED, HARMONIOUS 3D STATS WIDGETS                  */}
+      {/* 2. TOP KPI CARDS: 3 DISTINCT, MEANINGFUL, DATA-DRIVEN INSIGHT WIDGETS     */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         
-        {/* CARD 1: STREAK & STYLE STATS (3D Clay Flame) */}
+        {/* CARD 1: STREAK & STYLE STATS (3D Clay Flame & Gamified Streak) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5">
           
           {/* Central 3D Flame Emblem & Large Titles */}
@@ -300,185 +317,187 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 2: AURA STYLE INDEX (3D Amethyst Diamond) */}
+        {/* CARD 2: AVERAGE AURA INDEX (Score Breakdown & 4 Contributing AI Pillars) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5">
           
-          {/* Central 3D Diamond Emblem & Score Titles */}
-          <div className="flex flex-col items-center text-center space-y-2 pt-1">
-            <div className="relative w-24 h-24 rounded-full bg-white border border-gray-100 shadow-[0_12px_32px_rgba(124,58,237,0.18)] flex items-center justify-center p-3">
-              <div className="absolute inset-0 bg-radial from-purple-500/15 via-cyan-400/5 to-transparent rounded-full pointer-events-none" />
-              <img
-                src="/diamond_3d.png"
-                alt="3D Aura Diamond"
-                className="w-16 h-16 object-contain drop-shadow-md z-10 animate-pulse [animation-duration:3.5s]"
-              />
-            </div>
-
-            <div className="space-y-1 pt-1">
-              <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
-                92.4
-              </div>
-              <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
-                {isEn ? 'Average Aura Index' : 'Điểm Khí Chất Aura'}
-              </h3>
-              <p className="text-sm lg:text-base font-semibold text-purple-600 flex items-center justify-center gap-1">
-                <Sparkles className="w-4 h-4 text-[#FF2E93]" />
-                <span>{isEn ? 'Top 3% Highest Rated in Saigon' : 'Top 3% Điểm Cao Nhất Sài Gòn'}</span>
-              </p>
-            </div>
-          </div>
-
-          {/* Middle 4-Category Harmony Badges */}
-          <div className="grid grid-cols-4 gap-1 px-1 py-3 border-t border-gray-100 text-center">
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-gray-400">Harmony</span>
-              <span className="text-xs font-black text-purple-600">96%</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-gray-400">Silhouette</span>
-              <span className="text-xs font-black text-emerald-600">94%</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-gray-400">Vibe Match</span>
-              <span className="text-xs font-black text-[#FF2E93]">98%</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-gray-400">Eco Tier</span>
-              <span className="text-xs font-black text-blue-600">90%</span>
-            </div>
-          </div>
-
-          {/* Embedded Sub-Card: "SCORE BREAKDOWN & TIER" */}
-          <div className="p-4 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-3">
-            <div className="text-center">
-              <span className="text-xs font-black uppercase tracking-widest text-gray-400">
-                {isEn ? 'SCORE BREAKDOWN & TIER' : 'HẠNG KHÍ CHẤT & TIÊU CHUẨN'}
+          {/* Top Big Score & Tier Badge */}
+          <div className="space-y-3 pt-1">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black uppercase tracking-wider text-purple-600 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200/80">
+                {isEn ? 'Style Aura Engine' : 'Chỉ Số Khí Chất AI'}
+              </span>
+              <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80">
+                +6.8% vs last week
               </span>
             </div>
 
-            <div className="grid grid-cols-4 gap-1 text-center py-1">
+            <div className="flex items-baseline justify-between gap-2">
               <div>
-                <span className="text-[11px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'TIER' : 'HẠNG'}
-                </span>
-                <span className="text-base lg:text-lg font-black text-gray-950">Elite</span>
+                <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
+                  92.4
+                </div>
+                <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight mt-1">
+                  {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
+                </h3>
               </div>
-              <div className="border-l border-gray-200">
-                <span className="text-[11px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'TREND' : 'TĂNG'}
+
+              <div className="text-right">
+                <span className="text-xs font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Global Tier' : 'Hạng Toàn Cầu'}
                 </span>
-                <span className="text-base lg:text-lg font-black text-emerald-600">+6.8%</span>
-              </div>
-              <div className="border-l border-gray-200">
-                <span className="text-[11px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'PALETTE' : 'BẢNG MÀU'}
+                <span className="text-base font-black text-gray-900 flex items-center gap-1 justify-end">
+                  <Sparkles className="w-4 h-4 text-[#FF2E93]" />
+                  <span>Elite Top 3%</span>
                 </span>
-                <span className="text-base lg:text-lg font-black text-purple-600">Cyber</span>
-              </div>
-              <div className="border-l border-gray-200">
-                <span className="text-[11px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'MATCH' : 'ĐỘ CHUẨN'}
-                </span>
-                <span className="text-base lg:text-lg font-black text-gray-950">99%</span>
               </div>
             </div>
+          </div>
 
-            {/* Gradient Progress Bar */}
-            <div className="w-full h-2 bg-gray-200/80 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-[#D4FF00] via-[#00F5FF] to-[#7C3AED] w-[92.4%]" />
+          {/* Contributing Fashion Pillars with Visual Gradient Bars */}
+          <div className="space-y-2.5 py-2 border-t border-gray-100">
+            <div className="text-[11px] font-black uppercase tracking-wider text-gray-400">
+              {isEn ? 'Contributing Fashion Pillars' : '4 Trọng Số Cấu Thành Điểm'}
+            </div>
+
+            {auraPillars.map((pillar, idx) => (
+              <div key={idx} className="space-y-1">
+                <div className="flex items-center justify-between text-xs font-extrabold">
+                  <span className="text-gray-700">{pillar.name}</span>
+                  <span className="text-gray-950 font-black">{pillar.score}%</span>
+                </div>
+                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full bg-gradient-to-r ${pillar.color} rounded-full transition-all duration-500`}
+                    style={{ width: `${pillar.score}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Embedded Sub-Card: "AI STRENGTHS & METRICS" */}
+          <div className="p-4 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-2.5">
+            <div className="text-center">
+              <span className="text-xs font-black uppercase tracking-widest text-gray-400">
+                {isEn ? 'KEY STYLE INSIGHT' : 'ĐIỂM MẠNH NỔI BẬT NHẤT'}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-1 text-center py-1">
+              <div>
+                <span className="text-[10px] font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Top Pillar' : 'Mạnh Nhất'}
+                </span>
+                <span className="text-sm lg:text-base font-black text-purple-600">Vibe 98%</span>
+              </div>
+              <div className="border-l border-gray-200">
+                <span className="text-[10px] font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Palette' : 'Bảng Màu'}
+                </span>
+                <span className="text-sm lg:text-base font-black text-gray-950">Cyber Silver</span>
+              </div>
+              <div className="border-l border-gray-200">
+                <span className="text-[10px] font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Consistency' : 'Độ Chuẩn'}
+                </span>
+                <span className="text-sm lg:text-base font-black text-emerald-600">99.2%</span>
+              </div>
             </div>
           </div>
 
         </div>
 
-        {/* CARD 3: EXPERIENCE & CITY RADAR (3D Teal Map Pin) */}
+        {/* CARD 3: CURATED SPOTS & CITY RADAR (Category Breakdown & District Matrix) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5">
           
-          {/* Central 3D Map Pin Emblem & City Titles */}
-          <div className="flex flex-col items-center text-center space-y-2 pt-1">
-            <div className="relative w-24 h-24 rounded-full bg-white border border-gray-100 shadow-[0_12px_32px_rgba(16,185,129,0.18)] flex items-center justify-center p-3">
-              <div className="absolute inset-0 bg-radial from-emerald-400/15 via-teal-300/5 to-transparent rounded-full pointer-events-none" />
-              <img
-                src="/pin_3d.png"
-                alt="3D Map Pin"
-                className="w-16 h-16 object-contain drop-shadow-md z-10 animate-pulse [animation-duration:2.8s]"
-              />
-            </div>
-
-            <div className="space-y-1 pt-1">
-              <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
-                15
+          {/* Top Big Spots Count & Weather Live Status */}
+          <div className="space-y-3 pt-1">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200/80">
+                {isEn ? 'Saigon Experience Map' : 'Bản Đồ Điểm Đến Sài Gòn'}
+              </span>
+              <div className="flex items-center gap-1.5 text-xs font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{isEn ? 'Live Verified' : 'Khớp Thời Tiết'}</span>
               </div>
-              <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
-                {isEn ? 'Curated Spots Visited' : 'Điểm Ghé Đã Trải Nghiệm'}
-              </h3>
-              <p className="text-sm lg:text-base font-semibold text-emerald-600 flex items-center justify-center gap-1">
-                <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                <span>{isEn ? '100% Grounded with Saigon Weather' : 'Khớp 100% Thời Tiết Sài Gòn'}</span>
-              </p>
+            </div>
+
+            <div className="flex items-baseline justify-between gap-2">
+              <div>
+                <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
+                  15
+                </div>
+                <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight mt-1">
+                  {isEn ? 'Curated Spots Visited' : 'Quán Đã Trải Nghiệm'}
+                </h3>
+              </div>
+
+              <div className="text-right">
+                <span className="text-xs font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Weather Fit' : 'Thời Tiết'}
+                </span>
+                <span className="text-base font-black text-gray-900">
+                  29°C Nắng Đẹp
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Middle 4-District Hotspots Breakdown */}
-          <div className="grid grid-cols-4 gap-1 px-1 py-3 border-t border-gray-100 text-center">
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-gray-400">Quận 1</span>
-              <span className="text-xs font-black text-gray-950">6 Spots</span>
+          {/* Category Split: Cafes, Bars, Art Spaces */}
+          <div className="space-y-2 py-2 border-t border-gray-100">
+            <div className="text-[11px] font-black uppercase tracking-wider text-gray-400">
+              {isEn ? 'Verified Spots by Experience Type' : 'Phân Bổ Loại Hình Điểm Ghé'}
             </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-gray-400">Quận 3</span>
-              <span className="text-xs font-black text-gray-950">3 Spots</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-gray-400">Bình Thạnh</span>
-              <span className="text-xs font-black text-gray-950">2 Spots</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-bold text-gray-400">Thảo Điền</span>
-              <span className="text-xs font-black text-gray-950">4 Spots</span>
+
+            <div className="grid grid-cols-3 gap-2">
+              {spotCategories.map((cat, idx) => {
+                const Icon = cat.icon;
+                return (
+                  <div
+                    key={idx}
+                    className={`p-2.5 rounded-2xl border flex flex-col items-center text-center justify-between ${cat.color}`}
+                  >
+                    <Icon className="w-4 h-4 mb-1" />
+                    <span className="text-xs font-black text-gray-950">{cat.count} Quán</span>
+                    <span className="text-[9px] font-bold text-gray-600 truncate w-full">{cat.name}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* Embedded Sub-Card: "CITY & WARDROBE STATS" */}
-          <div className="p-4 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-3">
+          {/* Embedded Sub-Card: "DISTRICT CONCENTRATION & BRANDS" */}
+          <div className="p-4 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-2.5">
             <div className="text-center">
               <span className="text-xs font-black uppercase tracking-widest text-gray-400">
-                {isEn ? 'CITY & WARDROBE STATS' : 'HỆ SINH THÁI ĐỊA ĐIỂM & ĐỒ HIỆU'}
+                {isEn ? 'DISTRICT RADAR & LOCAL BRANDS' : 'MẬT ĐỘ QUẬN & LOCAL BRAND'}
               </span>
             </div>
 
             <div className="grid grid-cols-4 gap-1 text-center py-1">
               <div>
-                <span className="text-[11px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'BRANDS' : 'LOCAL BRAND'}
+                <span className="text-[10px] font-bold text-gray-400 block uppercase">
+                  Quận 1
                 </span>
-                <span className="text-base lg:text-lg font-black text-gray-950">20 Items</span>
+                <span className="text-sm lg:text-base font-black text-gray-950">6 Quán</span>
               </div>
               <div className="border-l border-gray-200">
-                <span className="text-[11px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'CHECK-IN' : 'CHECK-IN'}
+                <span className="text-[10px] font-bold text-gray-400 block uppercase">
+                  Thảo Điền
                 </span>
-                <span className="text-base lg:text-lg font-black text-purple-600">15 Real</span>
+                <span className="text-sm lg:text-base font-black text-gray-950">4 Quán</span>
               </div>
               <div className="border-l border-gray-200">
-                <span className="text-[11px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'TEMP' : 'NHIỆT ĐỘ'}
+                <span className="text-[10px] font-bold text-gray-400 block uppercase">
+                  Quận 3
                 </span>
-                <span className="text-base lg:text-lg font-black text-emerald-600">29°C</span>
+                <span className="text-sm lg:text-base font-black text-gray-950">3 Quán</span>
               </div>
               <div className="border-l border-gray-200">
-                <span className="text-[11px] font-bold text-gray-400 block uppercase">
-                  {isEn ? 'STATUS' : 'TRẠNG THÁI'}
+                <span className="text-[10px] font-bold text-gray-400 block uppercase">
+                  Brands
                 </span>
-                <span className="text-base lg:text-lg font-black text-gray-950">Open</span>
-              </div>
-            </div>
-
-            {/* Live Verification Indicator */}
-            <div className="flex items-center justify-center pt-0.5">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[10px] font-black text-emerald-700">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>{isEn ? 'Verified Real-Time Places & Weather' : 'Xác thực thời gian thực & Giờ mở cửa'}</span>
+                <span className="text-sm lg:text-base font-black text-purple-600">20 Món</span>
               </div>
             </div>
           </div>
