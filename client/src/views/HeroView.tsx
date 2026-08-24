@@ -352,7 +352,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 2: AVERAGE AURA INDEX (Natural Sparkling Diamond Metallic Gradient Text) */}
+        {/* CARD 2: AVERAGE AURA INDEX (Consistent Platinum Silver Diamond Text Color) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
           {/* Central Sized Floating Medal */}
@@ -374,14 +374,14 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
               </h3>
               
-              {/* Natural Diamond / Sparkling Silver-Platinum Gradient (Đen - Xám Bạc - Trắng Ánh Kim) */}
+              {/* Consistent Brilliant Silver-Diamond Platinum Text */}
               <p className="text-sm lg:text-base font-bold text-gray-900">
                 {isEn ? 'You achieved ' : 'Bạn đạt '}
-                <span className="bg-gradient-to-r from-gray-950 via-slate-500 to-zinc-800 bg-clip-text text-transparent font-black">
+                <span className="text-slate-400 font-black">
                   Top 3%
                 </span>
                 {isEn ? ' & ' : ' & '}
-                <span className="bg-gradient-to-r from-zinc-900 via-slate-400 via-zinc-200 to-gray-950 bg-clip-text text-transparent font-black drop-shadow-xs">
+                <span className="text-slate-400 font-black">
                   {isEn ? 'Diamond Rank' : 'Hạng Kim Cương'}
                 </span>
               </p>
@@ -417,7 +417,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 3: CURATED VIBE SPOTS (Larger Donut & Substantial Legend Filling Bottom Section) */}
+        {/* CARD 3: CURATED VIBE SPOTS (Clean Interactive Donut & Pure Static Legend) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
           {/* Top Section: Larger SVG Donut Chart */}
@@ -436,7 +436,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
                   strokeWidth="22"
                 />
 
-                {/* 5 Distinct Gen-Z Slices */}
+                {/* 5 Distinct Gen-Z Slices with Interactive Hover Only on the Donut */}
                 {spotCategories.map((cat) => {
                   const isHovered = hoveredSpotIndex === cat.id;
                   return (
@@ -499,45 +499,32 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
           </div>
 
-          {/* Symmetrical & Substantial Legend Filling Bottom Baseline */}
-          <div className="space-y-3.5 py-3 border-t border-gray-100 flex-1 flex flex-col justify-between">
+          {/* Pure Static, Clean Legend (Color Dots + Name, No counts, No button effects) */}
+          <div className="space-y-3 py-3 border-t border-gray-100 flex-1 flex flex-col justify-around">
             <div className="flex items-center justify-between pb-0.5">
               <span className="text-xs font-black uppercase tracking-wider text-gray-400">
-                {isEn ? 'Categories Breakdown' : 'Danh Mục Địa Điểm'}
+                {isEn ? 'Categories Legend' : 'Danh Mục Địa Điểm'}
               </span>
             </div>
 
-            {/* Symmetrical Grid of Category Pills with Generous Height */}
+            {/* Static Clean Grid (No Numbers, Pure Color Dot + Label) */}
             <div className="grid grid-cols-2 gap-2.5">
-              {spotCategories.map((cat) => {
-                const isHovered = hoveredSpotIndex === cat.id;
-                return (
+              {spotCategories.map((cat) => (
+                <div
+                  key={cat.id}
+                  className={`py-2.5 px-3 rounded-xl bg-gray-50/80 border border-gray-100 flex items-center gap-2.5 select-none ${
+                    cat.id === 4 ? 'col-span-2' : ''
+                  }`}
+                >
                   <div
-                    key={cat.id}
-                    onMouseEnter={() => setHoveredSpotIndex(cat.id)}
-                    onMouseLeave={() => setHoveredSpotIndex(null)}
-                    className={`py-3 px-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
-                      isHovered
-                        ? 'bg-gray-950 text-white border-gray-950 shadow-md scale-102'
-                        : 'bg-gray-50/90 border-gray-100 hover:border-gray-200 text-gray-900'
-                    } ${cat.id === 4 ? 'col-span-2' : ''}`}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div
-                        className="w-3.5 h-3.5 rounded-full shrink-0 shadow-xs"
-                        style={{ backgroundColor: cat.colorHex }}
-                      />
-                      <span className="text-xs sm:text-sm font-black truncate">
-                        {cat.name}
-                      </span>
-                    </div>
-
-                    <span className={`text-xs font-black shrink-0 ${isHovered ? 'text-[#D4FF00]' : 'text-gray-500'}`}>
-                      {cat.count} quán
-                    </span>
-                  </div>
-                );
-              })}
+                    className="w-3 h-3 rounded-full shrink-0 shadow-xs"
+                    style={{ backgroundColor: cat.colorHex }}
+                  />
+                  <span className="text-xs font-bold text-gray-800 truncate">
+                    {cat.name}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
