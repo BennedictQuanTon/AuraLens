@@ -57,7 +57,6 @@ export function App() {
       if (fetchedFrames && fetchedFrames.length > 0) {
         setFrames(fetchedFrames);
       } else {
-        // Client Fallback frames if backend not yet hit
         setFrames([
           {
             id: 'frame-01',
@@ -168,7 +167,6 @@ export function App() {
 
     setWeather(newWeather);
 
-    // Refresh place recommendations with new weather
     const currentStyle: VibeStyle = dripResult?.breakdown.detectedStyle || 'Cyber-Pop';
     const placeRecs = await apiService.recommendPlaces(currentStyle, newWeather);
     setRecommendationData(placeRecs);
@@ -177,8 +175,8 @@ export function App() {
   const currentVibe: VibeStyle = dripResult?.breakdown.detectedStyle || 'Cyber-Pop';
 
   return (
-    <div className="min-h-screen pb-24 flex flex-col items-center justify-start bg-[#FAFAFC] text-gray-900">
-      {/* Sticky Header */}
+    <div className="min-h-screen pb-24 md:pb-12 flex flex-col items-center justify-start bg-[#F8F9FA] text-gray-900">
+      {/* Responsive Header */}
       <Header
         currentVibe={currentVibe}
         onOpenMerchant={() => setIsMerchantOpen(true)}
@@ -187,8 +185,8 @@ export function App() {
         onSelectView={setActiveView}
       />
 
-      {/* Main Container */}
-      <main className="w-full max-w-md px-4 pt-4 flex-1">
+      {/* Main Container: max-w-md on mobile, expands to max-w-6xl / 7xl on desktop */}
+      <main className="w-full max-w-md md:max-w-4xl lg:max-w-6xl xl:max-w-7xl px-4 lg:px-8 pt-4 lg:pt-8 flex-1">
         {/* VIEW 1: HERO & LUMI VIBE GATE */}
         {activeView === 1 && (
           <HeroView
@@ -242,7 +240,7 @@ export function App() {
         )}
       </main>
 
-      {/* Bottom Floating Navigation Bar */}
+      {/* Mobile Floating Navigation Bar (Hidden on Desktop md:) */}
       <NavigationBar
         activeView={activeView}
         onSelectView={setActiveView}

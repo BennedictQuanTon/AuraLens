@@ -21,8 +21,8 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
   ];
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-40 px-6 max-w-xs mx-auto pointer-events-none">
-      {/* Floating Dark Capsule Dock */}
+    <div className="md:hidden fixed bottom-4 left-0 right-0 z-40 px-6 max-w-xs mx-auto pointer-events-none">
+      {/* Floating Dark Capsule Dock (Mobile Only) */}
       <nav className="pointer-events-auto bg-[#0F172A] text-white rounded-full px-3 py-2 shadow-2xl flex items-center justify-around border border-gray-800/80">
         {navItems.map((item) => {
           const Icon = item.icon;
