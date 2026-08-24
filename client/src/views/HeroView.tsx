@@ -8,7 +8,6 @@ import {
   CheckSquare,
   Square,
   Check,
-  Sparkles,
   Coffee,
   Wine,
   Palette,
@@ -132,6 +131,54 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { name: isEn ? 'Cocktail & Bars' : 'Quán Bar & Pub', count: 4, icon: Wine, color: 'text-purple-500 bg-purple-50 border-purple-200' },
     { name: isEn ? 'Art & Concept' : 'Không gian Art', count: 3, icon: Palette, color: 'text-teal-500 bg-teal-50 border-teal-200' },
   ];
+
+  // 5-Tier Rank System Setup (Iron -> Silver -> Gold -> Platinum -> Diamond)
+  const currentScore = 92.4;
+  const getRankData = (score: number) => {
+    if (score >= 90) {
+      return {
+        tier: 'Diamond',
+        title: isEn ? 'Diamond Rank' : 'Hạng Kim Cương',
+        leaderboard: isEn ? 'Top 3% Saigon' : 'Top 3% Sài Gòn',
+        color: 'text-purple-700 bg-purple-50 border-purple-200',
+        medalUrl: '/medal_diamond.png',
+      };
+    } else if (score >= 80) {
+      return {
+        tier: 'Platinum',
+        title: isEn ? 'Platinum Rank' : 'Hạng Bạch Kim',
+        leaderboard: isEn ? 'Top 10% Saigon' : 'Top 10% Sài Gòn',
+        color: 'text-cyan-700 bg-cyan-50 border-cyan-200',
+        medalUrl: '/medal_diamond.png',
+      };
+    } else if (score >= 70) {
+      return {
+        tier: 'Gold',
+        title: isEn ? 'Gold Rank' : 'Hạng Vàng',
+        leaderboard: isEn ? 'Top 25% Saigon' : 'Top 25% Sài Gòn',
+        color: 'text-amber-700 bg-amber-50 border-amber-200',
+        medalUrl: '/medal_diamond.png',
+      };
+    } else if (score >= 60) {
+      return {
+        tier: 'Silver',
+        title: isEn ? 'Silver Rank' : 'Hạng Bạc',
+        leaderboard: isEn ? 'Top 50% Saigon' : 'Top 50% Sài Gòn',
+        color: 'text-gray-700 bg-gray-100 border-gray-300',
+        medalUrl: '/medal_diamond.png',
+      };
+    } else {
+      return {
+        tier: 'Iron',
+        title: isEn ? 'Iron Rank' : 'Hạng Đồng / Sắt',
+        leaderboard: isEn ? 'Top 80% Saigon' : 'Top 80% Sài Gòn',
+        color: 'text-orange-900 bg-orange-50 border-orange-200',
+        medalUrl: '/medal_diamond.png',
+      };
+    }
+  };
+
+  const rankData = getRankData(currentScore);
 
   const genderTitle = userProfile.genderTitle || 'King';
 
@@ -317,32 +364,53 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 2: AVERAGE AURA INDEX (Centered 92.4 & Sized Progress Chart with Global Tier) */}
+        {/* CARD 2: AVERAGE AURA INDEX (Score on Left + Laurel Medal & Leaderboard Rank on Right) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-6">
           
-          {/* Centered Big Number 92.4 & Title */}
-          <div className="flex flex-col items-center text-center space-y-1.5 pt-2">
-            <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
-              92.4
+          {/* Top Section: Score & Title on Left, 3D Laurel Medal on Right */}
+          <div className="flex items-center justify-between gap-4 pt-1">
+            
+            {/* Left: 92.4 lowered and aligned */}
+            <div className="space-y-1">
+              <div className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
+                {currentScore}
+              </div>
+              <h3 className="text-base sm:text-lg lg:text-xl font-black text-gray-950 tracking-tight">
+                {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
+              </h3>
             </div>
-            <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
-              {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
-            </h3>
+
+            {/* Right: Laurel Medal Emblem & Leaderboard Tier */}
+            <div className="flex flex-col items-center text-center">
+              <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+                <img
+                  src={rankData.medalUrl}
+                  alt={rankData.title}
+                  className="w-full h-full object-contain drop-shadow-md hover:scale-105 transition-transform"
+                />
+              </div>
+
+              <span className={`text-[10px] sm:text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border mt-1.5 ${rankData.color}`}>
+                {rankData.title}
+              </span>
+              <span className="text-[10px] sm:text-[11px] font-extrabold text-gray-600 mt-0.5">
+                {rankData.leaderboard}
+              </span>
+            </div>
+
           </div>
 
-          {/* 4 Fashion Pillars with Increased Font Sizes & Integrated Global Tier */}
+          {/* 4 Fashion Pillars with Increased Font Sizes & Clean Header */}
           <div className="space-y-4 py-2 border-t border-gray-100 flex-1 flex flex-col justify-center">
             
-            {/* Header: Contributing Pillars + Integrated Global Tier */}
-            <div className="flex items-center justify-between pb-1">
+            {/* Clean Header */}
+            <div className="flex items-center justify-between pb-0.5">
               <span className="text-xs font-black uppercase tracking-wider text-gray-400">
                 {isEn ? 'Contributing Fashion Pillars' : 'Trọng Số Cấu Thành Điểm'}
               </span>
-
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 border border-purple-200 text-xs font-black text-purple-700 rounded-full shadow-xs">
-                <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
-                <span>{isEn ? 'Global Tier: Elite Top 3%' : 'Hạng: Elite Top 3%'}</span>
-              </div>
+              <span className="text-xs font-black text-emerald-600">
+                +6.8% vs last week
+              </span>
             </div>
 
             {/* 4 Larger Progress Bars with Bold Labels */}
