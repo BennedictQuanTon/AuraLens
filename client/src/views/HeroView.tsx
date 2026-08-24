@@ -130,7 +130,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 5,
       percent: '33.3%',
       colorHex: '#FF6B00',
-      strokeDash: '150.8 452.4',
+      strokeDash: '167.6 502.7',
       strokeOffset: '0',
     },
     {
@@ -139,8 +139,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 3,
       percent: '20.0%',
       colorHex: '#4F46E5',
-      strokeDash: '90.5 452.4',
-      strokeOffset: '-150.8',
+      strokeDash: '100.5 502.7',
+      strokeOffset: '-167.6',
     },
     {
       id: 2,
@@ -148,8 +148,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 3,
       percent: '20.0%',
       colorHex: '#10B981',
-      strokeDash: '90.5 452.4',
-      strokeOffset: '-241.3',
+      strokeDash: '100.5 502.7',
+      strokeOffset: '-268.1',
     },
     {
       id: 3,
@@ -157,8 +157,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 2,
       percent: '13.3%',
       colorHex: '#D946EF',
-      strokeDash: '60.3 452.4',
-      strokeOffset: '-331.8',
+      strokeDash: '67.0 502.7',
+      strokeOffset: '-368.6',
     },
     {
       id: 4,
@@ -166,8 +166,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 2,
       percent: '13.3%',
       colorHex: '#84CC16',
-      strokeDash: '60.3 452.4',
-      strokeOffset: '-392.1',
+      strokeDash: '67.0 502.7',
+      strokeOffset: '-435.6',
     },
   ];
 
@@ -352,7 +352,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 2: AVERAGE AURA INDEX (Sized Medal Aligned with Card 1 & Clean Diamond Text) */}
+        {/* CARD 2: AVERAGE AURA INDEX (Authentic Brilliant Diamond Cyan/Blue/Platinum Text) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
           {/* Central Sized Floating Medal */}
@@ -374,13 +374,14 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
               </h3>
               
+              {/* Authentic Icy Diamond / Platinum Blue Colors */}
               <p className="text-sm lg:text-base font-bold text-gray-900">
                 {isEn ? 'You achieved ' : 'Bạn đạt '}
-                <span className="bg-gradient-to-r from-purple-600 via-indigo-500 to-cyan-500 bg-clip-text text-transparent font-black">
+                <span className="bg-gradient-to-r from-[#0284C7] via-[#0EA5E9] to-[#06B6D4] bg-clip-text text-transparent font-black">
                   Top 3%
                 </span>
                 {isEn ? ' & ' : ' & '}
-                <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-400 bg-clip-text text-transparent font-black">
+                <span className="bg-gradient-to-r from-[#0EA5E9] via-[#38BDF8] to-[#67E8F9] bg-clip-text text-transparent font-black drop-shadow-xs">
                   {isEn ? 'Diamond Rank' : 'Hạng Kim Cương'}
                 </span>
               </p>
@@ -416,23 +417,23 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 3: CURATED VIBE SPOTS (Large SVG Donut & Harmonious Balanced Legend) */}
+        {/* CARD 3: CURATED VIBE SPOTS (Larger Donut & Substantial Legend Filling Bottom Section) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Top Section: Expansive Donut Chart with Center Total 15 */}
+          {/* Top Section: Larger SVG Donut Chart */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
             {/* Enlarged SVG Donut Chart */}
-            <div className="relative w-52 h-52 sm:w-56 sm:h-56 flex items-center justify-center">
-              <svg className="w-full h-full -rotate-90 overflow-visible" viewBox="0 0 180 180">
+            <div className="relative w-56 h-56 sm:w-60 sm:h-60 flex items-center justify-center">
+              <svg className="w-full h-full -rotate-90 overflow-visible" viewBox="0 0 200 200">
                 {/* Background Ring */}
                 <circle
-                  cx="90"
-                  cy="90"
-                  r="72"
+                  cx="100"
+                  cy="100"
+                  r="80"
                   fill="transparent"
                   stroke="#F8FAFC"
-                  strokeWidth="20"
+                  strokeWidth="22"
                 />
 
                 {/* 5 Distinct Gen-Z Slices */}
@@ -441,12 +442,12 @@ export const HeroView: React.FC<HeroViewProps> = ({
                   return (
                     <circle
                       key={cat.id}
-                      cx="90"
-                      cy="90"
-                      r="72"
+                      cx="100"
+                      cy="100"
+                      r="80"
                       fill="transparent"
                       stroke={cat.colorHex}
-                      strokeWidth={isHovered ? 26 : 20}
+                      strokeWidth={isHovered ? 28 : 22}
                       strokeDasharray={cat.strokeDash}
                       strokeDashoffset={cat.strokeOffset}
                       strokeLinecap="round"
@@ -454,7 +455,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
                       onMouseLeave={() => setHoveredSpotIndex(null)}
                       className="cursor-pointer transition-all duration-300 hover:opacity-100 opacity-95"
                       style={{
-                        filter: isHovered ? `drop-shadow(0 0 10px ${cat.colorHex}99)` : 'none',
+                        filter: isHovered ? `drop-shadow(0 0 12px ${cat.colorHex}AA)` : 'none',
                       }}
                     />
                   );
@@ -466,24 +467,24 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 {hoveredSpotIndex !== null ? (
                   <div className="animate-fadeIn flex flex-col items-center">
                     <span
-                      className="text-4xl sm:text-5xl font-black tracking-tight leading-none"
+                      className="text-5xl sm:text-6xl font-black tracking-tight leading-none"
                       style={{ color: spotCategories[hoveredSpotIndex].colorHex }}
                     >
                       {spotCategories[hoveredSpotIndex].count}
                     </span>
-                    <span className="text-xs sm:text-sm font-black text-gray-950 mt-0.5">
+                    <span className="text-sm sm:text-base font-black text-gray-950 mt-0.5">
                       {spotCategories[hoveredSpotIndex].percent}
                     </span>
-                    <span className="text-[10px] font-extrabold text-gray-500 truncate max-w-[130px] text-center mt-0.5">
+                    <span className="text-[11px] font-extrabold text-gray-500 truncate max-w-[140px] text-center mt-0.5">
                       {spotCategories[hoveredSpotIndex].name}
                     </span>
                   </div>
                 ) : (
                   <div className="animate-fadeIn flex flex-col items-center">
-                    <span className="text-5xl sm:text-6xl font-black text-gray-950 tracking-tight leading-none">
+                    <span className="text-6xl sm:text-7xl font-black text-gray-950 tracking-tight leading-none">
                       15
                     </span>
-                    <span className="text-[11px] font-black uppercase tracking-wider text-gray-400 mt-1">
+                    <span className="text-xs font-black uppercase tracking-wider text-gray-400 mt-1">
                       {isEn ? 'Total Spots' : 'Tổng Điểm'}
                     </span>
                   </div>
@@ -492,22 +493,22 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
 
             {/* Title */}
-            <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
+            <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight pt-1">
               {isEn ? 'Curated Vibe Spots' : 'Tọa Độ Săn Vibe'}
             </h3>
 
           </div>
 
-          {/* Harmonious Balanced Legend (Color Dots + Category Names only, No Icons, Matched Height) */}
-          <div className="space-y-3 py-3 border-t border-gray-100 flex-1 flex flex-col justify-around">
+          {/* Symmetrical & Substantial Legend Filling Bottom Baseline */}
+          <div className="space-y-3.5 py-3 border-t border-gray-100 flex-1 flex flex-col justify-between">
             <div className="flex items-center justify-between pb-0.5">
               <span className="text-xs font-black uppercase tracking-wider text-gray-400">
-                {isEn ? 'Categories Legend' : 'Danh Mục Địa Điểm'}
+                {isEn ? 'Categories Breakdown' : 'Danh Mục Địa Điểm'}
               </span>
             </div>
 
-            {/* Symmetrical, Harmonious Wrap of Clean Category Pills without Icons */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
+            {/* Symmetrical Grid of Category Pills with Generous Height */}
+            <div className="grid grid-cols-2 gap-2.5">
               {spotCategories.map((cat) => {
                 const isHovered = hoveredSpotIndex === cat.id;
                 return (
@@ -515,18 +516,24 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     key={cat.id}
                     onMouseEnter={() => setHoveredSpotIndex(cat.id)}
                     onMouseLeave={() => setHoveredSpotIndex(null)}
-                    className={`py-2 px-3 rounded-xl border transition-all cursor-pointer flex items-center gap-2.5 ${
+                    className={`py-3 px-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                       isHovered
                         ? 'bg-gray-950 text-white border-gray-950 shadow-md scale-102'
-                        : 'bg-gray-50/80 border-gray-100 hover:border-gray-200 text-gray-900'
-                    } ${cat.id === 4 ? 'col-span-2 sm:col-span-1' : ''}`}
+                        : 'bg-gray-50/90 border-gray-100 hover:border-gray-200 text-gray-900'
+                    } ${cat.id === 4 ? 'col-span-2' : ''}`}
                   >
-                    <div
-                      className="w-3 h-3 rounded-full shrink-0 shadow-xs"
-                      style={{ backgroundColor: cat.colorHex }}
-                    />
-                    <span className="text-xs font-extrabold truncate">
-                      {cat.name}
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div
+                        className="w-3.5 h-3.5 rounded-full shrink-0 shadow-xs"
+                        style={{ backgroundColor: cat.colorHex }}
+                      />
+                      <span className="text-xs sm:text-sm font-black truncate">
+                        {cat.name}
+                      </span>
+                    </div>
+
+                    <span className={`text-xs font-black shrink-0 ${isHovered ? 'text-[#D4FF00]' : 'text-gray-500'}`}>
+                      {cat.count} quán
                     </span>
                   </div>
                 );
