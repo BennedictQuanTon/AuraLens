@@ -208,50 +208,27 @@ export const HeroView: React.FC<HeroViewProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. TOP KPI CARDS: ACCURATE DESIGN-INSPIRED STREAK & STYLE STATS CARD      */}
+      {/* 2. TOP KPI CARDS: 3D CLAY STREAK FLAME CARD MATCHING REFERENCE DESIGN     */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         
-        {/* CARD 1: STREAK & STYLE STATS (Matching Exact Reference Image Layout) */}
+        {/* CARD 1: STREAK & STYLE STATS (Exact 3D Clay Flame & Reference Layout) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5">
           
           {/* Central 3D Flame Emblem & Large Titles */}
-          <div className="flex flex-col items-center text-center space-y-2 pt-2">
+          <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
-            {/* Custom 3D Warm Glow Flame Emblem */}
-            <div className="relative w-24 h-24 rounded-full bg-gradient-to-b from-orange-50 to-amber-50/50 border border-orange-100 shadow-[0_10px_25px_rgba(249,115,22,0.12)] flex items-center justify-center">
-              <svg
-                width="54"
-                height="54"
-                viewBox="0 0 64 64"
-                fill="none"
-                className="drop-shadow-[0_6px_12px_rgba(249,115,22,0.35)]"
-              >
-                <defs>
-                  <linearGradient id="flameGrad" x1="32" y1="56" x2="32" y2="4" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#EA580C" />
-                    <stop offset="40%" stopColor="#F97316" />
-                    <stop offset="100%" stopColor="#FB923C" />
-                  </linearGradient>
-                  <linearGradient id="flameInner" x1="32" y1="49" x2="32" y2="28" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#FFFFFF" />
-                    <stop offset="100%" stopColor="#FFFBEB" />
-                  </linearGradient>
-                </defs>
-                {/* Outer Flame Silhouette */}
-                <path
-                  d="M32 4C32 4 48 20 48 38C48 48 40.8366 56 32 56C23.1634 56 16 48 16 38C16 26 26 14 32 4Z"
-                  fill="url(#flameGrad)"
-                />
-                {/* Inner White Tear-drop Core */}
-                <path
-                  d="M32 28C32 28 38 36 38 42C38 45.5 35.3137 48 32 48C28.6863 48 26 45.5 26 42C26 36 32 28 32 28Z"
-                  fill="url(#flameInner)"
-                />
-              </svg>
+            {/* 3D Glossy Clay Flame Icon with Subtle Circular Border & Ambient Glow */}
+            <div className="relative w-24 h-24 rounded-full bg-white border border-gray-100 shadow-[0_12px_32px_rgba(249,115,22,0.16)] flex items-center justify-center p-3">
+              <div className="absolute inset-0 bg-radial from-orange-400/15 via-amber-300/5 to-transparent rounded-full pointer-events-none" />
+              <img
+                src="/flame_3d.png"
+                alt="3D Streak Flame"
+                className="w-16 h-16 object-contain drop-shadow-md z-10 animate-pulse [animation-duration:3s]"
+              />
             </div>
 
-            {/* BIG BOLD NUMBERS & SIZED TITLES */}
+            {/* BIG BOLD NUMBER & SIZED TITLES */}
             <div className="space-y-1 pt-1">
               <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
                 7
