@@ -8,6 +8,7 @@ export interface UserProfileState {
   avatarUrl: string;
   bio: string;
   favoriteVibe: string;
+  genderTitle: 'Queen' | 'King' | 'Icon';
 }
 
 export interface ThemeOption {

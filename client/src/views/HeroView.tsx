@@ -3,26 +3,24 @@ import {
   Sparkles,
   TrendingUp,
   Flame,
-  CheckCircle2,
-  MapPin,
   Camera,
   ExternalLink,
   ChevronRight,
-  ShieldCheck,
-  ShoppingBag,
-  Award,
   CheckSquare,
   Square,
+  Award,
+  Crown,
 } from 'lucide-react';
 import type { AppLanguage, UserProfileState } from '../types/settings.js';
+import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
 
 interface HeroViewProps {
   userProfile: UserProfileState;
   language: AppLanguage;
-  selectedContext: string;
-  onSelectContext: (ctx: any) => void;
-  mockScenario: 'low_score' | 'high_score' | 'cyberpunk';
-  onSelectMockScenario: (scenario: 'low_score' | 'high_score' | 'cyberpunk') => void;
+  selectedContext?: string;
+  onSelectContext?: (ctx: any) => void;
+  mockScenario?: 'low_score' | 'high_score' | 'cyberpunk';
+  onSelectMockScenario?: (scenario: 'low_score' | 'high_score' | 'cyberpunk') => void;
   onStartScanner: () => void;
 }
 
@@ -43,7 +41,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
     setCheckedItems((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Recommended Local Brand Items with Prices and Status
   const recommendedBrandItems = [
     {
       id: 'item-1',
@@ -87,47 +84,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
     },
   ];
 
-  // Confirmed Visited vs Recommended Spots by District
-  const districtVenues = [
-    {
-      id: 'v-1',
-      name: 'Danshari Coffee',
-      district: 'Quận 1',
-      type: 'Minimalist Wabi-Sabi Cafe',
-      status: 'visited',
-      vibe: 'Clean-Fit',
-      date: 'Yesterday, 15:30',
-    },
-    {
-      id: 'v-2',
-      name: 'Blank Lounge Landmark 81',
-      district: 'Bình Thạnh',
-      type: 'Sky Lounge (350m View)',
-      status: 'visited',
-      vibe: 'Old Money',
-      date: 'Aug 21, 20:00',
-    },
-    {
-      id: 'v-3',
-      name: 'Neo Saigon Cyber Bar',
-      district: 'Quận 1 (Pasteur)',
-      type: 'Neon Speakeasy Bar',
-      status: 'recommended',
-      vibe: 'Cyber-Pop',
-      match: '98% Match',
-    },
-    {
-      id: 'v-4',
-      name: 'Rang Rang Coffee',
-      district: 'Thủ Đức (Thảo Điền)',
-      type: 'Futuristic Inox Cafe',
-      status: 'recommended',
-      vibe: 'Minimalist',
-      match: '94% Match',
-    },
-  ];
-
-  // Streak Days Data
   const streakDays = [
     { day: 'Mon', active: true, label: 'T2' },
     { day: 'Tue', active: true, label: 'T3' },
@@ -138,75 +94,79 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { day: 'Sun', active: true, today: true, label: 'CN' },
   ];
 
+  const genderTitle = userProfile.genderTitle || 'Queen';
+
   return (
     <div className="space-y-8 animate-fadeIn pb-16">
       
       {/* ========================================================================= */}
-      {/* 1. TOP HERO BANNER: USER GREETING, 3D LUMI MASCOT & BIG ACTION CTA        */}
+      {/* 1. TOP HERO SECTION: SIZED GREETING & FREELY SWAYING LUMI WITH CHAT BUBBLES */}
       {/* ========================================================================= */}
-      <div className="calm-card-elevated p-6 lg:p-8 rounded-3xl relative overflow-hidden">
-        {/* Radiant Ambient Gradient Backdrops */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4FF00]/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-[#FF2E93]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="calm-card-elevated p-6 lg:p-10 rounded-3xl relative overflow-hidden">
+        {/* Soft Background Blurs */}
+        <div className="absolute top-0 right-10 w-96 h-96 bg-[#D4FF00]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-10 w-96 h-96 bg-[#FF2E93]/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           
-          {/* Left: Greeting & Mission */}
-          <div className="lg:col-span-8 space-y-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gray-950 text-white text-xs font-extrabold shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-[#D4FF00]" />
-              <span>{isEn ? `Hi, ${userProfile.name} 👋` : `Chào, ${userProfile.name} 👋`}</span>
-              <span className="text-[10px] text-gray-400">· @{userProfile.handle}</span>
+          {/* Left: Prominent Greeting & Big CTA */}
+          <div className="lg:col-span-7 space-y-4">
+            {/* Welcome Back Queen/King Line */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gray-950 text-white text-xs sm:text-sm font-extrabold shadow-sm">
+              <Crown className="w-4 h-4 text-[#D4FF00]" />
+              <span>
+                {isEn ? `Welcome Back, my ${genderTitle} ` : `Chào mừng trở lại, ${genderTitle} `}
+              </span>
+              <span className="bg-gradient-to-r from-[#D4FF00] via-[#00F5FF] to-[#FF2E93] bg-clip-text text-transparent font-black">
+                {userProfile.name}
+              </span>
+              <span>✨</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-950 tracking-tight leading-[1.15]">
-              {isEn ? 'Ready to slay your ' : 'Sẵn sàng bắt trọn '}
-              <span className="highlight-circle font-black text-black">
-                {isEn ? 'vibe' : 'khí chất'}
-              </span>{' '}
-              {isEn ? 'today?' : 'hôm nay?'}
+            {/* Big Editorial Title */}
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-[1.1]">
+              Ready to slay your{' '}
+              <span className="highlight-circle font-black text-black">vibe</span>{' '}
+              today?
             </h1>
 
-            <p className="text-sm lg:text-base text-gray-600 font-medium leading-relaxed max-w-xl">
-              {isEn
-                ? 'Your personal AI Stylist & verified HCMC Experience Graph. Instant outfit evaluation, curated local brand upgrades, and rain-proof cafe itineraries.'
-                : 'Trợ lý Stylist Đa phương thức & Bản đồ trải nghiệm thực tế. Chấm điểm outfit tức thì, gợi ý Local Brand và lịch trình ăn chơi chống AI Slop 100%.'}
-            </p>
-
             {/* Big Action CTA Button */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="pt-3">
               <button
                 onClick={onStartScanner}
-                className="py-4 px-8 rounded-full bg-[#0F172A] hover:bg-black text-white font-extrabold text-base shadow-xl active:scale-98 transition-all flex items-center justify-between sm:justify-center gap-3 cursor-pointer group"
+                className="py-4.5 px-8 rounded-full bg-[#0F172A] hover:bg-black text-white font-extrabold text-base lg:text-lg shadow-2xl active:scale-98 transition-all flex items-center justify-between sm:justify-center gap-4 cursor-pointer group w-full sm:w-auto"
               >
                 <Camera className="w-5 h-5 text-[#D4FF00]" />
                 <span>{isEn ? 'Launch Camera Scanner (Drip Check)' : 'Bật Thấu Kính (Drip Check ⚡)'}</span>
-                <ChevronRight className="w-5 h-5 text-[#D4FF00] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5 h-5 text-[#D4FF00] group-hover:translate-x-1.5 transition-transform" />
               </button>
-
-              <div className="flex items-center gap-2 px-4 py-3 rounded-full bg-white/80 border border-gray-200 text-xs font-bold text-gray-700">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>{isEn ? '100% Zero AI Slop' : 'Đồ Thị Thực Tế 100%'}</span>
-              </div>
             </div>
           </div>
 
-          {/* Right: Floating 3D Lumi Mascot Showcase */}
-          <div className="lg:col-span-4 flex flex-col items-center justify-center">
-            <div className="relative w-40 h-40 lg:w-48 lg:h-48 animate-lumi-float">
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/50 to-[#FF2E93]/50 rounded-full blur-2xl pointer-events-none" />
-              <div className="relative w-full h-full rounded-full p-2 bg-gradient-to-tr from-[#D4FF00] via-[#FF2E93] to-[#7C3AED] shadow-2xl overflow-hidden">
-                <img
-                  src="/lumi.jpg"
-                  alt="Lumi 3D Mascot"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-            </div>
-            <span className="mt-2 text-xs font-black text-gray-900 flex items-center gap-1.5">
+          {/* Right: Full Mascot Free-Floating & Swaying + 2 Pop-in Chat Bubbles */}
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center relative min-h-[220px]">
+            
+            {/* Pop-in Chat Bubble 1 */}
+            <div className="animate-bubble-1 mb-2 px-4 py-2 rounded-2xl rounded-br-xs bg-white text-gray-950 text-xs font-black shadow-lg border border-gray-100 flex items-center gap-1.5 z-20">
               <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
-              Lumi AI Companion
-            </span>
+              <span>{isEn ? "Hello! I'm Lumi, your AI stylist ✨" : "Hế nhô! Lumi đây nè~ ✨"}</span>
+            </div>
+
+            {/* Pop-in Chat Bubble 2 */}
+            <div className="animate-bubble-2 mb-2 px-4 py-2 rounded-2xl rounded-tr-xs bg-gray-950 text-white text-xs font-extrabold shadow-xl border border-gray-800 flex items-center gap-1.5 z-20 max-w-xs text-center">
+              <span>{isEn ? "Welcome to AuraLens! Ready to slay today? 💅" : "Chào mừng đến với AuraLens! Sẵn sàng lên đồ cháy phố chưa? 💅"}</span>
+            </div>
+
+            {/* Free-Floating & Swaying 3D Lumi Mascot (NO circle box) */}
+            <div className="relative w-44 h-44 sm:w-52 sm:h-52 animate-lumi-sway flex items-center justify-center">
+              {/* Soft Ambient Glow */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/40 to-[#FF2E93]/40 rounded-full blur-2xl pointer-events-none" />
+              <img
+                src="/lumi.jpg"
+                alt="Lumi 3D Mascot"
+                className="w-full h-full object-contain drop-shadow-2xl"
+              />
+            </div>
           </div>
 
         </div>
@@ -217,7 +177,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         
-        {/* CARD 1: DAILY FIT STREAK (Locket / TikTok style) */}
+        {/* CARD 1: DAILY FIT STREAK */}
         <div className="calm-card-elevated p-6 rounded-3xl flex flex-col justify-between space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-black uppercase tracking-wider text-gray-400">
@@ -238,7 +198,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </p>
           </div>
 
-          {/* 7 Days Visual Circles */}
           <div className="flex items-center justify-between pt-2 border-t border-gray-100">
             {streakDays.map((d, i) => (
               <div key={i} className="flex flex-col items-center gap-1">
@@ -259,7 +218,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
           </div>
         </div>
 
-        {/* CARD 2: AVERAGE FIT SCORE & COLOR INSIGHT */}
+        {/* CARD 2: AVERAGE FIT SCORE */}
         <div className="calm-card-elevated p-6 rounded-3xl flex flex-col justify-between space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-black uppercase tracking-wider text-gray-400">
@@ -278,7 +237,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </span>
             </div>
 
-            {/* Score Tier Badge */}
             <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 bg-gray-950 text-[#D4FF00] text-xs font-black rounded-full">
               <Sparkles className="w-3.5 h-3.5 text-[#D4FF00]" />
               <span>{isEn ? 'Elite Drip Tier (90-100)' : 'Hạng Khí Chất Xuất Sắc'}</span>
@@ -297,7 +255,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
               {isEn ? 'Experience & Wardrobe' : 'Trải Nghiệm & Tủ Đồ'}
             </span>
             <div className="p-2 rounded-2xl bg-blue-50 text-blue-600">
-              <MapPin className="w-5 h-5 text-blue-600" />
+              <Sparkles className="w-5 h-5 text-blue-600" />
             </div>
           </div>
 
@@ -324,19 +282,19 @@ export const HeroView: React.FC<HeroViewProps> = ({
           </div>
 
           <div className="p-2.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>{isEn ? 'Deterministic Graph Grounded' : 'Khớp 100% thời tiết & giờ mở cửa'}</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{isEn ? 'Weather & Opening Hours Grounded' : 'Khớp 100% thời tiết & giờ mở cửa'}</span>
           </div>
         </div>
 
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. MIDDLE SECTION: MULTI-LINE OOTD CHART & DISTRICT SPOTS RADAR           */}
+      {/* 3. MIDDLE SECTION: MULTI-LINE CHART (WITH Y-AXIS) & HCMC VISUAL MAP       */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         
-        {/* LEFT: OOTD FIT CHECK HISTORY MULTI-LINE CHART (cols 1-7 on lg) */}
+        {/* LEFT: OOTD ACTIVITY CHART WITH ACCURATE Y-AXIS (cols 1-7 on lg) */}
         <div className="lg:col-span-7 calm-card-elevated p-6 lg:p-7 rounded-3xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
@@ -354,59 +312,78 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
           </div>
 
-          {/* SVG Multi-Line Chart */}
-          <div className="relative w-full h-56 bg-gray-50/70 rounded-2xl p-4 border border-gray-100 overflow-hidden flex flex-col justify-between">
-            {/* Grid Background Lines */}
-            <div className="absolute inset-x-4 top-10 border-b border-dashed border-gray-200" />
-            <div className="absolute inset-x-4 top-24 border-b border-dashed border-gray-200" />
-            <div className="absolute inset-x-4 top-38 border-b border-dashed border-gray-200" />
+          {/* SVG Multi-Line Chart with Clear Y-Axis Values */}
+          <div className="relative w-full h-64 bg-gray-50/80 rounded-2xl p-4 border border-gray-100 flex flex-col justify-between">
+            
+            {/* Chart Area with Left Y-Axis */}
+            <div className="relative flex-1 flex">
+              {/* Y-Axis Numerical Scale Labels */}
+              <div className="flex flex-col justify-between text-[10px] font-extrabold text-gray-400 pr-2 select-none">
+                <span>10</span>
+                <span>8</span>
+                <span>6</span>
+                <span>4</span>
+                <span>2</span>
+                <span>0</span>
+              </div>
 
-            <svg className="w-full h-40 overflow-visible" viewBox="0 0 500 150">
-              {/* Line 1: Cyber-Pop (#D4FF00 / Green-Lime) */}
-              <polyline
-                fill="none"
-                stroke="#10B981"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                points="20,110 90,80 160,30 230,60 300,20 370,50 450,15"
-              />
-              {/* Points for Line 1 */}
-              <circle cx="20" cy="110" r="4" fill="#10B981" />
-              <circle cx="90" cy="80" r="4" fill="#10B981" />
-              <circle cx="160" cy="30" r="5" fill="#047857" stroke="#fff" strokeWidth="2" />
-              <circle cx="230" cy="60" r="4" fill="#10B981" />
-              <circle cx="300" cy="20" r="4" fill="#10B981" />
-              <circle cx="370" cy="50" r="4" fill="#10B981" />
-              <circle cx="450" cy="15" r="6" fill="#10B981" stroke="#fff" strokeWidth="2" />
+              {/* Chart SVG Graphic */}
+              <div className="relative flex-1 h-full">
+                {/* Horizontal Grid Lines */}
+                <div className="absolute inset-x-0 top-[0%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 top-[20%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 top-[40%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 top-[60%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 top-[80%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 bottom-0 border-b border-gray-300" />
 
-              {/* Line 2: Y2K / Streetwear (#FF2E93 / Pink) */}
-              <polyline
-                fill="none"
-                stroke="#FF2E93"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                points="20,130 90,110 160,70 230,90 300,50 370,40 450,60"
-              />
-              <circle cx="160" cy="70" r="4" fill="#FF2E93" />
-              <circle cx="370" cy="40" r="4" fill="#FF2E93" />
-              <circle cx="450" cy="60" r="5" fill="#FF2E93" stroke="#fff" strokeWidth="2" />
+                <svg className="w-full h-full overflow-visible" viewBox="0 0 450 140" preserveAspectRatio="none">
+                  {/* Line 1: Cyber-Pop (Green-Lime) */}
+                  <polyline
+                    fill="none"
+                    stroke="#10B981"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    points="20,110 85,85 150,30 220,60 290,20 360,50 430,15"
+                  />
+                  <circle cx="20" cy="110" r="4" fill="#10B981" />
+                  <circle cx="85" cy="85" r="4" fill="#10B981" />
+                  <circle cx="150" cy="30" r="5" fill="#047857" stroke="#fff" strokeWidth="2" />
+                  <circle cx="220" cy="60" r="4" fill="#10B981" />
+                  <circle cx="290" cy="20" r="4" fill="#10B981" />
+                  <circle cx="360" cy="50" r="4" fill="#10B981" />
+                  <circle cx="430" cy="15" r="6" fill="#10B981" stroke="#fff" strokeWidth="2" />
 
-              {/* Line 3: Minimalist / Clean-Fit (#7C3AED / Purple) */}
-              <polyline
-                fill="none"
-                stroke="#7C3AED"
-                strokeWidth="2.5"
-                strokeDasharray="5,5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                points="20,140 90,130 160,110 230,100 300,90 370,80 450,75"
-              />
-            </svg>
+                  {/* Line 2: Y2K / Streetwear (Pink) */}
+                  <polyline
+                    fill="none"
+                    stroke="#FF2E93"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    points="20,125 85,105 150,65 220,90 290,50 360,40 430,60"
+                  />
+                  <circle cx="150" cy="65" r="4" fill="#FF2E93" />
+                  <circle cx="360" cy="40" r="4" fill="#FF2E93" />
+                  <circle cx="430" cy="60" r="5" fill="#FF2E93" stroke="#fff" strokeWidth="2" />
 
-            {/* Days Label Axis */}
-            <div className="flex justify-between text-[11px] font-bold text-gray-400 px-2 pt-2 border-t border-gray-200">
+                  {/* Line 3: Minimalist (Purple) */}
+                  <polyline
+                    fill="none"
+                    stroke="#7C3AED"
+                    strokeWidth="2.5"
+                    strokeDasharray="5,5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    points="20,135 85,120 150,110 220,95 290,85 360,75 430,70"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* X-Axis Days Label */}
+            <div className="flex justify-between text-[11px] font-bold text-gray-500 pl-6 pt-2">
               <span>Mon (T2)</span>
               <span>Tue (T3)</span>
               <span>Wed (T4)</span>
@@ -418,7 +395,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
           </div>
 
           {/* Chart Legend */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs font-extrabold text-gray-700">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs font-extrabold text-gray-700">
             <div className="flex items-center gap-2">
               <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-xs" />
               <span>Cyber-Pop (8 Outfits)</span>
@@ -434,63 +411,9 @@ export const HeroView: React.FC<HeroViewProps> = ({
           </div>
         </div>
 
-        {/* RIGHT: DISTRICT RADAR & VISITED VENUES LIST (cols 8-12 on lg) */}
-        <div className="lg:col-span-5 calm-card-elevated p-6 lg:p-7 rounded-3xl space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-gray-400">
-                {isEn ? 'HCMC District Radar' : 'Bản Đồ Điểm Đến Đã Khớp'}
-              </span>
-              <h3 className="text-lg lg:text-xl font-black text-gray-950">
-                {isEn ? 'Confirmed & Recommended' : 'Địa Điểm Đã Ghé & Đề Xuất'}
-              </h3>
-            </div>
-            <MapPin className="w-5 h-5 text-blue-600" />
-          </div>
-
-          {/* Venue List */}
-          <div className="space-y-3">
-            {districtVenues.map((v) => (
-              <div
-                key={v.id}
-                className="p-3.5 rounded-2xl bg-white border border-gray-100 shadow-xs flex items-center justify-between gap-3 hover:border-gray-300 transition-all"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-extrabold text-xs text-gray-950 truncate">
-                      {v.name}
-                    </h4>
-                    <span className="text-[9px] font-black px-2 py-0.2 bg-gray-100 text-gray-700 rounded-full">
-                      {v.district}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 font-medium truncate mt-0.5">
-                    {v.type}
-                  </p>
-                </div>
-
-                <div className="text-right shrink-0">
-                  {v.status === 'visited' ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                      {isEn ? 'Visited' : 'Đã Đến'}
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-black text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
-                      <Sparkles className="w-3 h-3 text-purple-600" />
-                      {v.match}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-[11px] text-gray-400 text-center pt-1">
-            {isEn
-              ? 'Locations are verified with live Google Maps & operating hours.'
-              : 'Địa điểm được xác thực trực tiếp qua Google Maps & giờ mở cửa thực tế.'}
-          </p>
+        {/* RIGHT: HCMC INTERACTIVE VISUAL MAP RADAR (cols 8-12 on lg) */}
+        <div className="lg:col-span-5 calm-card-elevated p-6 lg:p-7 rounded-3xl">
+          <HCMCVisualMap />
         </div>
 
       </div>
@@ -529,7 +452,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 }`}
               >
                 <div>
-                  {/* Thumbnail Image */}
                   <div className="relative w-full h-40 rounded-2xl overflow-hidden bg-gray-100 mb-3">
                     <img
                       src={item.image}
@@ -540,7 +462,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
                       {item.tag}
                     </span>
 
-                    {/* Interactive Checkbox Button */}
                     <button
                       onClick={() => toggleCheck(item.id)}
                       className={`absolute top-2 right-2 p-1.5 rounded-full shadow-md transition-transform active:scale-90 cursor-pointer ${
@@ -558,7 +479,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     </button>
                   </div>
 
-                  {/* Brand & Item Info */}
                   <span className="text-[10px] font-extrabold text-purple-600 uppercase block truncate">
                     {item.brand}
                   </span>
