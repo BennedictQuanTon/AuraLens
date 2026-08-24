@@ -3,6 +3,7 @@ import {
   TrendingUp,
   Flame,
   Camera,
+  MapPin,
   ExternalLink,
   ChevronRight,
   CheckSquare,
@@ -15,31 +16,29 @@ import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
 interface HeroViewProps {
   userProfile: UserProfileState;
   language: AppLanguage;
-  selectedContext?: string;
-  onSelectContext?: (ctx: any) => void;
-  mockScenario?: 'low_score' | 'high_score' | 'cyberpunk';
-  onSelectMockScenario?: (scenario: 'low_score' | 'high_score' | 'cyberpunk') => void;
   onStartScanner: () => void;
+  onExplorePlaces: () => void;
 }
 
 export const HeroView: React.FC<HeroViewProps> = ({
   userProfile,
   language,
   onStartScanner,
+  onExplorePlaces,
 }) => {
   const isEn = language === 'en';
 
-  // Dynamic Comic Speech Bubble rotation every 4 seconds
+  // Dynamic Comic Speech Bubble rotation every 4 seconds (NO emojis/icons)
   const speechLines = isEn
     ? [
-        "Hello! I'm Lumi, your personal AI stylist ✨",
-        "Ready to slay the town today? Let's check your drip! 💅",
-        "Spotted 15 aesthetic spots in Saigon open right now! ☕",
+        "Hello! I'm Lumi, your personal AI stylist",
+        "Ready to slay the town today? Let's check your drip",
+        "Spotted 15 aesthetic spots in Saigon open right now",
       ]
     : [
-        "Hế nhô! Lumi đây nè, stylist AI của bạn ✨",
-        "Sẵn sàng lên đồ cháy phố chưa? Bật máy quét thôi! 💅",
-        "Vừa cập nhật 15 quán cafe siêu xinh mở cửa tại Sài Gòn! ☕",
+        "Hế nhô! Lumi đây nè, stylist AI của bạn",
+        "Sẵn sàng lên đồ cháy phố chưa? Bật máy quét thôi",
+        "Vừa cập nhật 15 quán cafe siêu xinh mở cửa tại Sài Gòn",
       ];
 
   const [currentSpeechIndex, setCurrentSpeechIndex] = useState(0);
@@ -121,31 +120,32 @@ export const HeroView: React.FC<HeroViewProps> = ({
     <div className="space-y-8 animate-fadeIn pb-16">
       
       {/* ========================================================================= */}
-      {/* 1. TOP HERO SECTION: "My King", GEN-Z SUBTITLE & TRANSPARENT LUMI MASCOT  */}
+      {/* 1. TOP HERO SECTION: BALANCED FONT SIZES, LARGER SHIFTED LUMI & 2 BUTTONS */}
       {/* ========================================================================= */}
       <div className="relative pt-2 pb-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           
-          {/* Left: Big Primary Heading & Action CTA */}
-          <div className="lg:col-span-7 space-y-3">
-            {/* PRIMARY HEADING: "Welcome Back," + "My King Alex ✨" */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-[1.1]">
-              <div className="text-gray-950">
+          {/* Left: Uniform Sized Primary Heading & 2 Short Action Buttons */}
+          <div className="lg:col-span-7 space-y-4">
+            
+            {/* PRIMARY HEADING: All words at equal bold font size */}
+            <div className="space-y-1.5">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-tight">
                 {isEn ? 'Welcome Back,' : 'Chào mừng trở lại,'}
-              </div>
-              <div className="flex flex-wrap items-baseline gap-2 mt-1">
-                <span className="text-gray-900 font-extrabold text-3xl sm:text-4xl lg:text-5xl">
+              </h1>
+              
+              <div className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight flex flex-wrap items-baseline gap-2.5">
+                <span className="text-gray-950">
                   {isEn ? `My ${genderTitle}` : `My ${genderTitle}`}
                 </span>
-                <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent font-black">
+                <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent">
                   {userProfile.name}
                 </span>
-                <span>✨</span>
               </div>
-            </h1>
+            </div>
 
-            {/* GEN-Z HIGHLIGHTED SUBTITLE (NO BLACK CIRCLE) */}
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-800 tracking-tight pt-1">
+            {/* GEN-Z SUBTITLE WITH GENEROUS SPACING */}
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-800 tracking-tight pt-2">
               Ready to{' '}
               <span className="text-[#FF2E93] font-black">slay</span>{' '}
               your{' '}
@@ -155,36 +155,47 @@ export const HeroView: React.FC<HeroViewProps> = ({
               today?
             </h2>
 
-            {/* Big Action CTA Button */}
-            <div className="pt-4">
+            {/* TWO SHORT CLEAN ACTION BUTTONS (Drip Check ⚡ & Vibe Map 📍) */}
+            <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+              {/* Button 1: Drip Check */}
               <button
                 onClick={onStartScanner}
-                className="py-4.5 px-8 rounded-full bg-[#0F172A] hover:bg-black text-white font-extrabold text-base lg:text-lg shadow-2xl active:scale-98 transition-all flex items-center justify-between sm:justify-center gap-4 cursor-pointer group w-full sm:w-auto"
+                className="py-4 px-7 rounded-full bg-[#0F172A] hover:bg-black text-white font-extrabold text-base shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2.5 cursor-pointer group"
               >
                 <Camera className="w-5 h-5 text-[#D4FF00]" />
-                <span>{isEn ? 'Launch Camera Scanner (Drip Check)' : 'Bật Thấu Kính (Drip Check ⚡)'}</span>
-                <ChevronRight className="w-5 h-5 text-[#D4FF00] group-hover:translate-x-1.5 transition-transform" />
+                <span>Drip Check</span>
+                <ChevronRight className="w-4 h-4 text-[#D4FF00] group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Button 2: Vibe Map */}
+              <button
+                onClick={onExplorePlaces}
+                className="py-4 px-7 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 hover:opacity-95 text-white font-extrabold text-base shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2.5 cursor-pointer group"
+              >
+                <MapPin className="w-5 h-5 text-[#D4FF00]" />
+                <span>Vibe Map</span>
+                <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
 
-          {/* Right: 100% Transparent Cutout Lumi Mascot (Shifted Left & Zero Shift Bubble) */}
-          <div className="lg:col-span-5 flex flex-col items-center lg:items-center justify-center relative min-h-[250px]">
+          {/* Right: Larger Lumi Mascot Shifted Left + Clean Text Comic Bubble */}
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-center justify-center relative min-h-[280px]">
             
             {/* FIXED HEIGHT CONTAINER (Zero layout shift on text change) */}
             <div className="h-16 flex items-center justify-center relative w-full mb-1">
               <div
                 key={currentSpeechIndex}
-                className="comic-bubble px-4 py-2 max-w-xs text-xs font-black text-gray-950 text-center leading-snug z-20"
+                className="comic-bubble px-4 py-2.5 max-w-xs text-xs font-black text-gray-950 text-center leading-snug z-20"
               >
                 {speechLines[currentSpeechIndex]}
               </div>
             </div>
 
-            {/* 100% Transparent Cutout Lumi Mascot (NO square borders, NO off-white background) */}
-            <div className="relative w-48 h-48 sm:w-56 sm:h-56 animate-lumi-sway flex items-center justify-center">
-              {/* Soft Radiant Glow */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/30 via-[#FF2E93]/25 to-[#00F5FF]/20 rounded-full blur-2xl pointer-events-none" />
+            {/* Enlarger Transparent Cutout Lumi Mascot */}
+            <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 animate-lumi-sway flex items-center justify-center -translate-x-3">
+              {/* Soft Ambient Radial Aura */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/30 via-[#FF2E93]/25 to-[#00F5FF]/20 rounded-full blur-3xl pointer-events-none" />
               <img
                 src="/lumi.png"
                 alt="Lumi AI Stylist"

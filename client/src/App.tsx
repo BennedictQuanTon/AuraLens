@@ -119,7 +119,7 @@ export function App() {
   const [userProfile, setUserProfile] = useState<UserProfileState>({
     name: 'Alex',
     handle: 'alex_slays_ootd',
-    avatarUrl: '/lumi.jpg',
+    avatarUrl: '/lumi.png',
     bio: 'Cyber-Pop & Y2K Fashion Explorer in Saigon.',
     favoriteVibe: 'Cyber-Pop',
     genderTitle: 'King',
@@ -306,11 +306,8 @@ export function App() {
           <HeroView
             userProfile={userProfile}
             language={language}
-            selectedContext={selectedContext}
-            onSelectContext={setSelectedContext}
-            mockScenario={mockScenario}
-            onSelectMockScenario={setMockScenario}
             onStartScanner={() => setActiveView(2)}
+            onExplorePlaces={() => setActiveView(4)}
           />
         )}
 
