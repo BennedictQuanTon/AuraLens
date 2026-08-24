@@ -132,54 +132,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { name: isEn ? 'Art & Concept' : 'Không gian Art', count: 3, icon: Palette, color: 'text-teal-500 bg-teal-50 border-teal-200' },
   ];
 
-  // 5-Tier Rank System Setup (Iron -> Silver -> Gold -> Platinum -> Diamond)
   const currentScore = 92.4;
-  const getRankData = (score: number) => {
-    if (score >= 90) {
-      return {
-        tier: 'Diamond',
-        title: isEn ? 'Diamond Rank' : 'Hạng Kim Cương',
-        leaderboard: isEn ? 'Top 3% Saigon' : 'Top 3% Sài Gòn',
-        color: 'text-purple-700 bg-purple-50 border-purple-200',
-        medalUrl: '/medal_diamond.png',
-      };
-    } else if (score >= 80) {
-      return {
-        tier: 'Platinum',
-        title: isEn ? 'Platinum Rank' : 'Hạng Bạch Kim',
-        leaderboard: isEn ? 'Top 10% Saigon' : 'Top 10% Sài Gòn',
-        color: 'text-cyan-700 bg-cyan-50 border-cyan-200',
-        medalUrl: '/medal_diamond.png',
-      };
-    } else if (score >= 70) {
-      return {
-        tier: 'Gold',
-        title: isEn ? 'Gold Rank' : 'Hạng Vàng',
-        leaderboard: isEn ? 'Top 25% Saigon' : 'Top 25% Sài Gòn',
-        color: 'text-amber-700 bg-amber-50 border-amber-200',
-        medalUrl: '/medal_diamond.png',
-      };
-    } else if (score >= 60) {
-      return {
-        tier: 'Silver',
-        title: isEn ? 'Silver Rank' : 'Hạng Bạc',
-        leaderboard: isEn ? 'Top 50% Saigon' : 'Top 50% Sài Gòn',
-        color: 'text-gray-700 bg-gray-100 border-gray-300',
-        medalUrl: '/medal_diamond.png',
-      };
-    } else {
-      return {
-        tier: 'Iron',
-        title: isEn ? 'Iron Rank' : 'Hạng Đồng / Sắt',
-        leaderboard: isEn ? 'Top 80% Saigon' : 'Top 80% Sài Gòn',
-        color: 'text-orange-900 bg-orange-50 border-orange-200',
-        medalUrl: '/medal_diamond.png',
-      };
-    }
-  };
-
-  const rankData = getRankData(currentScore);
-
   const genderTitle = userProfile.genderTitle || 'King';
 
   return (
@@ -273,12 +226,12 @@ export const HeroView: React.FC<HeroViewProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. TOP KPI CARDS: 3 DISTINCT, MEANINGFUL, DATA-DRIVEN INSIGHT WIDGETS     */}
+      {/* 2. TOP KPI CARDS: 3 PERFECTLY BALANCED, UNIFIED HEIGHT DASHBOARD WIDGETS */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
         
-        {/* CARD 1: STREAK & STYLE STATS (3D Clay Flame & Gamified Streak) */}
-        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5">
+        {/* CARD 1: STREAK & STYLE STATS (3D Clay Flame) */}
+        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
           {/* Central 3D Flame Emblem & Large Titles */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
@@ -364,46 +317,38 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 2: AVERAGE AURA INDEX (Score on Left + Laurel Medal & Leaderboard Rank on Right) */}
-        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-6">
+        {/* CARD 2: AVERAGE AURA INDEX (Diamond Laurel Medal Pod on Top & Centered 92.4) */}
+        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Top Section: Score & Title on Left, 3D Laurel Medal on Right */}
-          <div className="flex items-center justify-between gap-4 pt-1">
+          {/* Central 3D Diamond Laurel Medal Pod & Titles */}
+          <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
-            {/* Left: 92.4 lowered and aligned */}
-            <div className="space-y-1">
-              <div className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
+            {/* Top Laurel Medal Pod */}
+            <div className="relative w-24 h-24 rounded-full bg-white border border-gray-100 shadow-[0_12px_32px_rgba(124,58,237,0.16)] flex items-center justify-center p-3">
+              <div className="absolute inset-0 bg-radial from-purple-400/15 via-cyan-300/5 to-transparent rounded-full pointer-events-none" />
+              <img
+                src="/medal_diamond.png"
+                alt="Diamond Rank Medal"
+                className="w-16 h-16 object-contain drop-shadow-md z-10 animate-pulse [animation-duration:3.5s]"
+              />
+            </div>
+
+            {/* Big 92.4 and Titles */}
+            <div className="space-y-1 pt-1">
+              <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
                 {currentScore}
               </div>
-              <h3 className="text-base sm:text-lg lg:text-xl font-black text-gray-950 tracking-tight">
+              <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
                 {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
               </h3>
+              <p className="text-sm lg:text-base font-semibold text-purple-600">
+                {isEn ? 'You achieved Top 3% & Diamond Rank ✨' : 'Bạn đạt Top 3% & Hạng Kim Cương ✨'}
+              </p>
             </div>
-
-            {/* Right: Laurel Medal Emblem & Leaderboard Tier */}
-            <div className="flex flex-col items-center text-center">
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
-                <img
-                  src={rankData.medalUrl}
-                  alt={rankData.title}
-                  className="w-full h-full object-contain drop-shadow-md hover:scale-105 transition-transform"
-                />
-              </div>
-
-              <span className={`text-[10px] sm:text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border mt-1.5 ${rankData.color}`}>
-                {rankData.title}
-              </span>
-              <span className="text-[10px] sm:text-[11px] font-extrabold text-gray-600 mt-0.5">
-                {rankData.leaderboard}
-              </span>
-            </div>
-
           </div>
 
           {/* 4 Fashion Pillars with Increased Font Sizes & Clean Header */}
-          <div className="space-y-4 py-2 border-t border-gray-100 flex-1 flex flex-col justify-center">
-            
-            {/* Clean Header */}
+          <div className="space-y-3.5 py-3 border-t border-gray-100">
             <div className="flex items-center justify-between pb-0.5">
               <span className="text-xs font-black uppercase tracking-wider text-gray-400">
                 {isEn ? 'Contributing Fashion Pillars' : 'Trọng Số Cấu Thành Điểm'}
@@ -413,8 +358,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </span>
             </div>
 
-            {/* 4 Larger Progress Bars with Bold Labels */}
-            <div className="space-y-3.5">
+            {/* 4 Progress Bars with Bold Labels */}
+            <div className="space-y-3">
               {auraPillars.map((pillar, idx) => (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex items-center justify-between text-sm sm:text-base font-extrabold">
@@ -430,13 +375,12 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 </div>
               ))}
             </div>
-
           </div>
 
         </div>
 
         {/* CARD 3: CURATED SPOTS & CITY RADAR (Category Breakdown & District Matrix) */}
-        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5">
+        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
           {/* Top Big Spots Count & Weather Live Status */}
           <div className="space-y-3 pt-1">
