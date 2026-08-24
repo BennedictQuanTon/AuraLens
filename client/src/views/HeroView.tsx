@@ -11,6 +11,8 @@ import {
   Coffee,
   Wine,
   Palette,
+  ShoppingBag,
+  Sparkles,
 } from 'lucide-react';
 import type { AppLanguage, UserProfileState } from '../types/settings.js';
 import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
@@ -125,36 +127,61 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { name: isEn ? 'Accessories & Details' : 'Chi tiết & Phụ kiện', score: 90, color: 'from-[#10B981] to-[#059669]' },
   ];
 
-  // Spot Categories contributing to 15 Spots (for Donut Chart & Legend)
+  // 5 Gen-Z Spot Categories contributing to 15 Spots
   const spotCategories = [
     {
+      id: 0,
       name: isEn ? 'Aesthetic Cafes' : 'Cafe Sống Ảo',
-      count: 8,
-      percent: '53.3%',
+      count: 5,
+      percent: '33.3%',
       icon: Coffee,
-      color: 'bg-amber-500',
-      textColor: 'text-amber-600',
-      dotColor: '#F59E0B',
+      colorHex: '#FF6B00',
+      strokeDash: '142.4 427.3',
+      strokeOffset: '0',
     },
     {
-      name: isEn ? 'Cocktail & Speakeasy' : 'Quán Bar & Pub',
-      count: 4,
-      percent: '26.7%',
+      id: 1,
+      name: isEn ? 'Speakeasy Bars' : 'Quán Bar & Pub',
+      count: 3,
+      percent: '20.0%',
       icon: Wine,
-      color: 'bg-blue-600',
-      textColor: 'text-blue-600',
-      dotColor: '#2563EB',
+      colorHex: '#4F46E5',
+      strokeDash: '85.5 427.3',
+      strokeOffset: '-142.4',
     },
     {
-      name: isEn ? 'Art & Concept Spaces' : 'Không Gian Art Hub',
+      id: 2,
+      name: isEn ? 'Art Hubs' : 'Không Gian Art',
       count: 3,
       percent: '20.0%',
       icon: Palette,
-      color: 'bg-emerald-500',
-      textColor: 'text-emerald-600',
-      dotColor: '#10B981',
+      colorHex: '#10B981',
+      strokeDash: '85.5 427.3',
+      strokeOffset: '-227.9',
+    },
+    {
+      id: 3,
+      name: isEn ? 'Streetwear Flagships' : 'Local Brand Hub',
+      count: 2,
+      percent: '13.3%',
+      icon: ShoppingBag,
+      colorHex: '#D946EF',
+      strokeDash: '57.0 427.3',
+      strokeOffset: '-313.4',
+    },
+    {
+      id: 4,
+      name: isEn ? 'Photobooth Studios' : 'Studio Photobooth',
+      count: 2,
+      percent: '13.3%',
+      icon: Sparkles,
+      colorHex: '#84CC16',
+      strokeDash: '57.0 427.3',
+      strokeOffset: '-370.4',
     },
   ];
+
+  const [hoveredSpotIndex, setHoveredSpotIndex] = useState<number | null>(null);
 
   const currentScore = 92.4;
   const genderTitle = userProfile.genderTitle || 'King';
@@ -405,121 +432,123 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 3: CURATED VIBE SPOTS (Expansive Donut Chart & Large Bold Legend, Matched Height) */}
+        {/* CARD 3: CURATED VIBE SPOTS (Interactive 5-Category Gen-Z Donut & Professional Legend) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Top Section: Expansive Donut Chart with Center Total 15 */}
+          {/* Top Section: Expansive Interactive Donut Chart */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
-            {/* Enlarged SVG Donut Chart (Spacious & Clean) */}
-            <div className="relative w-40 h-40 sm:w-44 sm:h-44 flex items-center justify-center">
-              <svg className="w-full h-full -rotate-90" viewBox="0 0 140 140">
+            {/* Interactive SVG Donut Chart with Hover Effects */}
+            <div className="relative w-48 h-48 sm:w-52 sm:h-52 flex items-center justify-center">
+              <svg className="w-full h-full -rotate-90 overflow-visible" viewBox="0 0 170 170">
                 {/* Background Ring */}
                 <circle
-                  cx="70"
-                  cy="70"
-                  r="56"
+                  cx="85"
+                  cy="85"
+                  r="68"
                   fill="transparent"
-                  stroke="#F1F5F9"
-                  strokeWidth="16"
+                  stroke="#F8FAFC"
+                  strokeWidth="18"
                 />
 
-                {/* Segment 1: Aesthetic Cafes (8/15 = 53.33%) -> Stroke Amber-Orange */}
-                <circle
-                  cx="70"
-                  cy="70"
-                  r="56"
-                  fill="transparent"
-                  stroke="#F59E0B"
-                  strokeWidth="16"
-                  strokeDasharray="187.6 351.86"
-                  strokeDashoffset="0"
-                  strokeLinecap="round"
-                  className="transition-all duration-700"
-                />
-
-                {/* Segment 2: Cocktail & Bars (4/15 = 26.67%) -> Stroke Blue-Indigo */}
-                <circle
-                  cx="70"
-                  cy="70"
-                  r="56"
-                  fill="transparent"
-                  stroke="#2563EB"
-                  strokeWidth="16"
-                  strokeDasharray="93.8 351.86"
-                  strokeDashoffset="-191.6"
-                  strokeLinecap="round"
-                  className="transition-all duration-700"
-                />
-
-                {/* Segment 3: Art & Concept (3/15 = 20.00%) -> Stroke Mint-Emerald */}
-                <circle
-                  cx="70"
-                  cy="70"
-                  r="56"
-                  fill="transparent"
-                  stroke="#10B981"
-                  strokeWidth="16"
-                  strokeDasharray="70.4 351.86"
-                  strokeDashoffset="-287.4"
-                  strokeLinecap="round"
-                  className="transition-all duration-700"
-                />
+                {/* 5 Distinct Gen-Z Slices with Interactive Hover */}
+                {spotCategories.map((cat) => {
+                  const isHovered = hoveredSpotIndex === cat.id;
+                  return (
+                    <circle
+                      key={cat.id}
+                      cx="85"
+                      cy="85"
+                      r="68"
+                      fill="transparent"
+                      stroke={cat.colorHex}
+                      strokeWidth={isHovered ? 24 : 18}
+                      strokeDasharray={cat.strokeDash}
+                      strokeDashoffset={cat.strokeOffset}
+                      strokeLinecap="round"
+                      onMouseEnter={() => setHoveredSpotIndex(cat.id)}
+                      onMouseLeave={() => setHoveredSpotIndex(null)}
+                      className="cursor-pointer transition-all duration-300 hover:opacity-100 opacity-95"
+                      style={{
+                        filter: isHovered ? `drop-shadow(0 0 8px ${cat.colorHex}88)` : 'none',
+                      }}
+                    />
+                  );
+                })}
               </svg>
 
-              {/* Center Metrics (Total 15 & Spots Label) */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-5xl font-black text-gray-950 tracking-tight leading-none">
-                  15
-                </span>
-                <span className="text-[11px] font-black uppercase tracking-wider text-gray-400 mt-1">
-                  {isEn ? 'Spots Visited' : 'Điểm Đã Ghé'}
-                </span>
+              {/* Dynamic Center Metrics on Hover */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-3 transition-all duration-200">
+                {hoveredSpotIndex !== null ? (
+                  <div className="animate-fadeIn flex flex-col items-center">
+                    <span
+                      className="text-4xl sm:text-5xl font-black tracking-tight leading-none"
+                      style={{ color: spotCategories[hoveredSpotIndex].colorHex }}
+                    >
+                      {spotCategories[hoveredSpotIndex].count}
+                    </span>
+                    <span className="text-xs sm:text-sm font-black text-gray-950 mt-0.5">
+                      {spotCategories[hoveredSpotIndex].percent}
+                    </span>
+                    <span className="text-[10px] font-extrabold text-gray-500 truncate max-w-[120px] text-center mt-0.5">
+                      {spotCategories[hoveredSpotIndex].name}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="animate-fadeIn flex flex-col items-center">
+                    <span className="text-5xl sm:text-6xl font-black text-gray-950 tracking-tight leading-none">
+                      15
+                    </span>
+                    <span className="text-[11px] font-black uppercase tracking-wider text-gray-400 mt-1">
+                      {isEn ? 'Total Spots' : 'Tổng Điểm'}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Short Punchy Title */}
+            {/* Title */}
             <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
               {isEn ? 'Curated Vibe Spots' : 'Tọa Độ Săn Vibe'}
             </h3>
 
           </div>
 
-          {/* Expansive Bold Legend Filling the Card Naturally */}
-          <div className="space-y-3 py-3 border-t border-gray-100 flex-1 flex flex-col justify-around">
+          {/* Professional Standard Chart Legend (Color Swatch + Category Name) */}
+          <div className="space-y-3 py-3 border-t border-gray-100 flex-1 flex flex-col justify-center">
             <div className="flex items-center justify-between pb-0.5">
               <span className="text-xs font-black uppercase tracking-wider text-gray-400">
-                {isEn ? 'Spots Breakdown by Category' : 'Phân Bổ Thể Loại Trải Nghiệm'}
+                {isEn ? 'Categories Legend' : 'Danh Mục Địa Điểm'}
+              </span>
+              <span className="text-[10px] font-bold text-gray-400">
+                {isEn ? 'Hover slice for stats' : 'Di chuột để xem số liệu'}
               </span>
             </div>
 
-            <div className="space-y-3">
-              {spotCategories.map((cat, idx) => {
+            {/* Clean, Modern 2-Column Professional Legend Badges */}
+            <div className="grid grid-cols-2 gap-2">
+              {spotCategories.map((cat) => {
+                const isHovered = hoveredSpotIndex === cat.id;
                 const Icon = cat.icon;
                 return (
                   <div
-                    key={idx}
-                    className="flex items-center justify-between p-3.5 rounded-2xl bg-gray-50/90 border border-gray-100 hover:bg-gray-100/80 transition-colors"
+                    key={cat.id}
+                    onMouseEnter={() => setHoveredSpotIndex(cat.id)}
+                    onMouseLeave={() => setHoveredSpotIndex(null)}
+                    className={`p-2 sm:p-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-2 ${
+                      isHovered
+                        ? 'bg-gray-950 text-white border-gray-950 shadow-md scale-102'
+                        : 'bg-gray-50/80 border-gray-100 hover:border-gray-200 text-gray-800'
+                    }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-4 h-4 rounded-full flex items-center justify-center shadow-xs"
-                        style={{ backgroundColor: cat.dotColor }}
-                      />
-                      <Icon className="w-5 h-5 text-gray-700" />
-                      <span className="text-sm sm:text-base font-extrabold text-gray-900">
-                        {cat.name}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-base sm:text-lg font-black text-gray-950">
-                        {cat.count} {isEn ? 'Spots' : 'Quán'}
-                      </span>
-                      <span className={`text-xs sm:text-sm font-black ${cat.textColor}`}>
-                        ({cat.percent})
-                      </span>
-                    </div>
+                    <div
+                      className="w-3 h-3 rounded-md shrink-0 shadow-xs"
+                      style={{ backgroundColor: cat.colorHex }}
+                    />
+                    <Icon className={`w-3.5 h-3.5 shrink-0 ${isHovered ? 'text-[#D4FF00]' : 'text-gray-500'}`} />
+                    <span className="text-[11px] sm:text-xs font-black truncate">
+                      {cat.name}
+                    </span>
                   </div>
                 );
               })}
