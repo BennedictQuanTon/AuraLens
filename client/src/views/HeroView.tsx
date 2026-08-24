@@ -8,7 +8,6 @@ import {
   CheckSquare,
   Square,
   Award,
-  Sparkles,
 } from 'lucide-react';
 import type { AppLanguage, UserProfileState } from '../types/settings.js';
 import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
@@ -122,24 +121,31 @@ export const HeroView: React.FC<HeroViewProps> = ({
     <div className="space-y-8 animate-fadeIn pb-16">
       
       {/* ========================================================================= */}
-      {/* 1. TOP HERO SECTION: UNBOXED, BREATHABLE, BIG HEADING & COMIC BUBBLE      */}
+      {/* 1. TOP HERO SECTION: UNBOXED, "MY KING ALEX" ON SECOND LINE & ZERO-SHIFT BUBBLE */}
       {/* ========================================================================= */}
       <div className="relative pt-2 pb-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           
           {/* Left: Big Primary Heading & Action CTA */}
           <div className="lg:col-span-7 space-y-3">
-            {/* BIG PRIMARY HEADING */}
+            {/* PRIMARY HEADING: "Welcome Back," on Top, "my King Alex" on Line 2 */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-[1.1]">
-              {isEn ? `Welcome Back, my ${genderTitle} ` : `Chào mừng trở lại, ${genderTitle} `}
-              <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent">
-                {userProfile.name}
-              </span>
-              <span>✨</span>
+              <div className="text-gray-950">
+                {isEn ? 'Welcome Back,' : 'Chào mừng trở lại,'}
+              </div>
+              <div className="flex flex-wrap items-baseline gap-2 mt-1">
+                <span className="text-gray-900 font-extrabold text-3xl sm:text-4xl lg:text-5xl">
+                  {isEn ? `my ${genderTitle}` : genderTitle}
+                </span>
+                <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent font-black">
+                  {userProfile.name}
+                </span>
+                <span>✨</span>
+              </div>
             </h1>
 
             {/* SECONDARY STATEMENT UNDERNEATH */}
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-700 tracking-tight">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-extrabold text-gray-700 tracking-tight pt-1">
               Ready to slay your{' '}
               <span className="highlight-circle font-black text-black">vibe</span>{' '}
               today?
@@ -158,21 +164,23 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
           </div>
 
-          {/* Right: Unboxed Seamless Lumi Mascot + 4-Second Comic Speech Bubble */}
-          <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center relative min-h-[220px]">
+          {/* Right: Unboxed Seamless Mascot + ZERO LAYOUT SHIFT Comic Bubble */}
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center relative min-h-[250px]">
             
-            {/* Authentic Comic Speech Bubble (Changes every 4s, NO icons) */}
-            <div
-              key={currentSpeechIndex}
-              className="comic-bubble mb-3 px-4 py-2.5 max-w-xs text-xs font-black text-gray-950 z-20 text-center leading-relaxed"
-            >
-              {speechLines[currentSpeechIndex]}
+            {/* FIXED HEIGHT CONTAINER to prevent page jumping/layout shift */}
+            <div className="h-16 flex items-center justify-center relative w-full mb-1">
+              <div
+                key={currentSpeechIndex}
+                className="comic-bubble px-4 py-2 max-w-xs text-xs font-black text-gray-950 text-center leading-snug z-20"
+              >
+                {speechLines[currentSpeechIndex]}
+              </div>
             </div>
 
-            {/* Seamless Mascot Blending into Background (NO rectangle frame) */}
+            {/* 100% Seamless Mascot Blending into Background (Pure white isolated image) */}
             <div className="relative w-48 h-48 sm:w-56 sm:h-56 animate-lumi-sway flex items-center justify-center">
-              {/* Soft Radial Ambient Aura */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/45 to-[#FF2E93]/40 rounded-full blur-2xl pointer-events-none" />
+              {/* Soft Radial Ambient Glow */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/40 to-[#FF2E93]/35 rounded-full blur-2xl pointer-events-none" />
               <img
                 src="/lumi.jpg"
                 alt="Lumi AI Stylist"
@@ -250,7 +258,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
 
             <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 bg-gray-950 text-[#D4FF00] text-xs font-black rounded-full">
-              <Sparkles className="w-3.5 h-3.5 text-[#D4FF00]" />
+              <span className="w-2 h-2 rounded-full bg-[#D4FF00] animate-pulse" />
               <span>{isEn ? 'Elite Drip Tier (90-100)' : 'Hạng Khí Chất Xuất Sắc'}</span>
             </div>
           </div>
@@ -267,7 +275,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
               {isEn ? 'Experience & Wardrobe' : 'Trải Nghiệm & Tủ Đồ'}
             </span>
             <div className="p-2 rounded-2xl bg-blue-50 text-blue-600">
-              <Sparkles className="w-5 h-5 text-blue-600" />
+              <span className="text-base">📍</span>
             </div>
           </div>
 
