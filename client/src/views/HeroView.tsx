@@ -317,23 +317,23 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 2: AVERAGE AURA INDEX (Borderless Floating Diamond Laurel Medal & Shimmering Rank) */}
+        {/* CARD 2: AVERAGE AURA INDEX (Sized Medal Aligned with Card 1 & Clean Diamond Text) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Central Borderless Floating Medal & Sized Titles */}
-          <div className="flex flex-col items-center text-center space-y-1.5 pt-1">
+          {/* Central Sized Floating Medal (Height aligns 92.4 exactly with 7 on the left) */}
+          <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
-            {/* Borderless Floating Diamond Laurel Medal (No white circle frame) */}
-            <div className="relative w-20 h-20 flex items-center justify-center">
+            {/* Sized Medal Container matching Card 1's vertical rhythm */}
+            <div className="relative w-24 h-24 flex items-center justify-center">
               <img
                 src="/medal_diamond.png"
                 alt="Diamond Rank Medal"
-                className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300"
+                className="w-22 h-22 object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300"
               />
             </div>
 
-            {/* Big 92.4 and Centered Titles */}
-            <div className="space-y-1">
+            {/* Big 92.4 exactly horizontally aligned with number 7 on Card 1 */}
+            <div className="space-y-1 pt-1">
               <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
                 {currentScore}
               </div>
@@ -341,22 +341,21 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
               </h3>
               
-              {/* "You achieved" in clean black + "Top 3%" & "Diamond Rank" in Shimmering Iridescent Diamond Gradient */}
+              {/* "You achieved" in black + "Top 3%" (No underline) & "Diamond Rank" (No bling icon) */}
               <p className="text-sm lg:text-base font-bold text-gray-900">
                 {isEn ? 'You achieved ' : 'Bạn đạt '}
-                <span className="bg-gradient-to-r from-purple-600 via-indigo-500 to-cyan-500 bg-clip-text text-transparent font-black underline decoration-cyan-400 decoration-2 underline-offset-2">
+                <span className="bg-gradient-to-r from-purple-600 via-indigo-500 to-cyan-500 bg-clip-text text-transparent font-black">
                   Top 3%
                 </span>
                 {isEn ? ' & ' : ' & '}
                 <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-400 bg-clip-text text-transparent font-black">
                   {isEn ? 'Diamond Rank' : 'Hạng Kim Cương'}
                 </span>
-                <span> ✨</span>
               </p>
             </div>
           </div>
 
-          {/* 4 Fashion Pillars with Clean Title (No +6.8% badge) */}
+          {/* 4 Fashion Pillars with Clean Title */}
           <div className="space-y-3.5 py-3 border-t border-gray-100">
             <div className="flex items-center justify-between pb-0.5">
               <span className="text-xs font-black uppercase tracking-wider text-gray-400">
