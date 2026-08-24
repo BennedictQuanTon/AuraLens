@@ -9,6 +9,8 @@ import {
   CheckSquare,
   Square,
   Award,
+  Check,
+  Sparkles,
 } from 'lucide-react';
 import type { AppLanguage, UserProfileState } from '../types/settings.js';
 import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
@@ -104,14 +106,15 @@ export const HeroView: React.FC<HeroViewProps> = ({
     },
   ];
 
-  const streakDays = [
-    { day: 'Mon', active: true, label: 'T2' },
-    { day: 'Tue', active: true, label: 'T3' },
-    { day: 'Wed', active: true, label: 'T4' },
-    { day: 'Thu', active: true, label: 'T5' },
-    { day: 'Fri', active: true, label: 'T6' },
-    { day: 'Sat', active: true, label: 'T7' },
-    { day: 'Sun', active: true, today: true, label: 'CN' },
+  // Weekday Streak Tracker Data matching Reference Design
+  const streakWeekDays = [
+    { letter: 'M', completed: true, date: '18' },
+    { letter: 'T', completed: true, date: '19' },
+    { letter: 'W', completed: true, date: '20' },
+    { letter: 'T', completed: true, date: '21' },
+    { letter: 'F', completed: true, date: '22' },
+    { letter: 'S', completed: true, date: '23' },
+    { letter: 'S', completed: false, today: true, date: '24' },
   ];
 
   const genderTitle = userProfile.genderTitle || 'King';
@@ -120,12 +123,12 @@ export const HeroView: React.FC<HeroViewProps> = ({
     <div className="space-y-8 animate-fadeIn pb-16">
       
       {/* ========================================================================= */}
-      {/* 1. TOP HERO SECTION: INCREASED WORD SPACING & LARGER SHIFTED LUMI         */}
+      {/* 1. TOP HERO SECTION: BALANCED FONT SIZES, LARGER SHIFTED LUMI & 2 BUTTONS */}
       {/* ========================================================================= */}
       <div className="relative pt-2 pb-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center">
           
-          {/* Left: Primary Heading & 2 Action Buttons (Increased Word Spacing) */}
+          {/* Left: Primary Heading & 2 Action Buttons */}
           <div className="lg:col-span-7 space-y-4">
             
             {/* PRIMARY HEADING with wider word spacing */}
@@ -144,7 +147,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </div>
             </div>
 
-            {/* GEN-Z SUBTITLE with wider word spacing */}
+            {/* GEN-Z SUBTITLE */}
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-800 tracking-wide [word-spacing:0.25rem] pt-2">
               Ready to{' '}
               <span className="text-[#FF2E93] font-black">slay</span>{' '}
@@ -179,7 +182,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
           </div>
 
-          {/* Right: Larger Lumi Shifted Left & Crisp Background (No Pink Tint) */}
+          {/* Right: Larger Lumi Shifted Left & Clean Backdrop */}
           <div className="lg:col-span-5 flex flex-col items-center lg:items-start lg:-translate-x-10 justify-center relative min-h-[300px]">
             
             {/* FIXED HEIGHT CONTAINER (Zero layout shift on text change) */}
@@ -192,9 +195,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </div>
             </div>
 
-            {/* Enlarger Transparent Cutout Lumi Mascot (NO pink tint, pure crisp clean backdrop) */}
+            {/* Enlarger Transparent Cutout Lumi Mascot */}
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 animate-lumi-sway flex items-center justify-center">
-              {/* Very Subtle Ambient White/Cyan Clean Glow (No heavy pink cloud) */}
               <div className="absolute inset-0 bg-white/50 rounded-full blur-2xl pointer-events-none" />
               <img
                 src="/lumi.png"
@@ -208,52 +210,104 @@ export const HeroView: React.FC<HeroViewProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. TOP KPI CARDS: DAILY FIT STREAK & AVERAGE FIT SCORE INSIGHTS           */}
+      {/* 2. TOP KPI CARDS: DESIGN-INSPIRED STREAK & STYLE STATS CARD               */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         
-        {/* CARD 1: DAILY FIT STREAK */}
-        <div className="calm-card-elevated p-6 rounded-3xl flex flex-col justify-between space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-black uppercase tracking-wider text-gray-400">
-              {isEn ? 'Daily Fit Streak' : 'Chuỗi Fit Check Liên Tục'}
-            </span>
-            <div className="p-2 rounded-2xl bg-amber-50 text-amber-500">
-              <Flame className="w-5 h-5 fill-amber-500 animate-bounce [animation-duration:2s]" />
+        {/* CARD 1: STREAK & STYLE STATS (Matching User Reference Image Design) */}
+        <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-4">
+          
+          {/* Central Flame Emblem & Streak Title */}
+          <div className="flex flex-col items-center text-center space-y-2 pt-1">
+            <div className="relative w-20 h-20 rounded-full bg-gradient-to-b from-orange-50/80 to-amber-100/60 border border-orange-200/70 shadow-inner flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-red-500 flex items-center justify-center shadow-md shadow-orange-500/30">
+                <Flame className="w-7 h-7 text-white fill-white animate-bounce [animation-duration:2.5s]" />
+              </div>
+            </div>
+
+            <div className="space-y-0.5">
+              <div className="text-4xl sm:text-5xl font-black text-gray-950 tracking-tight">
+                7
+              </div>
+              <h3 className="text-base sm:text-lg font-black text-gray-950 tracking-tight">
+                {isEn ? 'Day Fit Streak' : 'Chuỗi Fit Check 7 Ngày'}
+              </h3>
+              <p className="text-xs text-gray-500 font-semibold">
+                {isEn ? `You are slaying your style, ${userProfile.name}!` : `Lên đồ quá cháy luôn, ${userProfile.name}!`}
+              </p>
             </div>
           </div>
 
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-4xl lg:text-5xl font-black text-gray-950 tracking-tight">7</span>
-              <span className="text-lg font-black text-amber-600">{isEn ? 'Days Streak 🔥' : 'Ngày Cháy 🔥'}</span>
-            </div>
-            <p className="text-xs text-gray-500 font-semibold mt-1">
-              {isEn ? 'Top 3% most consistent stylers in Saigon!' : 'Top 3% người dùng chăm lên đồ nhất Sài Gòn!'}
-            </p>
-          </div>
-
-          <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-            {streakDays.map((d, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <span className="text-[10px] font-bold text-gray-400">{d.label}</span>
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black transition-transform ${
-                    d.today
-                      ? 'bg-gray-950 text-[#D4FF00] ring-3 ring-[#D4FF00] scale-110 shadow-sm'
-                      : d.active
-                      ? 'bg-gradient-to-tr from-amber-400 to-orange-500 text-white shadow-xs'
-                      : 'bg-gray-100 text-gray-400'
-                  }`}
-                >
-                  {d.active ? '🔥' : '·'}
-                </div>
+          {/* Weekday Tracker Row with Checkmark Circle Pills */}
+          <div className="flex items-center justify-between px-1 py-2 border-t border-gray-100">
+            {streakWeekDays.map((d, i) => (
+              <div key={i} className="flex flex-col items-center gap-1.5">
+                <span className={`text-[10px] font-extrabold ${d.today ? 'text-gray-950 font-black' : 'text-gray-400'}`}>
+                  {d.letter}
+                </span>
+                {d.completed ? (
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-orange-400 to-amber-500 text-white flex items-center justify-center shadow-xs">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  </div>
+                ) : (
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${
+                    d.today ? 'bg-gray-950 text-[#D4FF00] ring-2 ring-[#D4FF00]' : 'text-gray-400 bg-gray-50'
+                  }`}>
+                    {d.date}
+                  </div>
+                )}
               </div>
             ))}
           </div>
+
+          {/* Embedded Sub-Card: "Your Style Stats" */}
+          <div className="p-3.5 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-2.5">
+            <div className="text-center">
+              <span className="text-[10px] font-black uppercase tracking-wider text-gray-400">
+                {isEn ? 'Your Style Stats' : 'Chỉ Số Thời Trang Của Bạn'}
+              </span>
+            </div>
+
+            {/* 4-Column Grid: Days, Fits, Spots, Aura */}
+            <div className="grid grid-cols-4 gap-1 text-center">
+              <div>
+                <span className="text-[9px] font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Days' : 'Ngày'}
+                </span>
+                <span className="text-base lg:text-lg font-black text-gray-950">28</span>
+              </div>
+              <div className="border-l border-gray-200">
+                <span className="text-[9px] font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Fits' : 'Outfit'}
+                </span>
+                <span className="text-base lg:text-lg font-black text-gray-950">42</span>
+              </div>
+              <div className="border-l border-gray-200">
+                <span className="text-[9px] font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Spots' : 'Quán'}
+                </span>
+                <span className="text-base lg:text-lg font-black text-gray-950">15</span>
+              </div>
+              <div className="border-l border-gray-200">
+                <span className="text-[9px] font-bold text-gray-400 block uppercase">
+                  {isEn ? 'Aura' : 'Điểm'}
+                </span>
+                <span className="text-base lg:text-lg font-black text-purple-600">92.4</span>
+              </div>
+            </div>
+
+            {/* Bottom Insights Pill */}
+            <div className="flex items-center justify-center pt-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-purple-100 text-[10px] font-black text-purple-700 shadow-xs">
+                <Sparkles className="w-3 h-3 text-[#FF2E93]" />
+                <span>{isEn ? '3 Style Insights Available' : '3 Phân Tích Mới Sẵn Sàng'}</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        {/* CARD 2: AVERAGE FIT SCORE */}
+        {/* CARD 2: AVERAGE FIT SCORE & TIER BREAKDOWN */}
         <div className="calm-card-elevated p-6 rounded-3xl flex flex-col justify-between space-y-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-black uppercase tracking-wider text-gray-400">
@@ -278,8 +332,13 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
           </div>
 
-          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-[#D4FF00] via-[#00F5FF] to-[#7C3AED] w-[92.4%]" />
+          <div className="space-y-2">
+            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-[#D4FF00] via-[#00F5FF] to-[#7C3AED] w-[92.4%]" />
+            </div>
+            <p className="text-[11px] text-gray-500 font-semibold">
+              {isEn ? 'Consistent silhouette harmony across 42 outfit checks.' : 'Độ hài hòa phom dáng ổn định qua 42 lần quét.'}
+            </p>
           </div>
         </div>
 
