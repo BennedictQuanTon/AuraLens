@@ -162,7 +162,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
     },
     {
       id: 4,
-      name: isEn ? 'Photobooth Studios' : 'Studio Photobooth',
+      name: isEn ? 'Photobooth Studios' : 'Photobooth Studios',
       count: 2,
       percent: '13.3%',
       colorHex: '#84CC16',
@@ -417,13 +417,13 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 3: CURATED VIBE SPOTS (Clean Interactive Donut & Pure Static Legend) */}
+        {/* CARD 3: CURATED VIBE SPOTS (Clean Interactive Donut & Perfectly Centered Fitted Legend) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
           {/* Top Section: Larger SVG Donut Chart */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
-            {/* Enlarged SVG Donut Chart */}
+            {/* Stable Non-Jitter SVG Donut Chart */}
             <div className="relative w-56 h-56 sm:w-60 sm:h-60 flex items-center justify-center">
               <svg className="w-full h-full -rotate-90 overflow-visible" viewBox="0 0 200 200">
                 {/* Background Ring */}
@@ -436,7 +436,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
                   strokeWidth="22"
                 />
 
-                {/* 5 Distinct Gen-Z Slices with Interactive Hover Only on the Donut */}
+                {/* 5 Distinct Gen-Z Slices with Stable Constant StrokeWidth (Zero Cursor Jitter) */}
                 {spotCategories.map((cat) => {
                   const isHovered = hoveredSpotIndex === cat.id;
                   return (
@@ -447,22 +447,22 @@ export const HeroView: React.FC<HeroViewProps> = ({
                       r="80"
                       fill="transparent"
                       stroke={cat.colorHex}
-                      strokeWidth={isHovered ? 28 : 22}
+                      strokeWidth={22}
                       strokeDasharray={cat.strokeDash}
                       strokeDashoffset={cat.strokeOffset}
-                      strokeLinecap="round"
                       onMouseEnter={() => setHoveredSpotIndex(cat.id)}
                       onMouseLeave={() => setHoveredSpotIndex(null)}
-                      className="cursor-pointer transition-all duration-300 hover:opacity-100 opacity-95"
+                      className="cursor-pointer transition-all duration-200"
                       style={{
-                        filter: isHovered ? `drop-shadow(0 0 12px ${cat.colorHex}AA)` : 'none',
+                        opacity: hoveredSpotIndex === null || isHovered ? 1 : 0.45,
+                        filter: isHovered ? `drop-shadow(0 0 10px ${cat.colorHex}CC)` : 'none',
                       }}
                     />
                   );
                 })}
               </svg>
 
-              {/* Center Metrics */}
+              {/* Center Metrics (Stable & Smooth Display) */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-3 transition-all duration-200">
                 {hoveredSpotIndex !== null ? (
                   <div className="animate-fadeIn flex flex-col items-center">
@@ -499,7 +499,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
           </div>
 
-          {/* Pure Static, Clean Legend (Color Dots + Name, No counts, No button effects) */}
+          {/* Symmetrical Legend: Fitted Compact Frames + Centered Photobooth Studios */}
           <div className="space-y-3 py-3 border-t border-gray-100 flex-1 flex flex-col justify-around">
             <div className="flex items-center justify-between pb-0.5">
               <span className="text-xs font-black uppercase tracking-wider text-gray-400">
@@ -507,24 +507,58 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </span>
             </div>
 
-            {/* Static Clean Grid (No Numbers, Pure Color Dot + Label) */}
-            <div className="grid grid-cols-2 gap-2.5">
-              {spotCategories.map((cat) => (
+            {/* Symmetrical & Centered Layout with Fitted Frames */}
+            <div className="space-y-2.5">
+              {/* Row 1: 2 items */}
+              <div className="grid grid-cols-2 gap-2.5">
+                {spotCategories.slice(0, 2).map((cat) => (
+                  <div
+                    key={cat.id}
+                    className="py-2 px-3 rounded-xl bg-gray-50/90 border border-gray-100 flex items-center gap-2 select-none justify-center"
+                  >
+                    <div
+                      className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
+                      style={{ backgroundColor: cat.colorHex }}
+                    />
+                    <span className="text-xs font-bold text-gray-800 truncate">
+                      {cat.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Row 2: 2 items */}
+              <div className="grid grid-cols-2 gap-2.5">
+                {spotCategories.slice(2, 4).map((cat) => (
+                  <div
+                    key={cat.id}
+                    className="py-2 px-3 rounded-xl bg-gray-50/90 border border-gray-100 flex items-center gap-2 select-none justify-center"
+                  >
+                    <div
+                      className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
+                      style={{ backgroundColor: cat.colorHex }}
+                    />
+                    <span className="text-xs font-bold text-gray-800 truncate">
+                      {cat.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Row 3: 5th item (Photobooth Studios) perfectly centered with fitted frame */}
+              <div className="flex justify-center">
                 <div
-                  key={cat.id}
-                  className={`py-2.5 px-3 rounded-xl bg-gray-50/80 border border-gray-100 flex items-center gap-2.5 select-none ${
-                    cat.id === 4 ? 'col-span-2' : ''
-                  }`}
+                  className="py-2 px-4 rounded-xl bg-gray-50/90 border border-gray-100 flex items-center gap-2 select-none w-fit"
                 >
                   <div
-                    className="w-3 h-3 rounded-full shrink-0 shadow-xs"
-                    style={{ backgroundColor: cat.colorHex }}
+                    className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
+                    style={{ backgroundColor: spotCategories[4].colorHex }}
                   />
-                  <span className="text-xs font-bold text-gray-800 truncate">
-                    {cat.name}
+                  <span className="text-xs font-bold text-gray-800">
+                    {spotCategories[4].name}
                   </span>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
 
