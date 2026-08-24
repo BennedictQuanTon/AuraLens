@@ -120,21 +120,21 @@ export const HeroView: React.FC<HeroViewProps> = ({
     <div className="space-y-8 animate-fadeIn pb-16">
       
       {/* ========================================================================= */}
-      {/* 1. TOP HERO SECTION: BALANCED FONT SIZES, LARGER SHIFTED LUMI & 2 BUTTONS */}
+      {/* 1. TOP HERO SECTION: INCREASED WORD SPACING & LARGER SHIFTED LUMI         */}
       {/* ========================================================================= */}
       <div className="relative pt-2 pb-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center">
           
-          {/* Left: Uniform Sized Primary Heading & 2 Short Action Buttons */}
+          {/* Left: Primary Heading & 2 Action Buttons (Increased Word Spacing) */}
           <div className="lg:col-span-7 space-y-4">
             
-            {/* PRIMARY HEADING: All words at equal bold font size */}
-            <div className="space-y-1.5">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-tight">
+            {/* PRIMARY HEADING with wider word spacing */}
+            <div className="space-y-2">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-tight [word-spacing:0.35rem]">
                 {isEn ? 'Welcome Back,' : 'Chào mừng trở lại,'}
               </h1>
               
-              <div className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight flex flex-wrap items-baseline gap-2.5">
+              <div className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight [word-spacing:0.35rem] flex flex-wrap items-baseline gap-3">
                 <span className="text-gray-950">
                   {isEn ? `My ${genderTitle}` : `My ${genderTitle}`}
                 </span>
@@ -144,8 +144,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </div>
             </div>
 
-            {/* GEN-Z SUBTITLE WITH GENEROUS SPACING */}
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-800 tracking-tight pt-2">
+            {/* GEN-Z SUBTITLE with wider word spacing */}
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-800 tracking-wide [word-spacing:0.25rem] pt-2">
               Ready to{' '}
               <span className="text-[#FF2E93] font-black">slay</span>{' '}
               your{' '}
@@ -179,8 +179,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
           </div>
 
-          {/* Right: Larger Lumi Mascot Shifted Left + Clean Text Comic Bubble */}
-          <div className="lg:col-span-5 flex flex-col items-center lg:items-center justify-center relative min-h-[280px]">
+          {/* Right: Larger Lumi Shifted Left & Crisp Background (No Pink Tint) */}
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-start lg:-translate-x-10 justify-center relative min-h-[300px]">
             
             {/* FIXED HEIGHT CONTAINER (Zero layout shift on text change) */}
             <div className="h-16 flex items-center justify-center relative w-full mb-1">
@@ -192,10 +192,10 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </div>
             </div>
 
-            {/* Enlarger Transparent Cutout Lumi Mascot */}
-            <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 animate-lumi-sway flex items-center justify-center -translate-x-3">
-              {/* Soft Ambient Radial Aura */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/30 via-[#FF2E93]/25 to-[#00F5FF]/20 rounded-full blur-3xl pointer-events-none" />
+            {/* Enlarger Transparent Cutout Lumi Mascot (NO pink tint, pure crisp clean backdrop) */}
+            <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 animate-lumi-sway flex items-center justify-center">
+              {/* Very Subtle Ambient White/Cyan Clean Glow (No heavy pink cloud) */}
+              <div className="absolute inset-0 bg-white/50 rounded-full blur-2xl pointer-events-none" />
               <img
                 src="/lumi.png"
                 alt="Lumi AI Stylist"
