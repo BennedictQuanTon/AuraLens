@@ -125,11 +125,35 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { name: isEn ? 'Accessories & Details' : 'Chi tiết & Phụ kiện', score: 90, color: 'from-[#10B981] to-[#059669]' },
   ];
 
-  // Spot Categories contributing to 15 Spots
+  // Spot Categories contributing to 15 Spots (for Donut Chart & Legend)
   const spotCategories = [
-    { name: isEn ? 'Aesthetic Cafes' : 'Cafe Check-in', count: 8, icon: Coffee, color: 'text-amber-500 bg-amber-50 border-amber-200' },
-    { name: isEn ? 'Cocktail & Bars' : 'Quán Bar & Pub', count: 4, icon: Wine, color: 'text-purple-500 bg-purple-50 border-purple-200' },
-    { name: isEn ? 'Art & Concept' : 'Không gian Art', count: 3, icon: Palette, color: 'text-teal-500 bg-teal-50 border-teal-200' },
+    {
+      name: isEn ? 'Aesthetic Cafes' : 'Cafe Sống Ảo',
+      count: 8,
+      percent: '53.3%',
+      icon: Coffee,
+      color: 'bg-amber-500',
+      textColor: 'text-amber-600',
+      dotColor: '#F59E0B',
+    },
+    {
+      name: isEn ? 'Cocktail & Speakeasy' : 'Quán Bar & Pub',
+      count: 4,
+      percent: '26.7%',
+      icon: Wine,
+      color: 'bg-blue-600',
+      textColor: 'text-blue-600',
+      dotColor: '#2563EB',
+    },
+    {
+      name: isEn ? 'Art & Concept Spaces' : 'Không Gian Art Hub',
+      count: 3,
+      percent: '20.0%',
+      icon: Palette,
+      color: 'bg-emerald-500',
+      textColor: 'text-emerald-600',
+      dotColor: '#10B981',
+    },
   ];
 
   const currentScore = 92.4;
@@ -320,10 +344,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
         {/* CARD 2: AVERAGE AURA INDEX (Sized Medal Aligned with Card 1 & Clean Diamond Text) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Central Sized Floating Medal (Height aligns 92.4 exactly with 7 on the left) */}
+          {/* Central Sized Floating Medal */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
-            
-            {/* Sized Medal Container matching Card 1's vertical rhythm */}
             <div className="relative w-24 h-24 flex items-center justify-center">
               <img
                 src="/medal_diamond.png"
@@ -332,7 +354,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
               />
             </div>
 
-            {/* Big 92.4 exactly horizontally aligned with number 7 on Card 1 */}
+            {/* Big 92.4 horizontally aligned with number 7 on Card 1 */}
             <div className="space-y-1 pt-1">
               <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
                 {currentScore}
@@ -341,7 +363,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
               </h3>
               
-              {/* "You achieved" in black + "Top 3%" (No underline) & "Diamond Rank" (No bling icon) */}
               <p className="text-sm lg:text-base font-bold text-gray-900">
                 {isEn ? 'You achieved ' : 'Bạn đạt '}
                 <span className="bg-gradient-to-r from-purple-600 via-indigo-500 to-cyan-500 bg-clip-text text-transparent font-black">
@@ -384,66 +405,133 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 3: CURATED SPOTS & CITY RADAR (Category Breakdown & District Matrix) */}
+        {/* CARD 3: CURATED SPOTS & CITY RADAR (SVG Donut Chart with Center Total & Large Legend) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Top Big Spots Count & Weather Live Status */}
-          <div className="space-y-3 pt-1">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-black uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200/80">
-                {isEn ? 'Saigon Experience Map' : 'Bản Đồ Điểm Đến Sài Gòn'}
-              </span>
-              <div className="flex items-center gap-1.5 text-xs font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>{isEn ? 'Live Verified' : 'Khớp Thời Tiết'}</span>
-              </div>
-            </div>
+          {/* Top Section: Donut Chart with Center Total 15 */}
+          <div className="flex flex-col items-center text-center space-y-2 pt-1">
+            
+            {/* SVG Donut Chart with Total Number in Center */}
+            <div className="relative w-36 h-36 flex items-center justify-center">
+              <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                {/* Background Ring */}
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="transparent"
+                  stroke="#F1F5F9"
+                  strokeWidth="14"
+                />
 
-            <div className="flex items-baseline justify-between gap-2">
-              <div>
-                <div className="text-6xl lg:text-7xl font-black text-gray-950 tracking-tight leading-none">
+                {/* Segment 1: Aesthetic Cafes (8/15 = 53.3%) -> Stroke Amber-Orange */}
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="transparent"
+                  stroke="#F59E0B"
+                  strokeWidth="14"
+                  strokeDasharray="160.8 301.6"
+                  strokeDashoffset="0"
+                  strokeLinecap="round"
+                  className="transition-all duration-700"
+                />
+
+                {/* Segment 2: Cocktail & Bars (4/15 = 26.7%) -> Stroke Blue-Indigo */}
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="transparent"
+                  stroke="#2563EB"
+                  strokeWidth="14"
+                  strokeDasharray="80.4 301.6"
+                  strokeDashoffset="-164"
+                  strokeLinecap="round"
+                  className="transition-all duration-700"
+                />
+
+                {/* Segment 3: Art & Concept (3/15 = 20.0%) -> Stroke Mint-Emerald */}
+                <circle
+                  cx="60"
+                  cy="60"
+                  r="48"
+                  fill="transparent"
+                  stroke="#10B981"
+                  strokeWidth="14"
+                  strokeDasharray="60.3 301.6"
+                  strokeDashoffset="-246"
+                  strokeLinecap="round"
+                  className="transition-all duration-700"
+                />
+              </svg>
+
+              {/* Center Metrics (Total 15 & Spots Label) */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-4xl font-black text-gray-950 tracking-tight leading-none">
                   15
-                </div>
-                <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight mt-1">
-                  {isEn ? 'Curated Spots Visited' : 'Quán Đã Trải Nghiệm'}
-                </h3>
-              </div>
-
-              <div className="text-right">
-                <span className="text-xs font-bold text-gray-400 block uppercase">
-                  {isEn ? 'Weather Fit' : 'Thời Tiết'}
                 </span>
-                <span className="text-base font-black text-gray-900">
-                  29°C Nắng Đẹp
+                <span className="text-[10px] font-black uppercase tracking-wider text-gray-400 mt-0.5">
+                  {isEn ? 'Total Spots' : 'Tổng Điểm'}
                 </span>
               </div>
             </div>
+
+            {/* Title & Short Description */}
+            <div className="space-y-0.5">
+              <h3 className="text-xl lg:text-2xl font-black text-gray-950 tracking-tight">
+                {isEn ? 'Saigon Experience Map' : 'Bản Đồ Điểm Đến'}
+              </h3>
+              <p className="text-xs font-semibold text-gray-500">
+                {isEn
+                  ? 'Confirmed spots distribution across Saigon vibe categories'
+                  : 'Tỉ lệ phân bổ điểm check-in theo thể loại trải nghiệm tại TP.HCM'}
+              </p>
+            </div>
+
           </div>
 
-          {/* Category Split: Cafes, Bars, Art Spaces */}
-          <div className="space-y-2 py-2 border-t border-gray-100">
+          {/* Large Bold Legend for Current Experience Categories */}
+          <div className="space-y-2.5 py-2.5 border-t border-gray-100">
             <div className="text-[11px] font-black uppercase tracking-wider text-gray-400">
-              {isEn ? 'Verified Spots by Experience Type' : 'Phân Bổ Loại Hình Điểm Ghé'}
+              {isEn ? 'Spots Breakdown by Category' : 'Phân Bổ Thể Loại Trải Nghiệm'}
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="space-y-2">
               {spotCategories.map((cat, idx) => {
                 const Icon = cat.icon;
                 return (
                   <div
                     key={idx}
-                    className={`p-2.5 rounded-2xl border flex flex-col items-center text-center justify-between ${cat.color}`}
+                    className="flex items-center justify-between p-2 rounded-2xl bg-gray-50/80 border border-gray-100 hover:bg-gray-100/70 transition-colors"
                   >
-                    <Icon className="w-4 h-4 mb-1" />
-                    <span className="text-xs font-black text-gray-950">{cat.count} Quán</span>
-                    <span className="text-[9px] font-bold text-gray-600 truncate w-full">{cat.name}</span>
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className="w-3.5 h-3.5 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: cat.dotColor }}
+                      />
+                      <Icon className="w-4 h-4 text-gray-600" />
+                      <span className="text-xs sm:text-sm font-extrabold text-gray-900">
+                        {cat.name}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm sm:text-base font-black text-gray-950">
+                        {cat.count} {isEn ? 'Spots' : 'Quán'}
+                      </span>
+                      <span className={`text-xs font-bold ${cat.textColor}`}>
+                        ({cat.percent})
+                      </span>
+                    </div>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          {/* Embedded Sub-Card: "DISTRICT CONCENTRATION & BRANDS" */}
+          {/* Embedded Sub-Card: "DISTRICT RADAR & LOCAL BRANDS" */}
           <div className="p-4 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-2.5">
             <div className="text-center">
               <span className="text-xs font-black uppercase tracking-widest text-gray-400">
