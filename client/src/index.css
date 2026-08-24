@@ -7,20 +7,67 @@
     --color-pink: #FF2E93;
     --color-cyan: #00F5FF;
     --color-purple: #7C3AED;
-    --color-bg: #F8F9FA;
+    --color-bg: #FAFAFC;
   }
 
   body {
-    background-color: #F8F9FA;
+    background-color: #FAFAFC;
     background-image: 
-      radial-gradient(at 0% 0%, rgba(212, 255, 0, 0.08) 0px, transparent 40%),
-      radial-gradient(at 100% 10%, rgba(255, 46, 147, 0.08) 0px, transparent 40%),
-      radial-gradient(at 50% 100%, rgba(124, 58, 237, 0.06) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgba(212, 255, 0, 0.14) 0px, transparent 45%),
+      radial-gradient(at 100% 0%, rgba(255, 46, 147, 0.12) 0px, transparent 45%),
+      radial-gradient(at 50% 50%, rgba(0, 245, 255, 0.06) 0px, transparent 50%),
+      radial-gradient(at 80% 100%, rgba(124, 58, 237, 0.09) 0px, transparent 55%);
     background-attachment: fixed;
     color: #0F172A;
     font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+  }
+}
+
+/* Comic Speech Bubble with Pointer Tail */
+.comic-bubble {
+  position: relative;
+  background: #FFFFFF;
+  border: 2px solid #0F172A;
+  border-radius: 20px;
+  box-shadow: 3px 4px 0px #0F172A;
+  font-family: 'Outfit', sans-serif;
+  animation: comicPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.comic-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 24px;
+  border-width: 10px 10px 0 0;
+  border-style: solid;
+  border-color: #FFFFFF transparent;
+  display: block;
+  width: 0;
+}
+
+.comic-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -13px;
+  right: 23px;
+  border-width: 12px 12px 0 0;
+  border-style: solid;
+  border-color: #0F172A transparent;
+  display: block;
+  width: 0;
+}
+
+@keyframes comicPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 
@@ -60,48 +107,6 @@
 
 .animate-lumi-sway {
   animation: gentleSway 5s ease-in-out infinite;
-}
-
-/* Sequential Pop-in animation for chat bubbles */
-@keyframes popIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.6) translateY(12px);
-  }
-  70% {
-    transform: scale(1.05) translateY(-2px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-.animate-bubble-1 {
-  animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
-  opacity: 0;
-}
-
-.animate-bubble-2 {
-  animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s forwards;
-  opacity: 0;
-}
-
-/* Pulse Glow */
-@keyframes auraPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(212, 255, 0, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 14px rgba(212, 255, 0, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(212, 255, 0, 0);
-  }
-}
-
-.animate-aura-pulse {
-  animation: auraPulse 2.5s infinite;
 }
 
 /* Modern Hand-drawn Highlight Circle */

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Sparkles,
   TrendingUp,
   Flame,
   Camera,
@@ -9,7 +8,7 @@ import {
   CheckSquare,
   Square,
   Award,
-  Crown,
+  Sparkles,
 } from 'lucide-react';
 import type { AppLanguage, UserProfileState } from '../types/settings.js';
 import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
@@ -30,6 +29,29 @@ export const HeroView: React.FC<HeroViewProps> = ({
   onStartScanner,
 }) => {
   const isEn = language === 'en';
+
+  // Dynamic Comic Speech Bubble rotation every 4 seconds
+  const speechLines = isEn
+    ? [
+        "Hello! I'm Lumi, your personal AI stylist ✨",
+        "Ready to slay the town today? Let's check your drip! 💅",
+        "Spotted 15 aesthetic spots in Saigon open right now! ☕",
+      ]
+    : [
+        "Hế nhô! Lumi đây nè, stylist AI của bạn ✨",
+        "Sẵn sàng lên đồ cháy phố chưa? Bật máy quét thôi! 💅",
+        "Vừa cập nhật 15 quán cafe siêu xinh mở cửa tại Sài Gòn! ☕",
+      ];
+
+  const [currentSpeechIndex, setCurrentSpeechIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSpeechIndex((prev) => (prev + 1) % speechLines.length);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [speechLines.length]);
 
   // Interactive Checklist for Local Brand Recommendations
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({
@@ -94,44 +116,37 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { day: 'Sun', active: true, today: true, label: 'CN' },
   ];
 
-  const genderTitle = userProfile.genderTitle || 'Queen';
+  const genderTitle = userProfile.genderTitle || 'King';
 
   return (
     <div className="space-y-8 animate-fadeIn pb-16">
       
       {/* ========================================================================= */}
-      {/* 1. TOP HERO SECTION: SIZED GREETING & FREELY SWAYING LUMI WITH CHAT BUBBLES */}
+      {/* 1. TOP HERO SECTION: UNBOXED, BREATHABLE, BIG HEADING & COMIC BUBBLE      */}
       {/* ========================================================================= */}
-      <div className="calm-card-elevated p-6 lg:p-10 rounded-3xl relative overflow-hidden">
-        {/* Soft Background Blurs */}
-        <div className="absolute top-0 right-10 w-96 h-96 bg-[#D4FF00]/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-96 h-96 bg-[#FF2E93]/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+      <div className="relative pt-2 pb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           
-          {/* Left: Prominent Greeting & Big CTA */}
-          <div className="lg:col-span-7 space-y-4">
-            {/* Welcome Back Queen/King Line */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gray-950 text-white text-xs sm:text-sm font-extrabold shadow-sm">
-              <Crown className="w-4 h-4 text-[#D4FF00]" />
-              <span>
-                {isEn ? `Welcome Back, my ${genderTitle} ` : `Chào mừng trở lại, ${genderTitle} `}
-              </span>
-              <span className="bg-gradient-to-r from-[#D4FF00] via-[#00F5FF] to-[#FF2E93] bg-clip-text text-transparent font-black">
+          {/* Left: Big Primary Heading & Action CTA */}
+          <div className="lg:col-span-7 space-y-3">
+            {/* BIG PRIMARY HEADING */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-[1.1]">
+              {isEn ? `Welcome Back, my ${genderTitle} ` : `Chào mừng trở lại, ${genderTitle} `}
+              <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent">
                 {userProfile.name}
               </span>
               <span>✨</span>
-            </div>
+            </h1>
 
-            {/* Big Editorial Title */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-[1.1]">
+            {/* SECONDARY STATEMENT UNDERNEATH */}
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-700 tracking-tight">
               Ready to slay your{' '}
               <span className="highlight-circle font-black text-black">vibe</span>{' '}
               today?
-            </h1>
+            </h2>
 
             {/* Big Action CTA Button */}
-            <div className="pt-3">
+            <div className="pt-4">
               <button
                 onClick={onStartScanner}
                 className="py-4.5 px-8 rounded-full bg-[#0F172A] hover:bg-black text-white font-extrabold text-base lg:text-lg shadow-2xl active:scale-98 transition-all flex items-center justify-between sm:justify-center gap-4 cursor-pointer group w-full sm:w-auto"
@@ -143,28 +158,25 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
           </div>
 
-          {/* Right: Full Mascot Free-Floating & Swaying + 2 Pop-in Chat Bubbles */}
+          {/* Right: Unboxed Seamless Lumi Mascot + 4-Second Comic Speech Bubble */}
           <div className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center relative min-h-[220px]">
             
-            {/* Pop-in Chat Bubble 1 */}
-            <div className="animate-bubble-1 mb-2 px-4 py-2 rounded-2xl rounded-br-xs bg-white text-gray-950 text-xs font-black shadow-lg border border-gray-100 flex items-center gap-1.5 z-20">
-              <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
-              <span>{isEn ? "Hello! I'm Lumi, your AI stylist ✨" : "Hế nhô! Lumi đây nè~ ✨"}</span>
+            {/* Authentic Comic Speech Bubble (Changes every 4s, NO icons) */}
+            <div
+              key={currentSpeechIndex}
+              className="comic-bubble mb-3 px-4 py-2.5 max-w-xs text-xs font-black text-gray-950 z-20 text-center leading-relaxed"
+            >
+              {speechLines[currentSpeechIndex]}
             </div>
 
-            {/* Pop-in Chat Bubble 2 */}
-            <div className="animate-bubble-2 mb-2 px-4 py-2 rounded-2xl rounded-tr-xs bg-gray-950 text-white text-xs font-extrabold shadow-xl border border-gray-800 flex items-center gap-1.5 z-20 max-w-xs text-center">
-              <span>{isEn ? "Welcome to AuraLens! Ready to slay today? 💅" : "Chào mừng đến với AuraLens! Sẵn sàng lên đồ cháy phố chưa? 💅"}</span>
-            </div>
-
-            {/* Free-Floating & Swaying 3D Lumi Mascot (NO circle box) */}
-            <div className="relative w-44 h-44 sm:w-52 sm:h-52 animate-lumi-sway flex items-center justify-center">
-              {/* Soft Ambient Glow */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/40 to-[#FF2E93]/40 rounded-full blur-2xl pointer-events-none" />
+            {/* Seamless Mascot Blending into Background (NO rectangle frame) */}
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 animate-lumi-sway flex items-center justify-center">
+              {/* Soft Radial Ambient Aura */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00]/45 to-[#FF2E93]/40 rounded-full blur-2xl pointer-events-none" />
               <img
                 src="/lumi.jpg"
-                alt="Lumi 3D Mascot"
-                className="w-full h-full object-contain drop-shadow-2xl"
+                alt="Lumi AI Stylist"
+                className="w-full h-full object-contain mix-blend-multiply drop-shadow-xl"
               />
             </div>
           </div>
@@ -317,7 +329,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
             
             {/* Chart Area with Left Y-Axis */}
             <div className="relative flex-1 flex">
-              {/* Y-Axis Numerical Scale Labels */}
               <div className="flex flex-col justify-between text-[10px] font-extrabold text-gray-400 pr-2 select-none">
                 <span>10</span>
                 <span>8</span>
@@ -327,9 +338,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 <span>0</span>
               </div>
 
-              {/* Chart SVG Graphic */}
               <div className="relative flex-1 h-full">
-                {/* Horizontal Grid Lines */}
                 <div className="absolute inset-x-0 top-[0%] border-b border-dashed border-gray-200" />
                 <div className="absolute inset-x-0 top-[20%] border-b border-dashed border-gray-200" />
                 <div className="absolute inset-x-0 top-[40%] border-b border-dashed border-gray-200" />

@@ -122,6 +122,7 @@ export function App() {
     avatarUrl: '/lumi.jpg',
     bio: 'Cyber-Pop & Y2K Fashion Explorer in Saigon.',
     favoriteVibe: 'Cyber-Pop',
+    genderTitle: 'King',
   });
 
   // App Context & Scenario States
@@ -288,8 +289,8 @@ export function App() {
   const currentVibe: VibeStyle = dripResult?.breakdown?.detectedStyle || 'Cyber-Pop';
 
   return (
-    <div className="min-h-screen pb-24 md:pb-12 flex flex-col items-center justify-start bg-[#F8F9FA] text-gray-900">
-      {/* Responsive Header with Expanded Desktop Navigation */}
+    <div className="min-h-screen pb-24 md:pb-12 flex flex-col items-center justify-start text-gray-900">
+      {/* Responsive Header */}
       <Header
         currentVibe={currentVibe}
         userProfile={userProfile}
@@ -299,7 +300,7 @@ export function App() {
       />
 
       {/* Main Responsive Container */}
-      <main className="w-full max-w-md md:max-w-4xl lg:max-w-6xl xl:max-w-7xl px-4 lg:px-8 pt-6 lg:pt-10 flex-1">
+      <main className="w-full max-w-md md:max-w-4xl lg:max-w-6xl xl:max-w-7xl px-4 lg:px-8 pt-4 lg:pt-8 flex-1">
         {/* VIEW 1: HERO & LUMI VIBE GATE */}
         {activeView === 1 && (
           <HeroView
