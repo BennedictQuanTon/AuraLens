@@ -19,6 +19,40 @@ interface HeroViewProps {
   onExplorePlaces: () => void;
 }
 
+// Helper to generate precise, non-overlapping SVG Donut Arc Paths
+function createDonutArc(
+  cx: number,
+  cy: number,
+  rInner: number,
+  rOuter: number,
+  startAngle: number,
+  endAngle: number
+): string {
+  const rad = Math.PI / 180;
+  const startRad = startAngle * rad;
+  const endRad = endAngle * rad;
+
+  const x1 = cx + rOuter * Math.cos(startRad);
+  const y1 = cy + rOuter * Math.sin(startRad);
+  const x2 = cx + rOuter * Math.cos(endRad);
+  const y2 = cy + rOuter * Math.sin(endRad);
+
+  const x3 = cx + rInner * Math.cos(endRad);
+  const y3 = cy + rInner * Math.sin(endRad);
+  const x4 = cx + rInner * Math.cos(startRad);
+  const y4 = cy + rInner * Math.sin(startRad);
+
+  const largeArcFlag = endAngle - startAngle <= 180 ? 0 : 1;
+
+  return [
+    `M ${x1} ${y1}`,
+    `A ${rOuter} ${rOuter} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+    `L ${x3} ${y3}`,
+    `A ${rInner} ${rInner} 0 ${largeArcFlag} 0 ${x4} ${y4}`,
+    'Z',
+  ].join(' ');
+}
+
 export const HeroView: React.FC<HeroViewProps> = ({
   userProfile,
   language,
@@ -122,7 +156,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { name: isEn ? 'Accessories & Details' : 'Chi tiết & Phụ kiện', score: 90, color: 'from-[#10B981] to-[#059669]' },
   ];
 
-  // 5 Gen-Z Spot Categories contributing to 15 Spots
+  // 5 Gen-Z Spot Categories with Exact Angular Arcs (Total 360 deg)
   const spotCategories = [
     {
       id: 0,
@@ -130,8 +164,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 5,
       percent: '33.3%',
       colorHex: '#FF6B00',
-      strokeDash: '167.6 502.7',
-      strokeOffset: '0',
+      startAngle: -90,
+      endAngle: 30, // 120 deg
     },
     {
       id: 1,
@@ -139,8 +173,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 3,
       percent: '20.0%',
       colorHex: '#4F46E5',
-      strokeDash: '100.5 502.7',
-      strokeOffset: '-167.6',
+      startAngle: 30,
+      endAngle: 102, // 72 deg
     },
     {
       id: 2,
@@ -148,8 +182,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 3,
       percent: '20.0%',
       colorHex: '#10B981',
-      strokeDash: '100.5 502.7',
-      strokeOffset: '-268.1',
+      startAngle: 102,
+      endAngle: 174, // 72 deg
     },
     {
       id: 3,
@@ -157,8 +191,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 2,
       percent: '13.3%',
       colorHex: '#D946EF',
-      strokeDash: '67.0 502.7',
-      strokeOffset: '-368.6',
+      startAngle: 174,
+      endAngle: 222, // 48 deg
     },
     {
       id: 4,
@@ -166,8 +200,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
       count: 2,
       percent: '13.3%',
       colorHex: '#84CC16',
-      strokeDash: '67.0 502.7',
-      strokeOffset: '-435.6',
+      startAngle: 222,
+      endAngle: 270, // 48 deg
     },
   ];
 
@@ -417,52 +451,43 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 3: CURATED VIBE SPOTS (Clean Interactive Donut & Perfectly Centered Fitted Legend) */}
+        {/* CARD 3: CURATED VIBE SPOTS (Individual SVG Path Sectors: 100% Reliable Hit Testing) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Top Section: Larger SVG Donut Chart */}
+          {/* Top Section: SVG Donut Chart with Exact SVG Path Sectors */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
-            {/* Stable Non-Jitter SVG Donut Chart */}
+            {/* SVG Donut Chart with 100% Independent Geometry Paths */}
             <div className="relative w-56 h-56 sm:w-60 sm:h-60 flex items-center justify-center">
-              <svg className="w-full h-full -rotate-90 overflow-visible" viewBox="0 0 200 200">
-                {/* Background Ring */}
-                <circle
-                  cx="100"
-                  cy="100"
-                  r="80"
-                  fill="transparent"
-                  stroke="#F8FAFC"
-                  strokeWidth="22"
-                />
-
-                {/* 5 Distinct Gen-Z Slices with Stable Constant StrokeWidth (Zero Cursor Jitter) */}
+              <svg
+                className="w-full h-full overflow-visible select-none"
+                viewBox="0 0 200 200"
+                onMouseLeave={() => setHoveredSpotIndex(null)}
+              >
+                {/* 5 Distinct Non-Overlapping Path Slices */}
                 {spotCategories.map((cat) => {
                   const isHovered = hoveredSpotIndex === cat.id;
+                  const pathD = createDonutArc(100, 100, 69, 91, cat.startAngle, cat.endAngle);
+
                   return (
-                    <circle
+                    <path
                       key={cat.id}
-                      cx="100"
-                      cy="100"
-                      r="80"
-                      fill="transparent"
-                      stroke={cat.colorHex}
-                      strokeWidth={22}
-                      strokeDasharray={cat.strokeDash}
-                      strokeDashoffset={cat.strokeOffset}
+                      d={pathD}
+                      fill={cat.colorHex}
                       onMouseEnter={() => setHoveredSpotIndex(cat.id)}
-                      onMouseLeave={() => setHoveredSpotIndex(null)}
                       className="cursor-pointer transition-all duration-200"
                       style={{
-                        opacity: hoveredSpotIndex === null || isHovered ? 1 : 0.45,
-                        filter: isHovered ? `drop-shadow(0 0 10px ${cat.colorHex}CC)` : 'none',
+                        opacity: hoveredSpotIndex === null || isHovered ? 1 : 0.4,
+                        filter: isHovered ? `drop-shadow(0 0 12px ${cat.colorHex}EE)` : 'none',
+                        transformOrigin: '100px 100px',
+                        transform: isHovered ? 'scale(1.04)' : 'scale(1)',
                       }}
                     />
                   );
                 })}
               </svg>
 
-              {/* Center Metrics (Stable & Smooth Display) */}
+              {/* Center Metrics (Always Accurate on Any Slice Hover) */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-3 transition-all duration-200">
                 {hoveredSpotIndex !== null ? (
                   <div className="animate-fadeIn flex flex-col items-center">
@@ -507,20 +532,20 @@ export const HeroView: React.FC<HeroViewProps> = ({
               </span>
             </div>
 
-            {/* Symmetrical & Centered Layout with Fitted Frames */}
+            {/* Symmetrical & Centered Layout with Fitted Frames & Larger Font */}
             <div className="space-y-2.5">
               {/* Row 1: 2 items */}
               <div className="grid grid-cols-2 gap-2.5">
                 {spotCategories.slice(0, 2).map((cat) => (
                   <div
                     key={cat.id}
-                    className="py-2 px-3 rounded-xl bg-gray-50/90 border border-gray-100 flex items-center gap-2 select-none justify-center"
+                    className="py-2.5 px-3.5 rounded-2xl bg-gray-50/90 border border-gray-100 flex items-center gap-2.5 select-none justify-center"
                   >
                     <div
-                      className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
+                      className="w-3 h-3 rounded-full shrink-0 shadow-xs"
                       style={{ backgroundColor: cat.colorHex }}
                     />
-                    <span className="text-xs font-bold text-gray-800 truncate">
+                    <span className="text-xs sm:text-sm font-black text-gray-900 truncate">
                       {cat.name}
                     </span>
                   </div>
@@ -532,13 +557,13 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 {spotCategories.slice(2, 4).map((cat) => (
                   <div
                     key={cat.id}
-                    className="py-2 px-3 rounded-xl bg-gray-50/90 border border-gray-100 flex items-center gap-2 select-none justify-center"
+                    className="py-2.5 px-3.5 rounded-2xl bg-gray-50/90 border border-gray-100 flex items-center gap-2.5 select-none justify-center"
                   >
                     <div
-                      className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
+                      className="w-3 h-3 rounded-full shrink-0 shadow-xs"
                       style={{ backgroundColor: cat.colorHex }}
                     />
-                    <span className="text-xs font-bold text-gray-800 truncate">
+                    <span className="text-xs sm:text-sm font-black text-gray-900 truncate">
                       {cat.name}
                     </span>
                   </div>
@@ -548,13 +573,13 @@ export const HeroView: React.FC<HeroViewProps> = ({
               {/* Row 3: 5th item (Photobooth Studios) perfectly centered with fitted frame */}
               <div className="flex justify-center">
                 <div
-                  className="py-2 px-4 rounded-xl bg-gray-50/90 border border-gray-100 flex items-center gap-2 select-none w-fit"
+                  className="py-2.5 px-5 rounded-2xl bg-gray-50/90 border border-gray-100 flex items-center gap-2.5 select-none w-fit"
                 >
                   <div
-                    className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
+                    className="w-3 h-3 rounded-full shrink-0 shadow-xs"
                     style={{ backgroundColor: spotCategories[4].colorHex }}
                   />
-                  <span className="text-xs font-bold text-gray-800">
+                  <span className="text-xs sm:text-sm font-black text-gray-900">
                     {spotCategories[4].name}
                   </span>
                 </div>
