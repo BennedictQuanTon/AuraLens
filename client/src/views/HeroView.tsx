@@ -352,7 +352,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         </div>
 
-        {/* CARD 2: AVERAGE AURA INDEX (Authentic Brilliant Diamond Cyan/Blue/Platinum Text) */}
+        {/* CARD 2: AVERAGE AURA INDEX (Natural Sparkling Diamond Metallic Gradient Text) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
           {/* Central Sized Floating Medal */}
@@ -374,14 +374,14 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 {isEn ? 'Average Aura Index' : 'Điểm Fit Trung Bình'}
               </h3>
               
-              {/* Authentic Icy Diamond / Platinum Blue Colors */}
+              {/* Natural Diamond / Sparkling Silver-Platinum Gradient (Đen - Xám Bạc - Trắng Ánh Kim) */}
               <p className="text-sm lg:text-base font-bold text-gray-900">
                 {isEn ? 'You achieved ' : 'Bạn đạt '}
-                <span className="bg-gradient-to-r from-[#0284C7] via-[#0EA5E9] to-[#06B6D4] bg-clip-text text-transparent font-black">
+                <span className="bg-gradient-to-r from-gray-950 via-slate-500 to-zinc-800 bg-clip-text text-transparent font-black">
                   Top 3%
                 </span>
                 {isEn ? ' & ' : ' & '}
-                <span className="bg-gradient-to-r from-[#0EA5E9] via-[#38BDF8] to-[#67E8F9] bg-clip-text text-transparent font-black drop-shadow-xs">
+                <span className="bg-gradient-to-r from-zinc-900 via-slate-400 via-zinc-200 to-gray-950 bg-clip-text text-transparent font-black drop-shadow-xs">
                   {isEn ? 'Diamond Rank' : 'Hạng Kim Cương'}
                 </span>
               </p>
