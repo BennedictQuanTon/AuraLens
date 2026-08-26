@@ -642,32 +642,25 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 <div className="absolute inset-x-0 top-[82%] border-b border-dashed border-gray-200" />
                 <div className="absolute inset-x-0 bottom-0 border-b border-gray-300" />
 
-                {/* Floating Interactive Hover Tooltip */}
-                {hoveredChartPoint && (
-                  <div
-                    className="absolute pointer-events-none z-30 transform -translate-x-1/2 -translate-y-full mb-3 px-3 py-1.5 rounded-xl bg-gray-950 text-white shadow-2xl border border-gray-800 text-xs font-extrabold flex items-center gap-2 animate-fadeIn select-none"
-                    style={{
-                      left: `${(hoveredChartPoint.x / 450) * 100}%`,
-                      top: `${(hoveredChartPoint.y / 150) * 100}%`,
-                    }}
-                  >
-                    <span
-                      className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
-                      style={{ backgroundColor: hoveredChartPoint.color }}
-                    />
-                    <span>{hoveredChartPoint.style}</span>
-                    <span className="text-gray-500">•</span>
-                    <span className="text-gray-300">{hoveredChartPoint.day}</span>
-                    <span className="text-[#D4FF00] font-black">{hoveredChartPoint.value} Fits</span>
-                  </div>
-                )}
-
                 <svg
-                  className="w-full h-full overflow-visible"
-                  viewBox="0 0 450 150"
+                  className="w-full h-full overflow-visible select-none"
+                  viewBox="0 0 500 200"
                   preserveAspectRatio="none"
                   onMouseLeave={() => setHoveredChartPoint(null)}
                 >
+                  {/* Vertical Guide Line on Hover */}
+                  {hoveredChartPoint && (
+                    <line
+                      x1={hoveredChartPoint.x}
+                      y1={25}
+                      x2={hoveredChartPoint.x}
+                      y2={175}
+                      stroke="#cbd5e1"
+                      strokeDasharray="4,4"
+                      strokeWidth={1.5}
+                    />
+                  )}
+
                   {/* Line 1: Cyber-Pop (Green-Lime) */}
                   <polyline
                     fill="none"
@@ -675,38 +668,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     strokeWidth="3.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    points="20,115 88,90 156,35 224,65 292,20 360,50 428,10"
+                    points="35,145 105,115 175,55 245,85 315,40 385,70 455,32.5"
                   />
-                  {[
-                    { day: 'Mon', value: 2, x: 20, y: 115 },
-                    { day: 'Tue', value: 4, x: 88, y: 90 },
-                    { day: 'Wed', value: 8, x: 156, y: 35 },
-                    { day: 'Thu', value: 6, x: 224, y: 65 },
-                    { day: 'Fri', value: 9, x: 292, y: 20 },
-                    { day: 'Sat', value: 7, x: 360, y: 50 },
-                    { day: 'Sun', value: 10, x: 428, y: 10 },
-                  ].map((pt, i) => (
-                    <circle
-                      key={i}
-                      cx={pt.x}
-                      cy={pt.y}
-                      r={hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Cyber-Pop' ? 7 : 5}
-                      fill="#10B981"
-                      stroke="#ffffff"
-                      strokeWidth={2}
-                      className="cursor-pointer transition-all duration-200 hover:scale-125"
-                      onMouseEnter={() =>
-                        setHoveredChartPoint({
-                          day: pt.day,
-                          style: 'Cyber-Pop',
-                          value: pt.value,
-                          color: '#10B981',
-                          x: pt.x,
-                          y: pt.y,
-                        })
-                      }
-                    />
-                  ))}
 
                   {/* Line 2: Y2K / Streetwear (Pink) */}
                   <polyline
@@ -715,38 +678,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    points="20,130 88,110 156,70 224,95 292,55 360,42 428,65"
+                    points="35,160 105,137.5 175,92.5 245,122.5 315,77.5 385,62.5 455,85"
                   />
-                  {[
-                    { day: 'Mon', value: 1, x: 20, y: 130 },
-                    { day: 'Tue', value: 2.5, x: 88, y: 110 },
-                    { day: 'Wed', value: 5.5, x: 156, y: 70 },
-                    { day: 'Thu', value: 3.5, x: 224, y: 95 },
-                    { day: 'Fri', value: 6.5, x: 292, y: 55 },
-                    { day: 'Sat', value: 7.5, x: 360, y: 42 },
-                    { day: 'Sun', value: 6, x: 428, y: 65 },
-                  ].map((pt, i) => (
-                    <circle
-                      key={i}
-                      cx={pt.x}
-                      cy={pt.y}
-                      r={hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Y2K / Streetwear' ? 7 : 4.5}
-                      fill="#FF2E93"
-                      stroke="#ffffff"
-                      strokeWidth={2}
-                      className="cursor-pointer transition-all duration-200 hover:scale-125"
-                      onMouseEnter={() =>
-                        setHoveredChartPoint({
-                          day: pt.day,
-                          style: 'Y2K / Streetwear',
-                          value: pt.value,
-                          color: '#FF2E93',
-                          x: pt.x,
-                          y: pt.y,
-                        })
-                      }
-                    />
-                  ))}
 
                   {/* Line 3: Minimalist (Purple) */}
                   <polyline
@@ -756,38 +689,193 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     strokeDasharray="5,5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    points="20,140 88,128 156,115 224,102 292,90 360,80 428,75"
+                    points="35,167.5 105,152.5 175,137.5 245,122.5 315,107.5 385,100 455,92.5"
                   />
+
+                  {/* Points for Line 1 (Cyber-Pop) */}
                   {[
-                    { day: 'Mon', value: 0, x: 20, y: 140 },
-                    { day: 'Tue', value: 1, x: 88, y: 128 },
-                    { day: 'Wed', value: 2, x: 156, y: 115 },
-                    { day: 'Thu', value: 3, x: 224, y: 102 },
-                    { day: 'Fri', value: 4, x: 292, y: 90 },
-                    { day: 'Sat', value: 4.5, x: 360, y: 80 },
-                    { day: 'Sun', value: 5, x: 428, y: 75 },
-                  ].map((pt, i) => (
-                    <circle
-                      key={i}
-                      cx={pt.x}
-                      cy={pt.y}
-                      r={hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Minimalist' ? 6.5 : 4}
-                      fill="#7C3AED"
-                      stroke="#ffffff"
-                      strokeWidth={1.5}
-                      className="cursor-pointer transition-all duration-200 hover:scale-125"
-                      onMouseEnter={() =>
-                        setHoveredChartPoint({
-                          day: pt.day,
-                          style: 'Minimalist',
-                          value: pt.value,
-                          color: '#7C3AED',
-                          x: pt.x,
-                          y: pt.y,
-                        })
-                      }
-                    />
-                  ))}
+                    { day: 'Mon', value: 2, x: 35, y: 145 },
+                    { day: 'Tue', value: 4, x: 105, y: 115 },
+                    { day: 'Wed', value: 8, x: 175, y: 55 },
+                    { day: 'Thu', value: 6, x: 245, y: 85 },
+                    { day: 'Fri', value: 9, x: 315, y: 40 },
+                    { day: 'Sat', value: 7, x: 385, y: 70 },
+                    { day: 'Sun', value: 9.5, x: 455, y: 32.5 },
+                  ].map((pt, i) => {
+                    const isHovered = hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Cyber-Pop';
+                    return (
+                      <g key={i}>
+                        {/* Transparent Large Hit Target */}
+                        <circle
+                          cx={pt.x}
+                          cy={pt.y}
+                          r={16}
+                          fill="transparent"
+                          className="cursor-pointer"
+                          onMouseEnter={() =>
+                            setHoveredChartPoint({
+                              day: pt.day,
+                              style: 'Cyber-Pop',
+                              value: pt.value,
+                              color: '#10B981',
+                              x: pt.x,
+                              y: pt.y,
+                            })
+                          }
+                        />
+                        {/* Visual Dot */}
+                        <circle
+                          cx={pt.x}
+                          cy={pt.y}
+                          r={isHovered ? 7.5 : 4.5}
+                          fill="#10B981"
+                          stroke="#ffffff"
+                          strokeWidth={2}
+                          className="pointer-events-none transition-all duration-150"
+                        />
+                      </g>
+                    );
+                  })}
+
+                  {/* Points for Line 2 (Y2K / Streetwear) */}
+                  {[
+                    { day: 'Mon', value: 1, x: 35, y: 160 },
+                    { day: 'Tue', value: 2.5, x: 105, y: 137.5 },
+                    { day: 'Wed', value: 5.5, x: 175, y: 92.5 },
+                    { day: 'Thu', value: 3.5, x: 245, y: 122.5 },
+                    { day: 'Fri', value: 6.5, x: 315, y: 77.5 },
+                    { day: 'Sat', value: 7.5, x: 385, y: 62.5 },
+                    { day: 'Sun', value: 6, x: 455, y: 85 },
+                  ].map((pt, i) => {
+                    const isHovered = hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Y2K / Streetwear';
+                    return (
+                      <g key={i}>
+                        <circle
+                          cx={pt.x}
+                          cy={pt.y}
+                          r={16}
+                          fill="transparent"
+                          className="cursor-pointer"
+                          onMouseEnter={() =>
+                            setHoveredChartPoint({
+                              day: pt.day,
+                              style: 'Y2K / Streetwear',
+                              value: pt.value,
+                              color: '#FF2E93',
+                              x: pt.x,
+                              y: pt.y,
+                            })
+                          }
+                        />
+                        <circle
+                          cx={pt.x}
+                          cy={pt.y}
+                          r={isHovered ? 7.5 : 4.5}
+                          fill="#FF2E93"
+                          stroke="#ffffff"
+                          strokeWidth={2}
+                          className="pointer-events-none transition-all duration-150"
+                        />
+                      </g>
+                    );
+                  })}
+
+                  {/* Points for Line 3 (Minimalist) */}
+                  {[
+                    { day: 'Mon', value: 0.5, x: 35, y: 167.5 },
+                    { day: 'Tue', value: 1.5, x: 105, y: 152.5 },
+                    { day: 'Wed', value: 2.5, x: 175, y: 137.5 },
+                    { day: 'Thu', value: 3.5, x: 245, y: 122.5 },
+                    { day: 'Fri', value: 4.5, x: 315, y: 107.5 },
+                    { day: 'Sat', value: 5.0, x: 385, y: 100 },
+                    { day: 'Sun', value: 5.5, x: 455, y: 92.5 },
+                  ].map((pt, i) => {
+                    const isHovered = hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Minimalist';
+                    return (
+                      <g key={i}>
+                        <circle
+                          cx={pt.x}
+                          cy={pt.y}
+                          r={16}
+                          fill="transparent"
+                          className="cursor-pointer"
+                          onMouseEnter={() =>
+                            setHoveredChartPoint({
+                              day: pt.day,
+                              style: 'Minimalist',
+                              value: pt.value,
+                              color: '#7C3AED',
+                              x: pt.x,
+                              y: pt.y,
+                            })
+                          }
+                        />
+                        <circle
+                          cx={pt.x}
+                          cy={pt.y}
+                          r={isHovered ? 6.5 : 3.5}
+                          fill="#7C3AED"
+                          stroke="#ffffff"
+                          strokeWidth={1.5}
+                          className="pointer-events-none transition-all duration-150"
+                        />
+                      </g>
+                    );
+                  })}
+
+                  {/* Native SVG Floating Tooltip: 100% Guaranteed Exact Alignment */}
+                  {hoveredChartPoint && (() => {
+                    const tooltipWidth = 148;
+                    const tooltipHeight = 40;
+                    const clampedX = Math.min(Math.max(hoveredChartPoint.x - tooltipWidth / 2, 10), 500 - tooltipWidth - 10);
+                    const clampedY = Math.max(hoveredChartPoint.y - tooltipHeight - 12, 6);
+
+                    return (
+                      <g className="pointer-events-none animate-fadeIn">
+                        {/* Tooltip Background Card with Shadow */}
+                        <rect
+                          x={clampedX}
+                          y={clampedY}
+                          width={tooltipWidth}
+                          height={tooltipHeight}
+                          rx={10}
+                          fill="#0f172a"
+                          stroke="#334155"
+                          strokeWidth={1}
+                          style={{ filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.35))' }}
+                        />
+                        {/* Style Color Pill */}
+                        <circle
+                          cx={clampedX + 16}
+                          cy={clampedY + 20}
+                          r={4.5}
+                          fill={hoveredChartPoint.color}
+                        />
+                        {/* Style Title */}
+                        <text
+                          x={clampedX + 28}
+                          y={clampedY + 16}
+                          fill="#ffffff"
+                          fontSize="11"
+                          fontWeight="800"
+                          fontFamily="sans-serif"
+                        >
+                          {hoveredChartPoint.style}
+                        </text>
+                        {/* Day & Fits Value */}
+                        <text
+                          x={clampedX + 28}
+                          y={clampedY + 30}
+                          fill="#94a3b8"
+                          fontSize="10"
+                          fontWeight="700"
+                          fontFamily="sans-serif"
+                        >
+                          {hoveredChartPoint.day}: <tspan fill="#D4FF00" fontWeight="900">{hoveredChartPoint.value} Fits</tspan>
+                        </text>
+                      </g>
+                    );
+                  })()}
                 </svg>
               </div>
             </div>
