@@ -14,6 +14,7 @@ import {
   Loader2,
   Lightbulb,
   Tag,
+  Timer,
 } from 'lucide-react';
 import type { DripCheckResponse, EventContext, FashionItem } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
@@ -45,6 +46,8 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isFlashActive, setIsFlashActive] = useState(false);
+  const [timerSeconds, setTimerSeconds] = useState<0 | 3 | 5 | 10>(0);
+  const [countdown, setCountdown] = useState<number | null>(null);
 
   // Flow states: 'camera' | 'processing' | 'result'
   const [flowState, setFlowState] = useState<'camera' | 'processing' | 'result'>(
@@ -53,7 +56,12 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
   const [currentPhoto, setCurrentPhoto] = useState<string | null>(capturedPhoto);
   const [processingStep, setProcessingStep] = useState<number>(0);
 
-  const { score, isPassing } = result;
+  const score = result?.score ?? 88;
+  const isPassing = result?.isPassing ?? (score >= 70);
+  const lumiComment = result?.lumiComment;
+  const breakdown = result?.breakdown;
+  const styleDirectives = breakdown?.styleDirectives;
+  const suggestedAccessories = result?.suggestedAccessories;
 
   // Camera stream lifecycle
   useEffect(() => {
@@ -111,37 +119,72 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
     setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
   };
 
-  // Start 3-second realistic AI reasoning flow with animated steps
-  const startProcessingFlow = (photoDataUrl: string) => {
+  // Start realistic AI reasoning flow that stays on loading screen until API response arrives
+  const startProcessingFlow = async (photoDataUrl: string) => {
     setCurrentPhoto(photoDataUrl);
     setFlowState('processing');
     setProcessingStep(0);
 
-    // Step 1: In progress at 0ms, complete at 1000ms
-    const timer1 = setTimeout(() => {
+    // Step 1 timer: 0 -> 1 at 800ms
+    const step1Timer = setTimeout(() => {
       setProcessingStep(1);
-    }, 1000);
+    }, 800);
 
-    // Step 2: Complete at 2000ms
-    const timer2 = setTimeout(() => {
+    // Step 2 timer: 1 -> 2 at 1600ms
+    const step2Timer = setTimeout(() => {
       setProcessingStep(2);
-    }, 2000);
+    }, 1600);
 
-    // Step 3: Complete at 3000ms -> Render Result
-    const timer3 = setTimeout(() => {
+    // Step 3 timer: 2 -> 3 at 2400ms (waiting for final API response)
+    const step3Timer = setTimeout(() => {
       setProcessingStep(3);
-      onCapture(photoDataUrl);
-      setFlowState('result');
-    }, 3000);
+    }, 2400);
 
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
+    // Minimum animation duration promise (2.2s for great visual feedback)
+    const minDelayPromise = new Promise((resolve) => setTimeout(resolve, 2200));
+
+    try {
+      // Fire Gemini API call in parallel
+      const capturePromise = Promise.resolve(onCapture(photoDataUrl));
+
+      // Wait for both the minimum animation time and the API result!
+      await Promise.all([capturePromise, minDelayPromise]);
+
+      // Complete all steps (step 4 = all done)
+      setProcessingStep(4);
+
+      // Brief delay to let user see all green checkmarks, then reveal result!
+      setTimeout(() => {
+        setFlowState('result');
+      }, 400);
+    } catch (err) {
+      console.error('Error during AI drip check:', err);
+      setProcessingStep(4);
+      setTimeout(() => {
+        setFlowState('result');
+      }, 400);
+    } finally {
+      clearTimeout(step1Timer);
+      clearTimeout(step2Timer);
+      clearTimeout(step3Timer);
+    }
   };
 
-  const handleSnap = () => {
+  // Camera timer cycle: 0s (Off) -> 3s -> 5s -> 10s -> 0s
+  const cycleTimer = () => {
+    setTimerSeconds((prev) => {
+      if (prev === 0) return 3;
+      if (prev === 3) return 5;
+      if (prev === 5) return 10;
+      return 0;
+    });
+  };
+
+  const cancelCountdown = () => {
+    setCountdown(null);
+  };
+
+  const captureSnapshot = () => {
     if (!videoRef.current) return;
 
     setIsFlashActive(true);
@@ -157,6 +200,34 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       startProcessingFlow(dataUrl);
     }
   };
+
+  const handleSnap = () => {
+    if (!videoRef.current) return;
+
+    if (timerSeconds > 0) {
+      setCountdown(timerSeconds);
+      return;
+    }
+
+    captureSnapshot();
+  };
+
+  // Countdown timer tick effect
+  useEffect(() => {
+    if (countdown === null) return;
+
+    if (countdown === 0) {
+      setCountdown(null);
+      captureSnapshot();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -274,6 +345,34 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                   <div className="w-7 h-7 border-b-3 border-r-3 border-[#D4FF00]" />
                 </div>
               </div>
+
+              {/* Live Countdown Overlay when timer is running */}
+              {countdown !== null && (
+                <div className="absolute inset-0 z-30 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center animate-fadeIn">
+                  <div className="relative flex items-center justify-center">
+                    <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full border-4 border-[#D4FF00] border-t-transparent animate-spin shadow-[0_0_50px_rgba(212,255,0,0.8)]" style={{ animationDuration: '1s' }} />
+                    <span className="absolute font-black text-7xl sm:text-8xl text-white tracking-tighter animate-ping drop-shadow-2xl">
+                      {countdown}
+                    </span>
+                    <span className="absolute font-black text-7xl sm:text-8xl text-[#D4FF00] tracking-tighter drop-shadow-2xl">
+                      {countdown}
+                    </span>
+                  </div>
+
+                  <div className="mt-8 space-y-3">
+                    <span className="text-sm sm:text-base font-black text-white uppercase tracking-widest block animate-pulse">
+                      {isEn ? '📸 Strike a pose...' : '📸 Tạo dáng đẹp nha...'}
+                    </span>
+
+                    <button
+                      onClick={cancelCountdown}
+                      className="px-5 py-2 rounded-full bg-white/20 hover:bg-white/30 text-white font-bold text-xs border border-white/30 transition-all active:scale-95 cursor-pointer backdrop-blur-md"
+                    >
+                      {isEn ? 'Cancel Countdown' : 'Hủy Hẹn Giờ'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Camera Top Bar */}
@@ -292,7 +391,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               </button>
             </div>
 
-            {/* Camera Bottom Controls: Snap & Upload */}
+            {/* Camera Bottom Controls: Snap, Upload & Timer Selector */}
             <div className="relative z-20 flex items-center justify-around pt-3">
               {/* File Upload Button */}
               <button
@@ -313,7 +412,8 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               {/* Shutter Snap Button */}
               <button
                 onClick={handleSnap}
-                className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-white flex items-center justify-center p-2 shadow-[0_0_40px_rgba(212,255,0,0.7)] active:scale-90 transition-transform cursor-pointer"
+                disabled={countdown !== null}
+                className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-white flex items-center justify-center p-2 shadow-[0_0_40px_rgba(212,255,0,0.7)] active:scale-90 transition-transform cursor-pointer disabled:opacity-50"
                 title={isEn ? 'Take Photo' : 'Chụp Ảnh'}
               >
                 <div className="w-full h-full rounded-full border-4 border-gray-950 bg-[#D4FF00] flex items-center justify-center shadow-inner">
@@ -321,8 +421,21 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                 </div>
               </button>
 
-              {/* Placeholder empty circle for symmetric balance */}
-              <div className="w-13 h-13" />
+              {/* Timer Selector Button (Off / 3s / 5s / 10s) */}
+              <button
+                onClick={cycleTimer}
+                className={`w-13 h-13 rounded-full backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-xl border flex flex-col items-center justify-center relative ${
+                  timerSeconds > 0
+                    ? 'bg-[#D4FF00] text-gray-950 border-[#D4FF00] shadow-[0_0_20px_rgba(212,255,0,0.6)] font-black'
+                    : 'bg-black/60 hover:bg-black text-white border-white/25'
+                }`}
+                title={isEn ? `Timer: ${timerSeconds === 0 ? 'Off' : `${timerSeconds}s`}` : `Hẹn giờ: ${timerSeconds === 0 ? 'Tắt' : `${timerSeconds} giây`}`}
+              >
+                <Timer className={`w-5 h-5 ${timerSeconds > 0 ? 'text-gray-950' : 'text-[#D4FF00]'}`} />
+                <span className={`text-[10px] font-black uppercase leading-none mt-0.5 ${timerSeconds > 0 ? 'text-gray-950' : 'text-gray-200'}`}>
+                  {timerSeconds === 0 ? (isEn ? 'Off' : 'Tắt') : `${timerSeconds}s`}
+                </span>
+              </button>
             </div>
 
           </div>
@@ -409,7 +522,21 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                       <span className="w-2.5 h-2.5 rounded-full bg-gray-600" />
                     </span>
                   )}
-                  <span className="leading-snug">{isEn ? 'Synthesizing Fit Score...' : 'Tổng hợp Reasoning & Fit Score...'}</span>
+                  <span className="leading-snug">{isEn ? 'Synthesizing Z-Stylist Fit Score...' : 'Tổng hợp Z-Stylist Fit Score...'}</span>
+                </div>
+
+                {/* Step 4: Final Synthesis & Local Brands Matching */}
+                <div className={`flex items-center gap-3.5 transition-all duration-300 ${processingStep >= 3 ? 'text-purple-300' : 'text-gray-500 opacity-40'}`}>
+                  {processingStep > 3 ? (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 animate-scaleUp" />
+                  ) : processingStep === 3 ? (
+                    <Loader2 className="w-5 h-5 text-purple-400 shrink-0 animate-spin" />
+                  ) : (
+                    <span className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-gray-600" />
+                    </span>
+                  )}
+                  <span className="leading-snug">{isEn ? 'Matching Local Brands & finalizing review...' : 'Đối soát Local Brand & hoàn tất nhận xét...'}</span>
                 </div>
 
               </div>
@@ -497,15 +624,15 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
 
                 {/* Right: Score Gauge (Evenly sized) */}
                 <div className="shrink-0 flex justify-center">
-                  <ScoreGauge score={score} size={155} />
+                  <ScoreGauge score={score} size={155} language={language} />
                 </div>
               </div>
 
               {/* Lumi Speech in Larger, Bold Gen-Z Typography */}
               <p className="text-base sm:text-[17px] font-bold text-gray-900 leading-relaxed">
-                {isEn
-                  ? '"Hey bestie! Lumi just broke down your fit. The oversized silhouette and contrast between pieces give off effortless Saigon streetwear energy! Lumi\'s favorite part is your natural eye for layering and proportions. Slay the town and take 8,000 photos for Story!"'
-                  : '"Hế nhô! Lumi vừa phân tích xong set đồ của bạn nè. Form dáng oversize hôm nay cực kỳ phóng khoáng, độ tương phản giữa áo và quần tạo visual chuẩn streetwear Sài Gòn luôn á! Lumi chấm điểm mạnh nhất là bạn có gu phối layer có chiều sâu và tôn dáng đỉnh chóp. Chuẩn bị đi quẩy và chụp 8,000 tấm ảnh thôi bà ơi! ✨"'}
+                "{lumiComment || (isEn
+                  ? 'Hey bestie! Lumi just broke down your fit. The oversized silhouette and contrast between pieces give off effortless Saigon streetwear energy! Lumi\'s favorite part is your natural eye for layering and proportions. Slay the town and take 8,000 photos for Story! ✨'
+                  : 'Hế nhô! Lumi vừa phân tích xong set đồ của bạn nè. Form dáng oversize hôm nay cực kỳ phóng khoáng, độ tương phản giữa áo và quần tạo visual chuẩn streetwear Sài Gòn luôn á! Lumi chấm điểm mạnh nhất là bạn có gu phối layer có chiều sâu và tôn dáng đỉnh chóp. Chuẩn bị đi quẩy và chụp 8,000 tấm ảnh thôi bà ơi! ✨')}"
               </p>
 
               {/* Lumi Style Directives Box with Larger Text */}
@@ -519,17 +646,17 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                   <div className="flex items-start gap-2">
                     <span className="text-purple-600 font-black">•</span>
                     <span>
-                      {isEn
+                      {styleDirectives?.cyberPop || (isEn
                         ? 'If you wanna push full Cyber-Pop: Stack some oval chrome sunglasses or double titanium chains.'
-                        : 'Nếu bạn muốn theo hướng Cyber-Pop: Phối thêm kính râm oval kim loại hoặc dây chuyền chrome layer.'}
+                        : 'Nếu bạn muốn theo hướng Cyber-Pop: Phối thêm kính râm oval kim loại hoặc dây chuyền chrome layer kép.')}
                     </span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="text-purple-600 font-black">•</span>
                     <span>
-                      {isEn
+                      {styleDirectives?.minimalist || (isEn
                         ? 'If you’re leaning into Clean Minimalist: Simplify accessories, rock basic white sneakers and a mini crossbody bag.'
-                        : 'Nếu bạn muốn chuyển sang Minimalist: Đơn giản hóa phụ kiện, kết hợp giày trắng basic và túi đeo chéo mini.'}
+                        : 'Nếu bạn muốn chuyển sang Minimalist: Đơn giản hóa phụ kiện, kết hợp giày trắng basic và túi đeo chéo mini.')}
                     </span>
                   </div>
                 </div>
@@ -547,30 +674,33 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                 </span>
               </div>
 
-              {/* 4 Accessory Item Cards with Crisp Photos & Bold Text */}
+              {/* Accessory Item Cards with Crisp Photos & Bold Text */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {accessoryItems.map((item) => (
+                {(suggestedAccessories && suggestedAccessories.length > 0
+                  ? suggestedAccessories
+                  : accessoryItems
+                ).map((item, idx) => (
                   <div
-                    key={item.id}
+                    key={item.id || idx}
                     onClick={() => onSelectBrandItem(item)}
                     className="p-3.5 rounded-2xl bg-gray-50 hover:bg-purple-50/60 border border-gray-100 hover:border-purple-200 transition-all cursor-pointer flex items-center gap-3.5 group shadow-xs hover:shadow-md"
                   >
                     <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-200 shrink-0 shadow-inner">
                       <img
-                        src={item.imageUrl}
-                        alt={item.name}
+                        src={item.imageUrl || 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=500&auto=format&fit=crop&q=80'}
+                        alt={item.name || 'Accessory'}
                         className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
                       />
                     </div>
                     <div className="min-w-0 flex-1">
                       <span className="text-[11px] font-black text-purple-600 uppercase block truncate">
-                        {item.brandName}
+                        {item.brandName || 'Local Brand'}
                       </span>
                       <h4 className="text-sm font-black text-gray-950 truncate leading-snug group-hover:text-purple-600 transition-colors">
                         {item.name}
                       </h4>
                       <span className="text-xs sm:text-sm font-black text-[#FF2E93] mt-0.5 block">
-                        {item.price.toLocaleString('vi-VN')} ₫
+                        {item.price ? Number(item.price).toLocaleString('vi-VN') : '290.000'} ₫
                       </span>
                     </div>
                   </div>

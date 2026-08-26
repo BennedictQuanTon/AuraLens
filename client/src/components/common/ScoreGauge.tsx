@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 interface ScoreGaugeProps {
   score: number; // 0 - 100
   size?: number;
+  language?: 'en' | 'vi';
 }
 
-export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 180 }) => {
+export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 180, language = 'en' }) => {
   const [displayScore, setDisplayScore] = useState(0);
+  const isEn = language === 'en';
 
   // Animated counter effect
   useEffect(() => {
@@ -99,13 +101,19 @@ export const ScoreGauge: React.FC<ScoreGaugeProps> = ({ score, size = 180 }) => 
           <span className="text-xl font-bold text-gray-400 ml-0.5">/100</span>
         </div>
         <span
-          className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full mt-1 ${
+          className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full mt-1 uppercase tracking-wider ${
             isPassing
               ? 'bg-[#D4FF00] text-black shadow-sm'
               : 'bg-[#FF2E93]/15 text-[#FF2E93]'
           }`}
         >
-          {isPassing ? '🔥 CHÁY PHỐ' : '⚠️ CẦN UPGRADE'}
+          {isPassing
+            ? isEn
+              ? '🔥 SLAYING'
+              : '🔥 CHÁY PHỐ'
+            : isEn
+            ? '⚠️ NEEDS UPGRADE'
+            : '⚠️ CẦN UPGRADE'}
         </span>
       </div>
     </div>

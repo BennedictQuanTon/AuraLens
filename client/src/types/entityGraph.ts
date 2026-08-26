@@ -89,6 +89,11 @@ export interface OutfitBreakdown {
   vibeMatchScore: number;
   pros: string[];
   cons: string[];
+  styleDirectives?: {
+    cyberPop?: string;
+    minimalist?: string;
+    streetwear?: string;
+  };
 }
 
 export interface DripCheckResponse {

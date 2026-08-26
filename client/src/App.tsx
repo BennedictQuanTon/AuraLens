@@ -236,15 +236,15 @@ export function App() {
   }, []);
 
   // Handle Photo Capture & Drip Check Evaluation
-  const handleCapture = async (imageDataUrl: string) => {
+  const handleCapture = async (imageDataUrl: string): Promise<DripCheckResponse> => {
     setIsLoading(true);
     setCapturedPhoto(imageDataUrl);
 
     try {
       const evaluation = await apiService.dripCheck({
         context: selectedContext,
-        mockScenario,
         imageBase64: imageDataUrl,
+        language,
       });
 
       setDripResult(evaluation);
@@ -256,9 +256,10 @@ export function App() {
       );
       setRecommendationData(placeRecs);
 
-      setActiveView(2);
+      return evaluation;
     } catch (error) {
       console.error('Error evaluating outfit:', error);
+      return dripResult;
     } finally {
       setIsLoading(false);
     }

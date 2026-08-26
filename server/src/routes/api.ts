@@ -26,12 +26,7 @@ apiRouter.get('/health', (_req: Request, res: Response) => {
 apiRouter.post('/drip-check', async (req: Request, res: Response) => {
   try {
     const body: DripCheckRequest = req.body;
-
-    if (!body.context) {
-      return res.status(400).json({
-        error: 'Missing required field: context (e.g., "Hẹn hò", "Quẩy bar / Pub đêm", "Cafe sống ảo")',
-      });
-    }
+    const context = body.context || 'Cafe sống ảo';
 
     const currentHour = new Date().getHours();
     const weatherSnapshot: WeatherContext = {
@@ -42,7 +37,7 @@ apiRouter.post('/drip-check', async (req: Request, res: Response) => {
       city: 'Hồ Chí Minh',
     };
 
-    const evaluation = await visionService.analyzeOutfit(body, weatherSnapshot);
+    const evaluation = await visionService.analyzeOutfit({ ...body, context }, weatherSnapshot);
     return res.status(200).json(evaluation);
   } catch (error) {
     console.error('Error in /api/v1/drip-check:', error);

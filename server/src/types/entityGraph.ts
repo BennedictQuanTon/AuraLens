@@ -116,9 +116,10 @@ export interface PhotoboothFrame {
 export interface DripCheckRequest {
   imageUri?: string;
   imageBase64?: string;
-  context: EventContext;
+  context?: EventContext;
   mockScenario?: 'low_score' | 'high_score' | 'rain_ready' | 'cyberpunk';
   userNotes?: string;
+  language?: 'en' | 'vi';
 }
 
 export interface OutfitBreakdown {
@@ -129,6 +130,11 @@ export interface OutfitBreakdown {
   vibeMatchScore: number; // 0 - 100
   pros: string[];
   cons: string[];
+  styleDirectives?: {
+    cyberPop?: string;
+    minimalist?: string;
+    streetwear?: string;
+  };
 }
 
 export interface DripCheckResponse {
