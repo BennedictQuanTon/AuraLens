@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/layout/Header.js';
 import { NavigationBar } from './components/layout/NavigationBar.js';
 import { HeroView } from './views/HeroView.js';
-import { ScannerView } from './views/ScannerView.js';
-import { FitScoreView } from './views/FitScoreView.js';
+import { DripCheckView } from './views/DripCheckView.js';
 import { VibeMapView } from './views/VibeMapView.js';
 import { PhotoboothView } from './views/PhotoboothView.js';
 import { SettingsView } from './views/SettingsView.js';
@@ -257,7 +256,7 @@ export function App() {
       );
       setRecommendationData(placeRecs);
 
-      setActiveView(3);
+      setActiveView(2);
     } catch (error) {
       console.error('Error evaluating outfit:', error);
     } finally {
@@ -333,32 +332,27 @@ export function App() {
             userProfile={userProfile}
             language={language}
             onStartScanner={() => setActiveView(2)}
-            onExplorePlaces={() => setActiveView(4)}
+            onExplorePlaces={() => setActiveView(3)}
           />
         )}
 
-        {/* VIEW 2: SMART CAMERA SCANNER */}
+        {/* VIEW 2: UNIFIED DRIP CHECK SCANNER & SCORE MATRIX */}
         {activeView === 2 && (
-          <ScannerView
-            context={selectedContext}
-            onCapture={handleCapture}
-            onBack={() => setActiveView(1)}
-            isLoading={isLoading}
-          />
-        )}
-
-        {/* VIEW 3: DRIP MATRIX SCORE DASHBOARD */}
-        {activeView === 3 && (
-          <FitScoreView
+          <DripCheckView
             result={dripResult}
-            onRetake={() => setActiveView(2)}
-            onExplorePlaces={() => setActiveView(4)}
+            context={selectedContext}
+            onContextChange={setSelectedContext}
+            onCapture={handleCapture}
+            onExplorePlaces={() => setActiveView(3)}
             onSelectBrandItem={(item) => setSelectedBrandItem(item)}
+            isLoading={isLoading}
+            language={language}
+            capturedPhoto={capturedPhoto}
           />
         )}
 
-        {/* VIEW 4: VIBE MAP & SMART F&B ITINERARY */}
-        {activeView === 4 && (
+        {/* VIEW 3: VIBE MAP & SMART F&B ITINERARY */}
+        {activeView === 3 && (
           <VibeMapView
             recommendationData={
               recommendationData || {
@@ -371,22 +365,22 @@ export function App() {
             weather={weather}
             onToggleRain={handleToggleRain}
             onSelectPlace={(place) => setSelectedPlace(place)}
-            onGoToPhotobooth={() => setActiveView(5)}
+            onGoToPhotobooth={() => setActiveView(4)}
           />
         )}
 
-        {/* VIEW 5: AURA PHOTOBOOTH STUDIO */}
-        {activeView === 5 && (
+        {/* VIEW 4: AURA PHOTOBOOTH STUDIO */}
+        {activeView === 4 && (
           <PhotoboothView
             frames={frames}
             currentVibe={currentVibe}
             capturedPhoto={capturedPhoto}
-            onBackToMap={() => setActiveView(4)}
+            onBackToMap={() => setActiveView(3)}
           />
         )}
 
-        {/* VIEW 6: SETTINGS & CUSTOMIZATION */}
-        {activeView === 6 && (
+        {/* VIEW 5: SETTINGS & CUSTOMIZATION */}
+        {activeView === 5 && (
           <SettingsView
             userProfile={userProfile}
             onUpdateProfile={handleUpdateProfile}
@@ -419,7 +413,7 @@ export function App() {
         onClose={() => setSelectedPlace(null)}
         onGoToPhotobooth={() => {
           setSelectedPlace(null);
-          setActiveView(5);
+          setActiveView(4);
         }}
       />
 

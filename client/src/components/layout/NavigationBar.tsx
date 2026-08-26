@@ -13,12 +13,11 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
   hasScore,
 }) => {
   const navItems = [
-    { id: 1, label: 'Lumi', icon: Home },
-    { id: 2, label: 'Camera', icon: Camera },
-    { id: 3, label: 'Score', icon: Sparkles, badge: hasScore },
-    { id: 4, label: 'Places', icon: MapPin },
-    { id: 5, label: 'Studio', icon: ImageIcon },
-    { id: 6, label: 'Settings', icon: Settings },
+    { id: 1, label: 'Home', icon: Home },
+    { id: 2, label: 'Drip Check', icon: Sparkles, badge: hasScore },
+    { id: 3, label: 'Places', icon: MapPin },
+    { id: 4, label: 'Studio', icon: ImageIcon },
+    { id: 5, label: 'Settings', icon: Settings },
   ];
 
   return (

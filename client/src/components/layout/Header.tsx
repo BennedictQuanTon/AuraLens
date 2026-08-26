@@ -31,12 +31,11 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectView,
 }) => {
   const desktopNavItems = [
-    { id: 1, label: 'Lumi Home', icon: Home },
-    { id: 2, label: 'Camera Scanner', icon: Camera },
-    { id: 3, label: 'Drip Score', icon: Sparkles },
-    { id: 4, label: 'Vibe Map', icon: MapPin },
-    { id: 5, label: 'Photobooth Studio', icon: ImageIcon },
-    { id: 6, label: 'Settings', icon: Settings },
+    { id: 1, label: 'Home', icon: Home },
+    { id: 2, label: 'Drip Check & Score', icon: Sparkles },
+    { id: 3, label: 'Vibe Map', icon: MapPin },
+    { id: 4, label: 'Photobooth Studio', icon: ImageIcon },
+    { id: 5, label: 'Settings', icon: Settings },
   ];
 
   return (
