@@ -221,12 +221,16 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
     setTimeout(() => setIsFlashActive(false), 250);
 
     const canvas = document.createElement('canvas');
-    canvas.width = 900;
-    canvas.height = 1200;
+    canvas.width = 1080;
+    canvas.height = 1440;
     const ctx = canvas.getContext('2d');
     if (ctx) {
+      if (facingMode === 'user') {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+      }
       ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
       startProcessingFlow(dataUrl);
     }
   };
@@ -543,7 +547,9 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                 autoPlay
                 playsInline
                 muted
-                className="w-full h-full object-cover"
+                className={`absolute inset-0 w-full h-full object-cover ${
+                  facingMode === 'user' ? 'scale-x-[-1]' : ''
+                }`}
               />
 
               {/* Viewfinder Target Reticle Overlay - Perfectly Inset with Zero Overlap */}
