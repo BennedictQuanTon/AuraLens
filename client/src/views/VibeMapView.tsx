@@ -1,8 +1,10 @@
-import React from 'react';
-import { MapPin, Clock, Camera, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Clock, Camera, Sparkles, ArrowRight, List, Map as MapIcon } from 'lucide-react';
 import type { Location, PlaceRecommendationResponse, WeatherContext } from '../types/entityGraph.js';
 import { WeatherBadge } from '../components/common/WeatherBadge.js';
 import { LumiAvatar } from '../components/common/LumiAvatar.js';
+import { MapViewMock } from '../components/common/MapViewMock.js';
 
 interface VibeMapViewProps {
   recommendationData: PlaceRecommendationResponse;
@@ -20,9 +22,11 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
   onGoToPhotobooth,
 }) => {
   const { recommendedPlaces, lumiSuggestion, aestheticTag } = recommendationData;
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('map');
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div className="space-y-6 animate-fadeIn pb-16">
+      
       {/* Top Header & Context Badges */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
@@ -48,7 +52,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
         </div>
       </div>
 
-      {/* Top Dashboard Row: Weather Widget + Lumi Suggestion side-by-side on desktop */}
+      {/* Top Dashboard Row: Weather Widget + Lumi Suggestion */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         <div className="lg:col-span-5">
           <WeatherBadge weather={weather} onToggleRain={onToggleRain} />
@@ -58,86 +62,150 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
         </div>
       </div>
 
-      {/* Place Feed: Multi-Column Grid (1 col on mobile, 2 on tablet, 3 on desktop) */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <span className="text-xs font-black uppercase tracking-wider text-gray-500 flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
-            Recommended Spots ({recommendedPlaces.length} Open Now)
-          </span>
-          <span className="text-[10px] text-gray-400 font-semibold">
-            Click card to view photo spots &amp; signature drinks
-          </span>
+      {/* ========================================================================= */}
+      {/* TOGGLE VIEW CONTROLLER (Placed right below Weather Widget)                 */}
+      {/* ========================================================================= */}
+      <div className="flex items-center justify-between gap-3 pt-1">
+        <div className="flex items-center gap-2 p-1.5 rounded-full bg-gray-100/90 backdrop-blur-md border border-gray-200/80 shadow-xs">
+          <button
+            onClick={() => setViewMode('map')}
+            className={`py-2 px-5 rounded-full text-xs font-black transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+              viewMode === 'map'
+                ? 'bg-[#D4FF00] text-gray-950 shadow-[0_0_15px_rgba(212,255,0,0.5)] scale-102'
+                : 'text-gray-600 hover:text-gray-950 hover:bg-gray-200'
+            }`}
+          >
+            <MapIcon className="w-3.5 h-3.5" />
+            <span>🗺️ Map</span>
+          </button>
+
+          <button
+            onClick={() => setViewMode('list')}
+            className={`py-2 px-5 rounded-full text-xs font-black transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+              viewMode === 'list'
+                ? 'bg-[#D4FF00] text-gray-950 shadow-[0_0_15px_rgba(212,255,0,0.5)] scale-102'
+                : 'text-gray-600 hover:text-gray-950 hover:bg-gray-200'
+            }`}
+          >
+            <List className="w-3.5 h-3.5" />
+            <span>📋 List</span>
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {recommendedPlaces.map((place) => (
-            <div
-              key={place.id}
-              onClick={() => onSelectPlace(place)}
-              className="calm-card-elevated rounded-3xl overflow-hidden hover:shadow-xl active:scale-99 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              {/* Image Header */}
-              <div className="relative w-full h-48 bg-gray-900 overflow-hidden">
-                <img
-                  src={place.imageUrl}
-                  alt={place.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
-
-                {/* Top Badges */}
-                <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                  <span className="px-2.5 py-0.5 bg-white text-gray-900 font-bold text-[10px] rounded-full shadow-xs">
-                    {place.aestheticTag}
-                  </span>
-                  <span
-                    className={`px-2.5 py-0.5 text-white font-bold text-[10px] rounded-full backdrop-blur-md ${
-                      place.isIndoor ? 'bg-blue-600/85' : 'bg-amber-600/85'
-                    }`}
-                  >
-                    {place.isIndoor ? '❄️ Indoor AC' : '🌿 Open Outdoor'}
-                  </span>
-                </div>
-
-                {/* Match Score Badge */}
-                <div className="absolute top-3 right-3 px-2.5 py-0.5 bg-black/60 backdrop-blur-md text-[#D4FF00] font-black text-xs rounded-full border border-white/10">
-                  {place.matchScore ?? 96}% Match
-                </div>
-
-                {/* Place Name & District */}
-                <div className="absolute bottom-3 left-3 right-3">
-                  <span className="text-[10px] font-semibold text-gray-300 block">
-                    {place.type} · {place.gps.district}
-                  </span>
-                  <h3 className="text-base font-extrabold text-white leading-snug drop-shadow-sm truncate">
-                    {place.name}
-                  </h3>
-                </div>
-              </div>
-
-              {/* Place Highlights */}
-              <div className="p-4 space-y-2.5 bg-white flex-1 flex flex-col justify-between">
-                <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
-                  "{place.vibeDescription}"
-                </p>
-
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100 text-[11px] text-gray-400 font-medium">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-gray-500" />
-                    {place.openHours.open}:00 - {place.openHours.close}:00
-                  </span>
-
-                  <span className="text-gray-900 font-bold flex items-center gap-1 group-hover:text-purple-600 transition-colors">
-                    <Camera className="w-3.5 h-3.5 text-[#FF2E93]" />
-                    Photo spots
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <span className="text-xs font-bold text-gray-400 hidden sm:block">
+          {viewMode === 'map' ? 'Khám phá tọa độ trực quan trên bản đồ' : `Danh sách (${recommendedPlaces.length} quán)`}
+        </span>
       </div>
+
+      {/* ========================================================================= */}
+      {/* MAIN VIEWPORT: ANIMATED MAP VIEW OR PINTEREST LIST GRID                    */}
+      {/* ========================================================================= */}
+      <AnimatePresence mode="wait">
+        {viewMode === 'map' ? (
+          <motion.div
+            key="map-view"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25 }}
+            className="w-full"
+          >
+            <MapViewMock
+              weather={weather}
+              onSelectPlace={onSelectPlace}
+              onGoToPhotobooth={onGoToPhotobooth}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="list-view"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.25 }}
+            className="space-y-3"
+          >
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs font-black uppercase tracking-wider text-gray-500 flex items-center gap-1">
+                <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
+                Recommended Spots ({recommendedPlaces.length} Open Now)
+              </span>
+              <span className="text-[10px] text-gray-400 font-semibold">
+                Click card to view photo spots &amp; signature drinks
+              </span>
+            </div>
+
+            {/* Place Feed: Pinterest Multi-Column Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {recommendedPlaces.map((place) => (
+                <div
+                  key={place.id}
+                  onClick={() => onSelectPlace(place)}
+                  className="calm-card-elevated rounded-3xl overflow-hidden hover:shadow-xl active:scale-99 transition-all cursor-pointer group flex flex-col justify-between"
+                >
+                  {/* Image Header */}
+                  <div className="relative w-full h-48 bg-gray-900 overflow-hidden">
+                    <img
+                      src={place.imageUrl}
+                      alt={place.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
+
+                    {/* Top Badges */}
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                      <span className="px-2.5 py-0.5 bg-white text-gray-900 font-bold text-[10px] rounded-full shadow-xs">
+                        {place.aestheticTag}
+                      </span>
+                      <span
+                        className={`px-2.5 py-0.5 text-white font-bold text-[10px] rounded-full backdrop-blur-md ${
+                          place.isIndoor ? 'bg-blue-600/85' : 'bg-amber-600/85'
+                        }`}
+                      >
+                        {place.isIndoor ? '❄️ Indoor AC' : '🌿 Open Outdoor'}
+                      </span>
+                    </div>
+
+                    {/* Match Score Badge */}
+                    <div className="absolute top-3 right-3 px-2.5 py-0.5 bg-black/60 backdrop-blur-md text-[#D4FF00] font-black text-xs rounded-full border border-white/10">
+                      {place.matchScore ?? 96}% Match
+                    </div>
+
+                    {/* Place Name & District */}
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <span className="text-[10px] font-semibold text-gray-300 block">
+                        {place.type} · {place.gps.district}
+                      </span>
+                      <h3 className="text-base font-extrabold text-white leading-snug drop-shadow-sm truncate">
+                        {place.name}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Place Highlights */}
+                  <div className="p-4 space-y-2.5 bg-white flex-1 flex flex-col justify-between">
+                    <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
+                      "{place.vibeDescription}"
+                    </p>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100 text-[11px] text-gray-400 font-medium">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5 text-gray-500" />
+                        {place.openHours.open}:00 - {place.openHours.close}:00
+                      </span>
+
+                      <span className="text-gray-900 font-bold flex items-center gap-1 group-hover:text-purple-600 transition-colors">
+                        <Camera className="w-3.5 h-3.5 text-[#FF2E93]" />
+                        Photo spots
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Bottom CTA to Photobooth (on mobile) */}
       <div className="pt-2 sm:hidden">
@@ -150,6 +218,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>
+
     </div>
   );
 };
