@@ -222,21 +222,21 @@ export const HeroView: React.FC<HeroViewProps> = ({
     <div className="space-y-8 animate-fadeIn pb-16">
       
       {/* ========================================================================= */}
-      {/* 1. TOP HERO SECTION: BALANCED FONT SIZES, LARGER SHIFTED LUMI & 2 BUTTONS */}
+      {/* 1. TOP HERO SECTION: GRAND IMPACT TYPOGRAPHY, ENLARGED LUMI & 2 BUTTONS   */}
       {/* ========================================================================= */}
-      <div className="relative pt-2 pb-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center">
+      <div className="relative pt-4 pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           
           {/* Left: Primary Heading & 2 Action Buttons */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="lg:col-span-7 space-y-6">
             
-            {/* PRIMARY HEADING with wider word spacing */}
-            <div className="space-y-2">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-950 tracking-tight leading-tight [word-spacing:0.35rem]">
+            {/* PRIMARY HEADING with Grand Typography */}
+            <div className="space-y-3">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-gray-950 tracking-tight leading-none [word-spacing:0.4rem]">
                 {isEn ? 'Welcome Back,' : 'Chào mừng trở lại,'}
               </h1>
               
-              <div className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight [word-spacing:0.35rem] flex flex-wrap items-baseline gap-3">
+              <div className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-none [word-spacing:0.4rem] flex flex-wrap items-baseline gap-3 pt-1">
                 <span className="text-gray-950">
                   {isEn ? `My ${genderTitle}` : `My ${genderTitle}`}
                 </span>
@@ -247,56 +247,56 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
 
             {/* GEN-Z SUBTITLE */}
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-gray-800 tracking-wide [word-spacing:0.25rem] pt-2">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-800 tracking-wide [word-spacing:0.3rem] pt-2">
               Ready to{' '}
               <span className="text-[#FF2E93] font-black">slay</span>{' '}
               your{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#00F5FF] to-[#10B981] font-black underline decoration-[#FF2E93] decoration-wavy decoration-2 underline-offset-4">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#00F5FF] to-[#10B981] font-black underline decoration-[#FF2E93] decoration-wavy decoration-3 underline-offset-6">
                 vibe
               </span>{' '}
               today?
             </h2>
 
-            {/* TWO SHORT CLEAN ACTION BUTTONS (Drip Check ⚡ & Vibe Map 📍) */}
-            <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+            {/* TWO LARGE CLEAN ACTION BUTTONS (Drip Check ⚡ & Vibe Map 📍) */}
+            <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               {/* Button 1: Drip Check */}
               <button
                 onClick={onStartScanner}
-                className="py-4 px-7 rounded-full bg-[#0F172A] hover:bg-black text-white font-extrabold text-base shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2.5 cursor-pointer group"
+                className="py-4.5 px-8 sm:py-5 sm:px-9 rounded-full bg-[#0F172A] hover:bg-black text-white font-black text-base sm:text-lg shadow-2xl active:scale-98 transition-all flex items-center justify-center gap-3 cursor-pointer group border border-white/10"
               >
-                <Camera className="w-5 h-5 text-[#D4FF00]" />
+                <Camera className="w-6 h-6 text-[#D4FF00]" />
                 <span>Drip Check</span>
-                <ChevronRight className="w-4 h-4 text-[#D4FF00] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5 h-5 text-[#D4FF00] group-hover:translate-x-1 transition-transform" />
               </button>
 
               {/* Button 2: Vibe Map */}
               <button
                 onClick={onExplorePlaces}
-                className="py-4 px-7 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 hover:opacity-95 text-white font-extrabold text-base shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2.5 cursor-pointer group"
+                className="py-4.5 px-8 sm:py-5 sm:px-9 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 hover:opacity-95 text-white font-black text-base sm:text-lg shadow-2xl active:scale-98 transition-all flex items-center justify-center gap-3 cursor-pointer group border border-white/10"
               >
-                <MapPin className="w-5 h-5 text-[#D4FF00]" />
+                <MapPin className="w-6 h-6 text-[#D4FF00]" />
                 <span>Vibe Map</span>
-                <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
 
-          {/* Right: Larger Lumi Shifted Left & Clean Backdrop */}
-          <div className="lg:col-span-5 flex flex-col items-center lg:items-start lg:-translate-x-10 justify-center relative min-h-[300px]">
+          {/* Right: Enlarger Lumi Mascot & Dynamic Speech Bubble */}
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-start lg:-translate-x-8 justify-center relative min-h-[360px]">
             
-            {/* FIXED HEIGHT CONTAINER (Zero layout shift on text change) */}
-            <div className="h-16 flex items-center justify-center relative w-full mb-1">
+            {/* Speech Bubble Container with Larger Text */}
+            <div className="h-20 flex items-center justify-center relative w-full mb-2">
               <div
                 key={currentSpeechIndex}
-                className="comic-bubble px-4 py-2.5 max-w-xs text-xs font-black text-gray-950 text-center leading-snug z-20"
+                className="comic-bubble px-6 py-3 max-w-sm sm:max-w-md text-xs sm:text-sm font-black text-gray-950 text-center leading-snug z-20 shadow-xl"
               >
                 {speechLines[currentSpeechIndex]}
               </div>
             </div>
 
             {/* Enlarger Transparent Cutout Lumi Mascot */}
-            <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 animate-lumi-sway flex items-center justify-center">
-              <div className="absolute inset-0 bg-white/50 rounded-full blur-2xl pointer-events-none" />
+            <div className="relative w-72 h-72 sm:w-88 sm:h-88 lg:w-[400px] lg:h-[400px] xl:w-[440px] xl:h-[440px] animate-lumi-sway flex items-center justify-center">
+              <div className="absolute inset-0 bg-white/60 rounded-full blur-3xl pointer-events-none" />
               <img
                 src="/lumi.png"
                 alt="Lumi AI Stylist"

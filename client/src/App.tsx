@@ -117,8 +117,8 @@ export function App() {
   const [language, setLanguage] = useState<AppLanguage>('en');
   const [colorTheme, setColorTheme] = useState<AppColorTheme>('cyber_pop');
   const [userProfile, setUserProfile] = useState<UserProfileState>({
-    name: 'Alex',
-    handle: 'alex_slays_ootd',
+    name: 'Bennedict Ton',
+    handle: 'bennedict_ton',
     avatarUrl: '/lumi.png',
     bio: 'Cyber-Pop & Y2K Fashion Explorer in Saigon.',
     favoriteVibe: 'Cyber-Pop',
