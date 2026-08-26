@@ -235,9 +235,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
   const ratioConfig = ASPECT_RATIOS.find((r) => r.id === selectedRatio) || ASPECT_RATIOS[0];
   const activeFilter = PHOTO_FILTERS.find((f) => f.id === selectedFilterId) || PHOTO_FILTERS[0];
-  
-  // Selected Frame: returns NULL when 'selectedFrameId' is empty ('None / Nguyên Bản')
-  const activeFrame = selectedFrameId ? frames.find((f) => f.id === selectedFrameId) || null : null;
 
   // Responsive Viewport Height helper (maintains tall consistent height across all ratios)
   const getContainerRatioClass = (ratio: AspectRatioType) => {
@@ -436,6 +433,183 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
     setDragStartPos(null);
   };
 
+  // =========================================================================
+  // DYNAMIC ADAPTIVE FRAME COMPONENT (Responsive to ANY aspect ratio)
+  // =========================================================================
+  const renderResponsiveFrame = (frameId: string) => {
+    if (!frameId) return null; // No Frame / Nguyên Bản
+
+    switch (frameId) {
+      case 'frame-01': // Y2K Cyber Magazine
+        return (
+          <div className="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between p-3 sm:p-4 select-none">
+            {/* Top Magazine Header */}
+            <div className="w-full text-center pt-1 pb-2 bg-gradient-to-b from-black/85 via-black/50 to-transparent rounded-t-2xl">
+              <h2 className="font-black text-xl sm:text-2xl text-[#D4FF00] tracking-widest uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] font-['Syne']">
+                AURALENS
+              </h2>
+              <span className="text-[9px] sm:text-[10px] font-black text-white/90 tracking-widest uppercase block mt-0.5 font-mono">
+                ISSUE 2026 // CYBERPOP SPECIAL EDITION
+              </span>
+              <div className="w-4/5 mx-auto border-b border-dashed border-[#00F5FF] mt-1 opacity-70" />
+            </div>
+
+            {/* Corner Cyber Brackets */}
+            <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-[#D4FF00]" />
+            <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#D4FF00]" />
+            <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00F5FF]" />
+            <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#00F5FF]" />
+
+            {/* Bottom Barcode & Footer */}
+            <div className="w-full flex items-center justify-between pb-1 pt-3 px-2 bg-gradient-to-t from-black/90 via-black/50 to-transparent rounded-b-2xl">
+              <div>
+                <span className="text-[11px] font-black text-white block tracking-wide">
+                  FEEL THE AURA // SGN 2026
+                </span>
+                <span className="text-[8px] font-bold text-[#D4FF00] tracking-wider block">
+                  POWERED BY GOOGLE AI & LUMI PERSONA
+                </span>
+              </div>
+              {/* Barcode graphic */}
+              <div className="flex items-center gap-0.5 text-white bg-black/60 px-2 py-0.5 rounded-sm">
+                <span className="font-mono text-sm tracking-tighter select-none">█║▌║█║▌█</span>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'frame-02': // Retro 35mm Film Strip
+        return (
+          <div className="absolute inset-0 pointer-events-none z-10 flex justify-between select-none">
+            {/* Left Film Strip */}
+            <div className="h-full w-7 sm:w-8 bg-black/95 flex flex-col justify-between py-2 items-center border-r border-white/20">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div key={`sprocket-l-${i}`} className="w-3.5 h-3.5 rounded-sm bg-white/90 shadow-inner" />
+              ))}
+            </div>
+
+            {/* Center Area Corner Timestamps */}
+            <div className="flex-1 flex flex-col justify-between p-3">
+              <div className="flex justify-between items-center text-[10px] font-mono font-black text-[#FFA500] drop-shadow-md">
+                <span>'26 08 27</span>
+                <span>KODAK GOLD 400</span>
+              </div>
+              <div className="flex justify-between items-center text-[9px] font-mono font-bold text-[#FFA500] drop-shadow-md">
+                <span>EXP 24+3</span>
+                <span>ISO 400 // 35MM</span>
+              </div>
+            </div>
+
+            {/* Right Film Strip */}
+            <div className="h-full w-7 sm:w-8 bg-black/95 flex flex-col justify-between py-2 items-center border-l border-white/20">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <div key={`sprocket-r-${i}`} className="w-3.5 h-3.5 rounded-sm bg-white/90 shadow-inner" />
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'frame-03': // Vogue Fashion Editorial
+        return (
+          <div className="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between p-4 select-none">
+            {/* Top Clean Vogue Masthead */}
+            <div className="w-full text-center pt-2">
+              <h1 className="font-serif font-black text-3xl sm:text-4xl text-white tracking-[0.22em] drop-shadow-lg leading-none">
+                VOGUE
+              </h1>
+              <span className="text-[9px] font-bold text-white/80 tracking-[0.3em] uppercase block mt-1">
+                AUTUMN / WINTER 2026
+              </span>
+            </div>
+
+            {/* Bottom Editorial Rule */}
+            <div className="w-full pt-1 pb-1">
+              <div className="w-full border-t border-white/60 mb-1.5" />
+              <div className="flex items-center justify-between text-[9px] font-mono font-black text-white drop-shadow">
+                <span>AURALENS SPECIAL EDITORIAL</span>
+                <span>VIETNAM · 2026</span>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'frame-04': // Dopamine Pop Pastel
+        return (
+          <div className="absolute inset-0 pointer-events-none z-10 p-2.5 sm:p-3 select-none flex flex-col justify-between">
+            {/* Outer Gradient Border */}
+            <div className="absolute inset-2 sm:inset-3 rounded-2xl border-4 border-transparent bg-gradient-to-r from-[#FF2E93] via-[#00F5FF] to-[#D4FF00] -z-10 [mask:linear-gradient(#fff_0_0)_padding-box,linear-gradient(#fff_0_0)] [mask-composite:exclude]" />
+
+            {/* Top Stars */}
+            <div className="flex justify-between items-center px-2 pt-1">
+              <span className="text-lg">🌟</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-black/75 text-[#D4FF00] text-[9px] font-black tracking-wider uppercase border border-[#FF2E93]">
+                ★ DOPAMINE POP ★
+              </span>
+              <span className="text-lg">✨</span>
+            </div>
+
+            {/* Bottom Stars */}
+            <div className="flex justify-between items-center px-2 pb-1">
+              <span className="text-lg">💖</span>
+              <span className="text-[9px] font-black text-white drop-shadow bg-black/60 px-2 py-0.5 rounded-full">
+                #AURALENS_GENZ
+              </span>
+              <span className="text-lg">🌟</span>
+            </div>
+          </div>
+        );
+
+      case 'frame-05': // Neon Matrix Grid (Cyberpunk HUD)
+        return (
+          <div className="absolute inset-0 pointer-events-none z-10 p-3 sm:p-4 select-none flex flex-col justify-between">
+            {/* 4 Neon Brackets */}
+            <div className="absolute top-2.5 left-2.5 w-7 h-7 border-t-2 border-l-2 border-[#00F5FF]" />
+            <div className="absolute top-2.5 right-2.5 w-7 h-7 border-t-2 border-r-2 border-[#00F5FF]" />
+            <div className="absolute bottom-2.5 left-2.5 w-7 h-7 border-b-2 border-l-2 border-[#00F5FF]" />
+            <div className="absolute bottom-2.5 right-2.5 w-7 h-7 border-b-2 border-r-2 border-[#00F5FF]" />
+
+            {/* Top HUD Stats */}
+            <div className="flex justify-between items-center text-[10px] font-mono font-black text-white px-2 drop-shadow">
+              <span className="text-red-500 animate-pulse">● REC [00:26:08]</span>
+              <span className="text-[#D4FF00]">BATT [99%]</span>
+            </div>
+
+            {/* Bottom Coordinates */}
+            <div className="flex justify-between items-center text-[9px] font-mono font-bold text-white px-2 drop-shadow">
+              <span className="text-[#00F5FF]">GPS: 10.7769° N, 106.7009° E</span>
+              <span>ISO 400 · 1/250s</span>
+            </div>
+          </div>
+        );
+
+      case 'frame-06': // Old Money Royal Gold
+        return (
+          <div className="absolute inset-0 pointer-events-none z-10 p-3 sm:p-4 select-none flex flex-col justify-between">
+            {/* Double Inset Gold Border */}
+            <div className="absolute inset-2 sm:inset-3 rounded-2xl border border-amber-300/80 pointer-events-none" />
+            <div className="absolute inset-3 sm:inset-4 rounded-xl border border-amber-400/50 pointer-events-none" />
+
+            {/* Top Monogram */}
+            <div className="w-full text-center pt-2">
+              <span className="font-serif font-black text-xs sm:text-sm text-amber-300 tracking-[0.3em] uppercase drop-shadow">
+                A U R A · L E N S
+              </span>
+            </div>
+
+            {/* Bottom Inscription */}
+            <div className="w-full text-center pb-2">
+              <span className="font-serif text-[8px] sm:text-[9px] text-amber-200/90 tracking-[0.2em] uppercase block drop-shadow">
+                PRIVATE COLLECTION · EST. 2026
+              </span>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   // High Resolution Canvas Compositor & Download
   const handleDownloadHQ = async () => {
     setIsExporting(true);
@@ -477,7 +651,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         } else {
           dw = canvas.width;
           dh = canvas.width / imgAspect;
-          // Crop with top bias so model's head is not cut off
           dy = Math.max(-dh * 0.15, (canvas.height - dh) / 2);
         }
 
@@ -488,19 +661,168 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       baseImg.onerror = () => resolve();
     });
 
-    // 2. Draw Frame Overlay if present (and only if activeFrame is selected)
-    if (activeFrame && activeFrame.frameOverlayUrl) {
-      const frameImg = new Image();
-      frameImg.crossOrigin = 'anonymous';
-      frameImg.src = activeFrame.frameOverlayUrl;
+    // 2. Draw Frame Overlay dynamically if frame selected
+    if (selectedFrameId) {
+      const W = canvas.width;
+      const H = canvas.height;
 
-      await new Promise<void>((resolve) => {
-        frameImg.onload = () => {
-          ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
-          resolve();
-        };
-        frameImg.onerror = () => resolve();
-      });
+      ctx.save();
+
+      if (selectedFrameId === 'frame-01') {
+        // Y2K Cyber Top Bar
+        const topGrad = ctx.createLinearGradient(0, 0, 0, H * 0.14);
+        topGrad.addColorStop(0, 'rgba(10, 10, 15, 0.92)');
+        topGrad.addColorStop(1, 'rgba(10, 10, 15, 0)');
+        ctx.fillStyle = topGrad;
+        ctx.fillRect(0, 0, W, H * 0.14);
+
+        ctx.font = `900 ${Math.round(W * 0.065)}px 'Syne', sans-serif`;
+        ctx.fillStyle = '#D4FF00';
+        ctx.textAlign = 'center';
+        ctx.fillText('AURALENS', W / 2, H * 0.055);
+
+        ctx.font = `700 ${Math.round(W * 0.024)}px 'Space Grotesk', monospace`;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText('ISSUE 2026 // CYBERPOP SPECIAL EDITION', W / 2, H * 0.082);
+
+        // Neon corners
+        ctx.strokeStyle = '#D4FF00';
+        ctx.lineWidth = Math.round(W * 0.008);
+        const pad = Math.round(W * 0.035);
+        const len = Math.round(W * 0.08);
+
+        // Top-left
+        ctx.beginPath();
+        ctx.moveTo(pad, pad + len);
+        ctx.lineTo(pad, pad);
+        ctx.lineTo(pad + len, pad);
+        ctx.stroke();
+
+        // Top-right
+        ctx.beginPath();
+        ctx.moveTo(W - pad - len, pad);
+        ctx.lineTo(W - pad, pad);
+        ctx.lineTo(W - pad, pad + len);
+        ctx.stroke();
+
+        // Bottom corners
+        ctx.strokeStyle = '#00F5FF';
+        ctx.beginPath();
+        ctx.moveTo(pad, H - pad - len);
+        ctx.lineTo(pad, H - pad);
+        ctx.lineTo(pad + len, H - pad);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(W - pad - len, H - pad);
+        ctx.lineTo(W - pad, H - pad);
+        ctx.lineTo(W - pad, H - pad - len);
+        ctx.stroke();
+
+        // Bottom Barcode Footer
+        const botGrad = ctx.createLinearGradient(0, H, 0, H * 0.88);
+        botGrad.addColorStop(0, 'rgba(10, 10, 15, 0.95)');
+        botGrad.addColorStop(1, 'rgba(10, 10, 15, 0)');
+        ctx.fillStyle = botGrad;
+        ctx.fillRect(0, H * 0.88, W, H * 0.12);
+
+        ctx.textAlign = 'left';
+        ctx.font = `900 ${Math.round(W * 0.032)}px 'Space Grotesk', sans-serif`;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText('FEEL THE AURA // SGN 2026', pad, H - pad * 1.5);
+
+        ctx.font = `700 ${Math.round(W * 0.02)}px 'Space Grotesk', sans-serif`;
+        ctx.fillStyle = '#D4FF00';
+        ctx.fillText('POWERED BY GOOGLE AI & LUMI PERSONA', pad, H - pad * 0.6);
+      } else if (selectedFrameId === 'frame-02') {
+        // Film 35mm Strip
+        const stripW = Math.round(W * 0.07);
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, stripW, H);
+        ctx.fillRect(W - stripW, 0, stripW, H);
+
+        const sprocH = Math.round(H * 0.025);
+        const sprocW = Math.round(stripW * 0.55);
+        const sprocGap = Math.round(H * 0.08);
+
+        ctx.fillStyle = '#FFFFFF';
+        for (let y = sprocH; y < H - sprocH; y += sprocGap) {
+          ctx.fillRect((stripW - sprocW) / 2, y, sprocW, sprocH);
+          ctx.fillRect(W - stripW + (stripW - sprocW) / 2, y, sprocW, sprocH);
+        }
+
+        ctx.font = `900 ${Math.round(W * 0.03)}px monospace`;
+        ctx.fillStyle = '#FFA500';
+        ctx.textAlign = 'left';
+        ctx.fillText("'26 08 27  KODAK GOLD 400", stripW + 20, Math.round(H * 0.05));
+      } else if (selectedFrameId === 'frame-03') {
+        // Vogue Editorial
+        ctx.font = `900 ${Math.round(W * 0.11)}px 'Didot', 'Playfair Display', serif`;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = 'rgba(0,0,0,0.7)';
+        ctx.shadowBlur = 16;
+        ctx.fillText('VOGUE', W / 2, Math.round(H * 0.09));
+
+        ctx.shadowBlur = 0;
+        ctx.font = `700 ${Math.round(W * 0.022)}px 'Space Grotesk', sans-serif`;
+        ctx.fillText('AUTUMN / WINTER 2026', W / 2, Math.round(H * 0.12));
+
+        // Bottom rule
+        const botY = Math.round(H * 0.94);
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(W * 0.05, botY);
+        ctx.lineTo(W * 0.95, botY);
+        ctx.stroke();
+
+        ctx.font = `800 ${Math.round(W * 0.022)}px 'Space Grotesk', sans-serif`;
+        ctx.textAlign = 'left';
+        ctx.fillText('AURALENS SPECIAL EDITORIAL', W * 0.05, botY + Math.round(W * 0.035));
+        ctx.textAlign = 'right';
+        ctx.fillText('VIETNAM · 2026', W * 0.95, botY + Math.round(W * 0.035));
+      } else if (selectedFrameId === 'frame-04') {
+        // Dopamine Pop Gradient Border
+        const b = Math.round(W * 0.015);
+        ctx.strokeStyle = '#FF2E93';
+        ctx.lineWidth = b;
+        ctx.strokeRect(b, b, W - b * 2, H - b * 2);
+      } else if (selectedFrameId === 'frame-05') {
+        // Cyberpunk HUD
+        ctx.strokeStyle = '#00F5FF';
+        ctx.lineWidth = Math.round(W * 0.007);
+        const pad = Math.round(W * 0.03);
+        const len = Math.round(W * 0.07);
+
+        ctx.strokeRect(pad, pad, len, len);
+        ctx.strokeRect(W - pad - len, pad, len, len);
+        ctx.strokeRect(pad, H - pad - len, len, len);
+        ctx.strokeRect(W - pad - len, H - pad - len, len, len);
+
+        ctx.font = `900 ${Math.round(W * 0.024)}px monospace`;
+        ctx.fillStyle = '#FF2E93';
+        ctx.fillText('● REC [00:26:08]', pad * 1.5, pad * 2);
+        ctx.fillStyle = '#00F5FF';
+        ctx.fillText('GPS: 10.7769° N, 106.7009° E', pad * 1.5, H - pad * 1.5);
+      } else if (selectedFrameId === 'frame-06') {
+        // Old Money Gold Inset
+        const ins1 = Math.round(W * 0.035);
+        const ins2 = Math.round(W * 0.045);
+        ctx.strokeStyle = '#FCD34D';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(ins1, ins1, W - ins1 * 2, H - ins1 * 2);
+        ctx.strokeStyle = '#F59E0B';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(ins2, ins2, W - ins2 * 2, H - ins2 * 2);
+
+        ctx.font = `900 ${Math.round(W * 0.032)}px serif`;
+        ctx.fillStyle = '#FCD34D';
+        ctx.textAlign = 'center';
+        ctx.fillText('A U R A · L E N S', W / 2, ins1 + Math.round(W * 0.04));
+      }
+
+      ctx.restore();
     }
 
     // 3. Draw all Placed Stickers and Text
@@ -527,7 +849,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.fillStyle = item.color || '#FFFFFF';
         ctx.fillText(item.content, 0, 0);
 
-        // Stroke outline for readability
         ctx.shadowBlur = 0;
         ctx.strokeStyle = '#000000';
         ctx.lineWidth = 4;
@@ -542,7 +863,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         const boxW = textMetrics.width + padX * 2;
         const boxH = fontSize + padY * 2;
 
-        // Background pill
         ctx.fillStyle = 'rgba(10, 10, 15, 0.85)';
         ctx.strokeStyle = '#00F5FF';
         ctx.lineWidth = 3;
@@ -556,7 +876,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.textBaseline = 'middle';
         ctx.fillText(item.content, 0, 2);
       } else {
-        // Emoji / Sticker
         const emojiSize = Math.round(canvas.width * 0.09);
         ctx.font = `${emojiSize}px sans-serif`;
         ctx.textAlign = 'center';
@@ -598,7 +917,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   };
 
   return (
-    <div className="animate-fadeIn space-y-6 pb-20 max-w-5xl mx-auto px-2 sm:px-4">
+    <div className="animate-fadeIn space-y-6 pb-20 max-w-6xl w-full mx-auto px-2 sm:px-4">
       
       {/* Hidden File Input */}
       <input
@@ -638,14 +957,8 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 }`}
               />
 
-              {/* Frame Overlay during Live Camera */}
-              {activeFrame?.frameOverlayUrl && (
-                <img
-                  src={activeFrame.frameOverlayUrl}
-                  alt="Frame"
-                  className="absolute inset-0 w-full h-full object-fill pointer-events-none z-10"
-                />
-              )}
+              {/* Dynamic Responsive Frame Overlay during Live Camera */}
+              {renderResponsiveFrame(selectedFrameId)}
 
               {/* Countdown Overlay */}
               {countdown !== null && (
@@ -709,18 +1022,12 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
               <img
                 src={activePhoto}
                 alt="Photobooth Subject"
-                className="absolute inset-0 w-full h-full object-cover object-[center_12%] transition-all duration-300"
+                className="absolute inset-0 w-full h-full object-cover object-[center_10%] transition-all duration-300"
                 style={{ filter: activeFilter.filterCss }}
               />
 
-              {/* 2. Vector Frame Overlay (only if activeFrame is selected) */}
-              {activeFrame?.frameOverlayUrl && (
-                <img
-                  src={activeFrame.frameOverlayUrl}
-                  alt={activeFrame.name}
-                  className="absolute inset-0 w-full h-full object-fill pointer-events-none z-10"
-                />
-              )}
+              {/* 2. Responsive Vector Frame Overlay */}
+              {renderResponsiveFrame(selectedFrameId)}
 
               {/* 3. Draggable Stickers & Text Layer */}
               {placedItems.map((item) => {
@@ -871,15 +1178,15 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. CATEGORIZED CUSTOMIZATION STUDIO DECK (Centered & Expanded Box)        */}
+      {/* 3. CATEGORIZED CUSTOMIZATION STUDIO DECK (Wide & Centered Box)            */}
       {/* ========================================================================= */}
-      <div className="calm-card-elevated p-5 sm:p-7 rounded-3xl bg-white shadow-xl border border-gray-100 space-y-5 max-w-4xl mx-auto">
+      <div className="calm-card-elevated p-5 sm:p-7 rounded-3xl bg-white shadow-xl border border-gray-100 space-y-5 w-full mx-auto">
         
         {/* Tab Headers (Centered) */}
         <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-gray-100 flex-wrap">
           <button
             onClick={() => setActiveTab('ratio')}
-            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'ratio'
                 ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
@@ -891,7 +1198,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
           <button
             onClick={() => setActiveTab('frames')}
-            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'frames'
                 ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
@@ -903,7 +1210,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
           <button
             onClick={() => setActiveTab('filters')}
-            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'filters'
                 ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
@@ -915,7 +1222,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
           <button
             onClick={() => setActiveTab('stickers')}
-            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'stickers'
                 ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
@@ -927,7 +1234,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
           <button
             onClick={() => setActiveTab('text')}
-            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'text'
                 ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
@@ -940,7 +1247,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
         {/* ==================== TAB 1: ASPECT RATIO (Centered) ==================== */}
         {activeTab === 'ratio' && (
-          <div className="flex flex-wrap items-center justify-center gap-3 animate-fadeIn">
+          <div className="flex flex-wrap items-center justify-center gap-3.5 animate-fadeIn py-2">
             {ASPECT_RATIOS.map((ratio) => {
               const isSelected = ratio.id === selectedRatio;
 
@@ -948,10 +1255,10 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 <button
                   key={ratio.id}
                   onClick={() => setSelectedRatio(ratio.id)}
-                  className={`p-3.5 sm:p-4 rounded-2xl text-left border transition-all cursor-pointer flex flex-col justify-between gap-2.5 w-[145px] sm:w-[160px] shrink-0 ${
+                  className={`p-4 rounded-2xl text-left border transition-all cursor-pointer flex flex-col justify-between gap-2.5 w-[150px] sm:w-[170px] shrink-0 ${
                     isSelected
-                      ? 'bg-purple-50/90 border-purple-500 ring-2 ring-purple-300/50 shadow-md'
-                      : 'bg-gray-50/80 hover:bg-gray-100/80 border-gray-200 hover:shadow-xs'
+                      ? 'bg-purple-50/95 border-2 border-purple-600 shadow-md ring-2 ring-purple-300/40'
+                      : 'bg-gray-50/80 hover:bg-gray-100/80 border border-gray-200 hover:shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -978,22 +1285,22 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
         {/* ==================== TAB 2: FRAMES (Centered) ==================== */}
         {activeTab === 'frames' && (
-          <div className="flex items-center justify-center gap-3.5 overflow-x-auto pb-2 scrollbar-none snap-x animate-fadeIn flex-wrap sm:flex-nowrap">
+          <div className="flex items-center justify-center gap-3.5 overflow-x-auto py-2 scrollbar-none snap-x animate-fadeIn flex-wrap sm:flex-nowrap">
             {/* Option: None / Raw (Nguyên Bản) */}
             <button
               onClick={() => setSelectedFrameId('')}
-              className={`snap-start shrink-0 flex flex-col items-center gap-2 p-1.5 rounded-2xl transition-all cursor-pointer ${
-                selectedFrameId === '' ? 'scale-105 opacity-100' : 'opacity-70 hover:opacity-90'
+              className={`snap-start shrink-0 flex flex-col items-center gap-2 p-2 rounded-2xl transition-all cursor-pointer ${
+                selectedFrameId === '' ? 'scale-105 bg-purple-50/90 border-2 border-purple-600 shadow-md' : 'opacity-70 hover:opacity-100 border border-transparent'
               }`}
             >
               <div className={`w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden p-1 shadow-md flex items-center justify-center transition-all ${
-                selectedFrameId === '' ? 'ring-4 ring-[#D4FF00] bg-purple-600 text-white shadow-lg' : 'bg-gray-100 border-2 border-dashed border-gray-300 text-gray-500'
+                selectedFrameId === '' ? 'bg-purple-600 text-white shadow-lg' : 'bg-gray-100 border-2 border-dashed border-gray-300 text-gray-500'
               }`}>
                 <span className="text-xs font-black uppercase text-center leading-tight">
                   {isEn ? 'NO FRAME' : 'NGUYÊN BẢN'}
                 </span>
               </div>
-              <span className="text-xs font-extrabold text-gray-800">
+              <span className="text-xs font-black text-gray-800">
                 {isEn ? 'Raw Photo' : 'Không Khung'}
               </span>
             </button>
@@ -1005,14 +1312,14 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 <button
                   key={frame.id}
                   onClick={() => setSelectedFrameId(frame.id)}
-                  className={`snap-start shrink-0 flex flex-col items-center gap-2 p-1.5 rounded-2xl transition-all cursor-pointer ${
-                    isSelected ? 'scale-105 opacity-100' : 'opacity-70 hover:opacity-90'
+                  className={`snap-start shrink-0 flex flex-col items-center gap-2 p-2 rounded-2xl transition-all cursor-pointer ${
+                    isSelected ? 'scale-105 bg-purple-50/90 border-2 border-purple-600 shadow-md' : 'opacity-70 hover:opacity-100 border border-transparent'
                   }`}
                 >
                   <div
                     className={`w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden p-0.5 shadow-md transition-all ${
                       isSelected
-                        ? 'ring-4 ring-[#D4FF00] shadow-lg bg-gradient-to-tr from-[#FF2E93] to-[#00F5FF]'
+                        ? 'ring-2 ring-purple-600 shadow-lg bg-gradient-to-tr from-[#FF2E93] to-[#00F5FF]'
                         : 'bg-white/80 border border-gray-200'
                     }`}
                   >
@@ -1028,7 +1335,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                       </span>
                     </div>
                   </div>
-                  <span className="text-xs font-extrabold text-gray-800 truncate max-w-[80px]">
+                  <span className="text-xs font-black text-gray-800 truncate max-w-[80px]">
                     {frame.name.split(' ')[0]}
                   </span>
                 </button>
@@ -1037,9 +1344,9 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </div>
         )}
 
-        {/* ==================== TAB 3: FILTERS (Centered & Spacious Boxes) ==================== */}
+        {/* ==================== TAB 3: FILTERS (Centered & Generous Spacing) ==================== */}
         {activeTab === 'filters' && (
-          <div className="flex items-center justify-center gap-3 overflow-x-auto pb-2 scrollbar-none snap-x animate-fadeIn flex-wrap">
+          <div className="flex items-center justify-center gap-3 overflow-x-auto py-3 px-2 scrollbar-none snap-x animate-fadeIn flex-wrap">
             {PHOTO_FILTERS.map((filter) => {
               const isSelected = filter.id === selectedFilterId;
 
@@ -1047,18 +1354,18 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 <button
                   key={filter.id}
                   onClick={() => setSelectedFilterId(filter.id)}
-                  className={`snap-start shrink-0 flex flex-col items-center gap-2 p-2 rounded-2xl transition-all cursor-pointer ${
+                  className={`snap-start shrink-0 flex flex-col items-center gap-2 p-2.5 rounded-2xl transition-all cursor-pointer ${
                     isSelected
-                      ? 'scale-105 bg-purple-50 ring-2 ring-purple-400 shadow-md'
-                      : 'opacity-75 hover:opacity-100 hover:bg-gray-50'
+                      ? 'bg-purple-100/90 border-2 border-purple-600 shadow-md scale-105'
+                      : 'bg-gray-50/80 hover:bg-gray-100/80 border border-gray-200 opacity-80 hover:opacity-100'
                   }`}
                 >
                   <div
-                    className={`w-16 h-16 sm:w-18 sm:h-18 rounded-2xl shadow-inner overflow-hidden bg-gradient-to-tr ${filter.previewColor} flex items-center justify-center text-white font-black text-xs border-2 border-white/60`}
+                    className={`w-16 h-16 sm:w-18 sm:h-18 rounded-2xl shadow-inner overflow-hidden bg-gradient-to-tr ${filter.previewColor} flex items-center justify-center text-white font-black text-xs border border-white/60`}
                   >
                     {isSelected && <CheckCircle2 className="w-6 h-6 text-white drop-shadow-md" />}
                   </div>
-                  <span className="text-xs font-black text-gray-900 truncate max-w-[75px]">
+                  <span className={`text-xs font-black truncate max-w-[85px] ${isSelected ? 'text-purple-950' : 'text-gray-800'}`}>
                     {isEn ? filter.nameEn : filter.nameVi}
                   </span>
                 </button>
@@ -1069,7 +1376,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
         {/* ==================== TAB 4: STICKERS (Centered) ==================== */}
         {activeTab === 'stickers' && (
-          <div className="space-y-3 animate-fadeIn text-center">
+          <div className="space-y-3 animate-fadeIn text-center py-2">
             <p className="text-xs sm:text-sm font-bold text-gray-600">
               {isEn
                 ? '💡 Tap any sticker to add it to your photo. Drag it freely and scale/delete directly on the preview canvas!'
@@ -1093,7 +1400,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
         {/* ==================== TAB 5: CUSTOM TEXT & FONTS (Centered) ==================== */}
         {activeTab === 'text' && (
-          <div className="space-y-4 animate-fadeIn max-w-2xl mx-auto">
+          <div className="space-y-4 animate-fadeIn max-w-2xl mx-auto py-2">
             {/* Input Row */}
             <div className="flex items-center gap-2.5">
               <input
