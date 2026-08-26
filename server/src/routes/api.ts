@@ -121,19 +121,48 @@ apiRouter.post('/map/ai-analyze', async (req: Request, res: Response) => {
 
     if (geminiApiKey) {
       try {
-        const prompt = `You are Lumi, an expert Gen Z fashion stylist and Saigon local guide.
-Analyze the following scenario and return a JSON object with concise bullet-point recommendations:
-- Style/Vibe: ${aestheticTag}
+        const prompt = isEn
+          ? `You are Lumi, an expert Gen Z fashion stylist and Saigon local guide.
+CRITICAL MANDATE: ALL output fields MUST be 100% in ENGLISH. Do not use Vietnamese.
+
+Scenario:
+- Aesthetic / Vibe: ${aestheticTag}
 - Weather: ${temp}°C, Condition: ${condition}, Rain: ${isRain ? 'Yes' : 'No'}, City: Ho Chi Minh City
 - Date: ${dateStr}
-- Language: ${language}
+- Target Language: English
 
 Output MUST be a valid JSON matching this schema:
 {
   "dateStr": "${dateStr}",
   "weatherBullets": [
+    "Temperature ${temp}°C & Saigon outdoor weather feel in English",
+    "Sun/rain forecast and best golden hour time window to snap photos"
+  ],
+  "outfitBullets": [
+    "Specific top/bottom/dress recommendations for ${aestheticTag} style",
+    "Footwear and statement accessories (sunglasses, bags, jewelry)"
+  ],
+  "destinationBullets": [
+    "Trending cafes/rooftops/speakeasies in Saigon matching this vibe",
+    "Signature photo spots or signature drinks to check out"
+  ],
+  "lumiComment": "Catchy, playful Gen Z stylist quote in English (under 25 words)"
+}`
+          : `Bạn là Lumi, chuyên gia stylist thời trang Gen Z và thổ địa Sài Gòn.
+YÊU CẦU BẮT BUỘC: Toàn bộ nội dung trả về PHẢI BẰNG TIẾNG VIỆT (100% Tiếng Việt).
+
+Ngữ cảnh:
+- Phong cách/Vibe: ${aestheticTag}
+- Thời tiết: ${temp}°C, Trạng thái: ${condition}, Mưa: ${isRain ? 'Có' : 'Không'}, Thành phố: Hồ Chí Minh
+- Ngày: ${dateStr}
+- Ngôn ngữ: Tiếng Việt
+
+Đầu ra BẮT BUỘC là JSON hợp lệ theo cấu trúc:
+{
+  "dateStr": "${dateStr}",
+  "weatherBullets": [
     "Nhiệt độ ${temp}°C & cảm nhận thời tiết tại Sài Gòn",
-    "Tình trạng nắng/mưa & thời điểm lý tưởng nhất trong ngày"
+    "Tình trạng nắng/mưa & thời điểm lý tưởng nhất trong ngày để săn ảnh"
   ],
   "outfitBullets": [
     "Gợi ý áo/quần/váy cụ thể phù hợp phong cách ${aestheticTag}",
@@ -143,7 +172,7 @@ Output MUST be a valid JSON matching this schema:
     "Tên quán & phong cách không gian ăn khớp với set đồ",
     "Góc chụp ảnh / Signature item đáng thử nhất"
   ],
-  "lumiComment": "Catchy, playful Gen Z stylist comment (under 25 words)"
+  "lumiComment": "Câu nhận xét ngắn gọn, dí dỏm chuẩn Gen Z bằng tiếng Việt (dưới 25 từ)"
 }`;
 
         const geminiRes = await fetch(
