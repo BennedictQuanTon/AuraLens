@@ -206,6 +206,14 @@ export const HeroView: React.FC<HeroViewProps> = ({
   ];
 
   const [hoveredSpotIndex, setHoveredSpotIndex] = useState<number | null>(null);
+  const [hoveredChartPoint, setHoveredChartPoint] = useState<{
+    day: string;
+    style: string;
+    value: number;
+    color: string;
+    x: number;
+    y: number;
+  } | null>(null);
 
   const currentScore = 92.4;
   const genderTitle = userProfile.genderTitle || 'King';
@@ -600,26 +608,22 @@ export const HeroView: React.FC<HeroViewProps> = ({
         <div className="lg:col-span-7 calm-card-elevated p-6 lg:p-7 rounded-3xl space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-gray-400">
-                {isEn ? 'OOTD Activity Trend (7 Days)' : 'Tần Suất Lên Đồ Qua Các Ngày'}
-              </span>
-              <h3 className="text-lg lg:text-xl font-black text-gray-950">
+              <h3 className="text-xl lg:text-2xl font-black text-gray-950">
                 {isEn ? 'Outfit Checks by Style Category' : 'Phân Bổ Phong Cách Hàng Ngày'}
               </h3>
             </div>
-
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-gray-100 rounded-full text-xs font-bold text-gray-700">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-              <span>{isEn ? '18 Outfits Checked' : '18 Bộ Đồ Đã Chấm'}</span>
-            </div>
           </div>
 
-          {/* SVG Multi-Line Chart with Clear Y-Axis Values */}
-          <div className="relative w-full h-64 bg-gray-50/80 rounded-2xl p-4 border border-gray-100 flex flex-col justify-between">
+          {/* SVG Multi-Line Chart with Clear Y-Axis Values & Larger Height */}
+          <div className="relative w-full h-72 sm:h-80 bg-gray-50/80 rounded-2xl p-4 border border-gray-100 flex flex-col justify-between">
             
             {/* Chart Area with Left Y-Axis */}
             <div className="relative flex-1 flex">
-              <div className="flex flex-col justify-between text-[10px] font-extrabold text-gray-400 pr-2 select-none">
+              {/* Y-Axis Column with (Fits) Unit */}
+              <div className="flex flex-col justify-between text-[10px] font-extrabold text-gray-400 pr-3 select-none pb-1">
+                <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider">
+                  (Fits)
+                </span>
                 <span>10</span>
                 <span>8</span>
                 <span>6</span>
@@ -628,15 +632,42 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 <span>0</span>
               </div>
 
+              {/* Grid & SVG Area */}
               <div className="relative flex-1 h-full">
-                <div className="absolute inset-x-0 top-[0%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 top-[20%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 top-[40%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 top-[60%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 top-[80%] border-b border-dashed border-gray-200" />
+                {/* Horizontal Grid lines */}
+                <div className="absolute inset-x-0 top-[12%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 top-[28%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 top-[46%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 top-[64%] border-b border-dashed border-gray-200" />
+                <div className="absolute inset-x-0 top-[82%] border-b border-dashed border-gray-200" />
                 <div className="absolute inset-x-0 bottom-0 border-b border-gray-300" />
 
-                <svg className="w-full h-full overflow-visible" viewBox="0 0 450 140" preserveAspectRatio="none">
+                {/* Floating Interactive Hover Tooltip */}
+                {hoveredChartPoint && (
+                  <div
+                    className="absolute pointer-events-none z-30 transform -translate-x-1/2 -translate-y-full mb-3 px-3 py-1.5 rounded-xl bg-gray-950 text-white shadow-2xl border border-gray-800 text-xs font-extrabold flex items-center gap-2 animate-fadeIn select-none"
+                    style={{
+                      left: `${(hoveredChartPoint.x / 450) * 100}%`,
+                      top: `${(hoveredChartPoint.y / 150) * 100}%`,
+                    }}
+                  >
+                    <span
+                      className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
+                      style={{ backgroundColor: hoveredChartPoint.color }}
+                    />
+                    <span>{hoveredChartPoint.style}</span>
+                    <span className="text-gray-500">•</span>
+                    <span className="text-gray-300">{hoveredChartPoint.day}</span>
+                    <span className="text-[#D4FF00] font-black">{hoveredChartPoint.value} Fits</span>
+                  </div>
+                )}
+
+                <svg
+                  className="w-full h-full overflow-visible"
+                  viewBox="0 0 450 150"
+                  preserveAspectRatio="none"
+                  onMouseLeave={() => setHoveredChartPoint(null)}
+                >
                   {/* Line 1: Cyber-Pop (Green-Lime) */}
                   <polyline
                     fill="none"
@@ -644,15 +675,38 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     strokeWidth="3.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    points="20,110 85,85 150,30 220,60 290,20 360,50 430,15"
+                    points="20,115 88,90 156,35 224,65 292,20 360,50 428,10"
                   />
-                  <circle cx="20" cy="110" r="4" fill="#10B981" />
-                  <circle cx="85" cy="85" r="4" fill="#10B981" />
-                  <circle cx="150" cy="30" r="5" fill="#047857" stroke="#fff" strokeWidth="2" />
-                  <circle cx="220" cy="60" r="4" fill="#10B981" />
-                  <circle cx="290" cy="20" r="4" fill="#10B981" />
-                  <circle cx="360" cy="50" r="4" fill="#10B981" />
-                  <circle cx="430" cy="15" r="6" fill="#10B981" stroke="#fff" strokeWidth="2" />
+                  {[
+                    { day: 'Mon', value: 2, x: 20, y: 115 },
+                    { day: 'Tue', value: 4, x: 88, y: 90 },
+                    { day: 'Wed', value: 8, x: 156, y: 35 },
+                    { day: 'Thu', value: 6, x: 224, y: 65 },
+                    { day: 'Fri', value: 9, x: 292, y: 20 },
+                    { day: 'Sat', value: 7, x: 360, y: 50 },
+                    { day: 'Sun', value: 10, x: 428, y: 10 },
+                  ].map((pt, i) => (
+                    <circle
+                      key={i}
+                      cx={pt.x}
+                      cy={pt.y}
+                      r={hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Cyber-Pop' ? 7 : 5}
+                      fill="#10B981"
+                      stroke="#ffffff"
+                      strokeWidth={2}
+                      className="cursor-pointer transition-all duration-200 hover:scale-125"
+                      onMouseEnter={() =>
+                        setHoveredChartPoint({
+                          day: pt.day,
+                          style: 'Cyber-Pop',
+                          value: pt.value,
+                          color: '#10B981',
+                          x: pt.x,
+                          y: pt.y,
+                        })
+                      }
+                    />
+                  ))}
 
                   {/* Line 2: Y2K / Streetwear (Pink) */}
                   <polyline
@@ -661,11 +715,38 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    points="20,125 85,105 150,65 220,90 290,50 360,40 430,60"
+                    points="20,130 88,110 156,70 224,95 292,55 360,42 428,65"
                   />
-                  <circle cx="150" cy="65" r="4" fill="#FF2E93" />
-                  <circle cx="360" cy="40" r="4" fill="#FF2E93" />
-                  <circle cx="430" cy="60" r="5" fill="#FF2E93" stroke="#fff" strokeWidth="2" />
+                  {[
+                    { day: 'Mon', value: 1, x: 20, y: 130 },
+                    { day: 'Tue', value: 2.5, x: 88, y: 110 },
+                    { day: 'Wed', value: 5.5, x: 156, y: 70 },
+                    { day: 'Thu', value: 3.5, x: 224, y: 95 },
+                    { day: 'Fri', value: 6.5, x: 292, y: 55 },
+                    { day: 'Sat', value: 7.5, x: 360, y: 42 },
+                    { day: 'Sun', value: 6, x: 428, y: 65 },
+                  ].map((pt, i) => (
+                    <circle
+                      key={i}
+                      cx={pt.x}
+                      cy={pt.y}
+                      r={hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Y2K / Streetwear' ? 7 : 4.5}
+                      fill="#FF2E93"
+                      stroke="#ffffff"
+                      strokeWidth={2}
+                      className="cursor-pointer transition-all duration-200 hover:scale-125"
+                      onMouseEnter={() =>
+                        setHoveredChartPoint({
+                          day: pt.day,
+                          style: 'Y2K / Streetwear',
+                          value: pt.value,
+                          color: '#FF2E93',
+                          x: pt.x,
+                          y: pt.y,
+                        })
+                      }
+                    />
+                  ))}
 
                   {/* Line 3: Minimalist (Purple) */}
                   <polyline
@@ -675,37 +756,67 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     strokeDasharray="5,5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    points="20,135 85,120 150,110 220,95 290,85 360,75 430,70"
+                    points="20,140 88,128 156,115 224,102 292,90 360,80 428,75"
                   />
+                  {[
+                    { day: 'Mon', value: 0, x: 20, y: 140 },
+                    { day: 'Tue', value: 1, x: 88, y: 128 },
+                    { day: 'Wed', value: 2, x: 156, y: 115 },
+                    { day: 'Thu', value: 3, x: 224, y: 102 },
+                    { day: 'Fri', value: 4, x: 292, y: 90 },
+                    { day: 'Sat', value: 4.5, x: 360, y: 80 },
+                    { day: 'Sun', value: 5, x: 428, y: 75 },
+                  ].map((pt, i) => (
+                    <circle
+                      key={i}
+                      cx={pt.x}
+                      cy={pt.y}
+                      r={hoveredChartPoint?.day === pt.day && hoveredChartPoint?.style === 'Minimalist' ? 6.5 : 4}
+                      fill="#7C3AED"
+                      stroke="#ffffff"
+                      strokeWidth={1.5}
+                      className="cursor-pointer transition-all duration-200 hover:scale-125"
+                      onMouseEnter={() =>
+                        setHoveredChartPoint({
+                          day: pt.day,
+                          style: 'Minimalist',
+                          value: pt.value,
+                          color: '#7C3AED',
+                          x: pt.x,
+                          y: pt.y,
+                        })
+                      }
+                    />
+                  ))}
                 </svg>
               </div>
             </div>
 
-            {/* X-Axis Days Label */}
-            <div className="flex justify-between text-[11px] font-bold text-gray-500 pl-6 pt-2">
-              <span>Mon (T2)</span>
-              <span>Tue (T3)</span>
-              <span>Wed (T4)</span>
-              <span>Thu (T5)</span>
-              <span>Fri (T6)</span>
-              <span>Sat (T7)</span>
-              <span className="text-gray-950 font-black">Sun (CN)</span>
+            {/* X-Axis Days Label (Pure English, No Parentheses) */}
+            <div className="flex justify-between text-xs font-bold text-gray-500 pl-8 pr-1 pt-2 select-none">
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+              <span className="text-gray-950 font-black">Sun</span>
             </div>
           </div>
 
-          {/* Chart Legend */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs font-extrabold text-gray-700">
+          {/* Chart Legend (Clean, No Numbers) */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-xs sm:text-sm font-extrabold text-gray-700 select-none">
             <div className="flex items-center gap-2">
               <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-xs" />
-              <span>Cyber-Pop (8 Outfits)</span>
+              <span>Cyber-Pop</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3.5 h-3.5 rounded-full bg-[#FF2E93] shadow-xs" />
-              <span>Y2K / Streetwear (6 Outfits)</span>
+              <span>Y2K / Streetwear</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3.5 h-3.5 rounded-full bg-[#7C3AED] shadow-xs" />
-              <span>Minimalist (4 Outfits)</span>
+              <span>Minimalist</span>
             </div>
           </div>
         </div>
