@@ -118,7 +118,7 @@ export function App() {
   const [userProfile, setUserProfile] = useState<UserProfileState>({
     name: 'Bennedict',
     handle: 'bennedict',
-    avatarUrl: '/lumi.png',
+    avatarUrl: '',
     bio: 'Cyber-Pop & Y2K Fashion Explorer in Saigon.',
     favoriteVibe: 'Cyber-Pop',
     genderTitle: 'King',
