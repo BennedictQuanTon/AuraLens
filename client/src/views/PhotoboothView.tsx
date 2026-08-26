@@ -25,6 +25,7 @@ import {
   Bot,
   MessageSquare,
   Send,
+  Layers,
 } from 'lucide-react';
 import type { PhotoboothFrame, VibeStyle, AITemplateResponse } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
@@ -1385,17 +1386,17 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         
         {/* Tab Headers (Centered) */}
         <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-gray-100 flex-wrap">
-          {/* TAB 0: AI TEMPLATE (New Killer Feature!) */}
+          {/* TAB 0: AI TEMPLATE */}
           <button
             onClick={() => setActiveTab('ai-template')}
             className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'ai-template'
                 ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md ring-2 ring-purple-300/40'
-                : 'text-purple-700 bg-purple-50 hover:bg-purple-100'
+                : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            <Wand2 className="w-4 h-4 text-[#D4FF00]" />
-            <span>{isEn ? '✨ AI Template (Gemini)' : '✨ AI Template (Gemini)'}</span>
+            <Sparkles className="w-4 h-4" />
+            <span>{isEn ? 'AI Template (Gemini)' : 'AI Template (Gemini)'}</span>
           </button>
 
           <button
@@ -1418,7 +1419,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            <Sparkles className="w-4 h-4" />
+            <Layers className="w-4 h-4" />
             <span>{isEn ? `Trend Frames (${frames.length})` : `Khung Trend (${frames.length})`}</span>
           </button>
 
@@ -1442,7 +1443,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            <Star className="w-4 h-4 text-[#D4FF00]" />
+            <Star className="w-4 h-4" />
             <span>{isEn ? `Stickers & Decals (${STICKER_LIBRARY.length})` : `Sticker & Nhãn (${STICKER_LIBRARY.length})`}</span>
           </button>
 
@@ -1503,7 +1504,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                   </>
                 ) : (
                   <>
-                    <Wand2 className="w-4 h-4 text-[#D4FF00]" />
+                    <Sparkles className="w-4 h-4 text-white" />
                     <span>{isEn ? 'Generate AI Template' : 'Sinh Template AI'}</span>
                   </>
                 )}
