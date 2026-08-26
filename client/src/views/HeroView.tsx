@@ -301,18 +301,18 @@ export const HeroView: React.FC<HeroViewProps> = ({
           {/* Left: Primary Heading & 2 Action Buttons (Slightly larger, matching Lumi's vertical height) */}
           <div className="lg:col-span-7 space-y-6 flex flex-col justify-between">
             
-            {/* PRIMARY HEADING (My King Quan Ton on one single line) */}
+            {/* PRIMARY HEADING (The GOAT Is Back, / Sup Bennedict xD) */}
             <div className="space-y-2">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-[62px] font-black text-gray-950 tracking-tight leading-none [word-spacing:0.35rem]">
-                {isEn ? 'Welcome Back,' : 'Chào mừng trở lại,'}
+                The GOAT Is Back,
               </h1>
               
               <div className="text-4xl sm:text-5xl lg:text-6xl xl:text-[62px] font-black tracking-tight leading-none [word-spacing:0.35rem] flex items-baseline gap-3 whitespace-nowrap pt-1">
                 <span className="text-gray-950">
-                  {isEn ? `My ${genderTitle}` : `My ${genderTitle}`}
+                  Sup
                 </span>
                 <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent">
-                  {userProfile.name}
+                  {userProfile.name} xD
                 </span>
               </div>
             </div>
