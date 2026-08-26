@@ -431,6 +431,7 @@ export function App() {
       <OOTDHistoryDrawer
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
+        language={language}
       />
     </div>
   );
