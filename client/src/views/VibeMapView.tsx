@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Clock, Camera, Sparkles, ArrowRight, List, Map as MapIcon } from 'lucide-react';
-import type { Location, PlaceRecommendationResponse, WeatherContext } from '../types/entityGraph.js';
-import { WeatherBadge } from '../components/common/WeatherBadge.js';
-import { LumiAvatar } from '../components/common/LumiAvatar.js';
+import { Sparkles, List, Map as MapIcon, X, Shirt, MapPin, Sun, CloudRain, Moon } from 'lucide-react';
+import type { Location, PlaceRecommendationResponse, WeatherContext, AIMapAnalysisResponse } from '../types/entityGraph.js';
+import type { AppLanguage } from '../types/settings.js';
 import { MapViewMock } from '../components/common/MapViewMock.js';
+import { apiService } from '../services/api.js';
 
 interface VibeMapViewProps {
   recommendationData: PlaceRecommendationResponse;
   weather: WeatherContext;
+  language?: AppLanguage;
   onToggleRain: () => void;
   onSelectPlace: (place: Location) => void;
   onGoToPhotobooth: () => void;
@@ -17,85 +18,272 @@ interface VibeMapViewProps {
 export const VibeMapView: React.FC<VibeMapViewProps> = ({
   recommendationData,
   weather,
-  onToggleRain,
+  language = 'en',
   onSelectPlace,
   onGoToPhotobooth,
 }) => {
-  const { recommendedPlaces, lumiSuggestion, aestheticTag } = recommendationData;
+  const { recommendedPlaces, aestheticTag } = recommendationData;
+  const isEn = language === 'en';
+
   const [viewMode, setViewMode] = useState<'list' | 'map'>('map');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [aiReport, setAiReport] = useState<AIMapAnalysisResponse | null>(null);
+  const [showReport, setShowReport] = useState(false);
+
+  const handleAnalyze = async () => {
+    setIsAnalyzing(true);
+    try {
+      const report = await apiService.analyzeMapAI({
+        aestheticTag,
+        weather,
+        language,
+      });
+      setAiReport(report);
+      setShowReport(true);
+    } catch (err) {
+      console.error('Error analyzing map with AI:', err);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // Weather Theme Resolver (Sunlit Day vs Cool Rain vs Midnight Glow)
+  const isRain = weather.isRaining;
+  const isDaytime = weather.currentHour >= 6 && weather.currentHour < 18;
+
+  const getThemeClasses = () => {
+    if (isRain) {
+      return {
+        container: 'bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white border-2 border-cyan-400/40 shadow-2xl',
+        card: 'bg-white/10 border border-white/15 text-gray-100',
+        weatherIcon: <CloudRain className="w-5 h-5 text-cyan-400" />,
+        weatherTitle: 'text-cyan-400',
+        outfitIcon: <Shirt className="w-5 h-5 text-[#00F5FF]" />,
+        outfitTitle: 'text-[#00F5FF]',
+        spotIcon: <MapPin className="w-5 h-5 text-pink-400" />,
+        spotTitle: 'text-pink-400',
+        quote: 'text-cyan-300 font-bold',
+        quoteBox: 'border-t border-white/15',
+        closeBtn: 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white',
+      };
+    }
+
+    if (isDaytime) {
+      return {
+        container: 'bg-gradient-to-br from-amber-50/95 via-orange-50/90 to-yellow-50/95 text-gray-900 border-2 border-amber-300/80 shadow-2xl',
+        card: 'bg-white/90 border border-amber-200/90 text-gray-800 shadow-xs',
+        weatherIcon: <Sun className="w-5 h-5 text-amber-600" />,
+        weatherTitle: 'text-amber-700',
+        outfitIcon: <Shirt className="w-5 h-5 text-purple-700" />,
+        outfitTitle: 'text-purple-700',
+        spotIcon: <MapPin className="w-5 h-5 text-pink-600" />,
+        spotTitle: 'text-pink-700',
+        quote: 'text-amber-950 font-black',
+        quoteBox: 'border-t border-amber-200/80 bg-amber-100/50 p-2.5 rounded-2xl',
+        closeBtn: 'bg-amber-200/60 hover:bg-amber-300 text-gray-700 hover:text-gray-950',
+      };
+    }
+
+    // Evening / Night
+    return {
+      container: 'bg-gradient-to-br from-slate-950 via-purple-950/90 to-gray-950 text-white border-2 border-purple-500/40 shadow-2xl',
+      card: 'bg-white/5 border border-white/10 text-gray-200',
+      weatherIcon: <Moon className="w-5 h-5 text-[#D4FF00]" />,
+      weatherTitle: 'text-[#D4FF00]',
+      outfitIcon: <Shirt className="w-5 h-5 text-[#00F5FF]" />,
+      outfitTitle: 'text-[#00F5FF]',
+      spotIcon: <MapPin className="w-5 h-5 text-[#FF2E93]" />,
+      spotTitle: 'text-[#FF2E93]',
+      quote: 'text-[#D4FF00] font-bold',
+      quoteBox: 'border-t border-white/10',
+      closeBtn: 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white',
+    };
+  };
+
+  const theme = getThemeClasses();
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-16">
+    <div className="space-y-5 animate-fadeIn pb-16 max-w-6xl w-full mx-auto px-2 sm:px-4">
       
-      {/* Top Header & Context Badges */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div>
-          <span className="text-[10px] font-black uppercase tracking-wider text-gray-400">
-            AuraLens Itinerary &amp; Map
-          </span>
-          <h2 className="text-2xl lg:text-3xl font-black text-gray-950">
-            Tone-Sur-Tone Verified Spots 📍
-          </h2>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="px-3.5 py-1 bg-gray-950 text-[#D4FF00] font-extrabold text-xs rounded-full shadow-xs">
-            {aestheticTag} Vibe
-          </span>
-          <button
-            onClick={onGoToPhotobooth}
-            className="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-extrabold text-xs shadow-md hover:opacity-95 active:scale-95 transition-all cursor-pointer"
-          >
-            <Camera className="w-3.5 h-3.5" />
-            <span>Launch Photobooth Studio</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Top Dashboard Row: Weather Widget + Lumi Suggestion */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        <div className="lg:col-span-5">
-          <WeatherBadge weather={weather} onToggleRain={onToggleRain} />
-        </div>
-        <div className="lg:col-span-7">
-          <LumiAvatar comment={lumiSuggestion} isSpeaking={true} size="md" />
-        </div>
-      </div>
-
       {/* ========================================================================= */}
-      {/* TOGGLE VIEW CONTROLLER (Placed right below Weather Widget)                 */}
+      {/* TOP CONTROLLER BAR: MAP/LIST TOGGLE + AI ANALYZE BUTTON                   */}
       {/* ========================================================================= */}
-      <div className="flex items-center justify-between gap-3 pt-1">
-        <div className="flex items-center gap-2 p-1.5 rounded-full bg-gray-100/90 backdrop-blur-md border border-gray-200/80 shadow-xs">
+      <div className="flex items-center justify-between gap-3 pt-2">
+        {/* View Mode Toggle (Map vs List) */}
+        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-gray-100/90 backdrop-blur-md border border-gray-200/80 shadow-xs">
           <button
             onClick={() => setViewMode('map')}
-            className={`py-2 px-5 rounded-full text-xs font-black transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+            className={`py-2 px-5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-2 cursor-pointer ${
               viewMode === 'map'
                 ? 'bg-[#D4FF00] text-gray-950 shadow-[0_0_15px_rgba(212,255,0,0.5)] scale-102'
                 : 'text-gray-600 hover:text-gray-950 hover:bg-gray-200'
             }`}
           >
-            <MapIcon className="w-3.5 h-3.5" />
-            <span>🗺️ Map</span>
+            <MapIcon className="w-4 h-4" />
+            <span>Map</span>
           </button>
 
           <button
             onClick={() => setViewMode('list')}
-            className={`py-2 px-5 rounded-full text-xs font-black transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+            className={`py-2 px-5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-2 cursor-pointer ${
               viewMode === 'list'
                 ? 'bg-[#D4FF00] text-gray-950 shadow-[0_0_15px_rgba(212,255,0,0.5)] scale-102'
                 : 'text-gray-600 hover:text-gray-950 hover:bg-gray-200'
             }`}
           >
-            <List className="w-3.5 h-3.5" />
-            <span>📋 List</span>
+            <List className="w-4 h-4" />
+            <span>List ({recommendedPlaces.length})</span>
           </button>
         </div>
 
-        <span className="text-xs font-bold text-gray-400 hidden sm:block">
-          {viewMode === 'map' ? 'Khám phá tọa độ trực quan trên bản đồ' : `Danh sách (${recommendedPlaces.length} quán)`}
-        </span>
+        {/* AI Analyze Button */}
+        <button
+          onClick={handleAnalyze}
+          disabled={isAnalyzing}
+          className="py-2.5 px-5 sm:px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 hover:from-purple-700 hover:to-pink-700 text-white font-black text-xs sm:text-sm shadow-lg active:scale-95 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+        >
+          {isAnalyzing ? (
+            <>
+              <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              <span>{isEn ? 'Analyzing...' : 'Đang Phân Tích...'}</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4 text-[#D4FF00]" />
+              <span>Analyze</span>
+            </>
+          )}
+        </button>
       </div>
+
+      {/* ========================================================================= */}
+      {/* AI ANALYZE REPORT CARD (Lumi Stylist & Adaptive Weather Theme)            */}
+      {/* ========================================================================= */}
+      <AnimatePresence>
+        {showReport && aiReport && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.98 }}
+            className={`p-6 sm:p-7 rounded-3xl relative overflow-hidden transition-colors duration-500 ${theme.container}`}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowReport(false)}
+              className={`absolute top-5 right-5 p-2 rounded-full transition-colors cursor-pointer ${theme.closeBtn}`}
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Header: Lumi Stylist */}
+            <div className="flex items-center gap-3.5 mb-5">
+              <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-white/80 shadow-md shrink-0 bg-white">
+                <img
+                  src="/lumi.png"
+                  alt="Lumi Stylist"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <h3 className="font-black text-lg sm:text-xl leading-tight">
+                  {isEn ? 'Lumi Stylist & Weather Report' : 'Báo Cáo Thời Tiết & Gợi Ý Lên Đồ Từ Lumi'}
+                </h3>
+              </div>
+            </div>
+
+            {/* 3 Insight Blocks with Bullet Points & Larger Fonts */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              
+              {/* 1. Today Weather */}
+              <div className={`p-5 rounded-2xl space-y-2.5 ${theme.card}`}>
+                <div className="flex items-center gap-2">
+                  {theme.weatherIcon}
+                  <span className={`text-xs sm:text-sm font-black uppercase tracking-wider ${theme.weatherTitle}`}>
+                    {isEn ? 'Today Weather' : 'Thời Tiết Hôm Nay'}
+                  </span>
+                </div>
+                <ul className="space-y-1.5 text-xs sm:text-sm leading-relaxed font-semibold">
+                  <li className="font-bold flex items-start gap-1.5">
+                    <span className="shrink-0">•</span>
+                    <span>{isEn ? 'Date:' : 'Ngày:'} {aiReport.dateStr || (isEn ? 'Aug 27, 2026' : '27/08/2026')}</span>
+                  </li>
+                  {aiReport.weatherBullets && aiReport.weatherBullets.length > 0 ? (
+                    aiReport.weatherBullets.map((bullet, i) => (
+                      <li key={i} className="flex items-start gap-1.5">
+                        <span className="shrink-0">•</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="flex items-start gap-1.5">
+                      <span className="shrink-0">•</span>
+                      <span>{aiReport.weatherSummary}</span>
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+              {/* 2. Outfit Directive */}
+              <div className={`p-5 rounded-2xl space-y-2.5 ${theme.card}`}>
+                <div className="flex items-center gap-2">
+                  {theme.outfitIcon}
+                  <span className={`text-xs sm:text-sm font-black uppercase tracking-wider ${theme.outfitTitle}`}>
+                    {isEn ? 'Outfit Directive' : 'Gợi Ý Mặc Đồ'}
+                  </span>
+                </div>
+                <ul className="space-y-1.5 text-xs sm:text-sm leading-relaxed font-semibold">
+                  {aiReport.outfitBullets && aiReport.outfitBullets.length > 0 ? (
+                    aiReport.outfitBullets.map((bullet, i) => (
+                      <li key={i} className="flex items-start gap-1.5">
+                        <span className="shrink-0">•</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="flex items-start gap-1.5">
+                      <span className="shrink-0">•</span>
+                      <span>{aiReport.outfitAdvice}</span>
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+              {/* 3. Matching Hotspots */}
+              <div className={`p-5 rounded-2xl space-y-2.5 ${theme.card}`}>
+                <div className="flex items-center gap-2">
+                  {theme.spotIcon}
+                  <span className={`text-xs sm:text-sm font-black uppercase tracking-wider ${theme.spotTitle}`}>
+                    {isEn ? 'Matching Hotspots' : 'Địa Điểm Nên Ghé'}
+                  </span>
+                </div>
+                <ul className="space-y-1.5 text-xs sm:text-sm leading-relaxed font-semibold">
+                  {aiReport.destinationBullets && aiReport.destinationBullets.length > 0 ? (
+                    aiReport.destinationBullets.map((bullet, i) => (
+                      <li key={i} className="flex items-start gap-1.5">
+                        <span className="shrink-0">•</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="flex items-start gap-1.5">
+                      <span className="shrink-0">•</span>
+                      <span>{aiReport.destinationRec}</span>
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+            </div>
+
+            {/* Lumi Commentary Quote (Clean without bottom spot chips) */}
+            <div className={`pt-3 ${theme.quoteBox}`}>
+              <p className={`text-xs sm:text-sm leading-relaxed italic ${theme.quote}`}>
+                "{aiReport.lumiComment}"
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ========================================================================= */}
       {/* MAIN VIEWPORT: ANIMATED MAP VIEW OR PINTEREST LIST GRID                    */}
@@ -123,14 +311,14 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.25 }}
-            className="space-y-3"
+            className="space-y-4"
           >
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-black uppercase tracking-wider text-gray-500 flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
                 Recommended Spots ({recommendedPlaces.length} Open Now)
               </span>
-              <span className="text-[10px] text-gray-400 font-semibold">
+              <span className="text-xs text-gray-400 font-semibold">
                 Click card to view photo spots &amp; signature drinks
               </span>
             </div>
@@ -141,7 +329,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
                 <div
                   key={place.id}
                   onClick={() => onSelectPlace(place)}
-                  className="calm-card-elevated rounded-3xl overflow-hidden hover:shadow-xl active:scale-99 transition-all cursor-pointer group flex flex-col justify-between"
+                  className="calm-card-elevated rounded-3xl overflow-hidden hover:shadow-xl active:scale-99 transition-all cursor-pointer group flex flex-col justify-between bg-white border border-gray-100"
                 >
                   {/* Image Header */}
                   <div className="relative w-full h-48 bg-gray-900 overflow-hidden">
@@ -182,22 +370,21 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
                     </div>
                   </div>
 
-                  {/* Place Highlights */}
-                  <div className="p-4 space-y-2.5 bg-white flex-1 flex flex-col justify-between">
-                    <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
-                      "{place.vibeDescription}"
+                  {/* Body Content */}
+                  <div className="p-4 space-y-2.5 flex-1 flex flex-col justify-between">
+                    <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                      {place.vibeDescription}
                     </p>
 
-                    <div className="flex items-center justify-between pt-2 border-t border-gray-100 text-[11px] text-gray-400 font-medium">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-gray-500" />
-                        {place.openHours.open}:00 - {place.openHours.close}:00
-                      </span>
-
-                      <span className="text-gray-900 font-bold flex items-center gap-1 group-hover:text-purple-600 transition-colors">
-                        <Camera className="w-3.5 h-3.5 text-[#FF2E93]" />
-                        Photo spots
-                      </span>
+                    <div className="pt-2 border-t border-gray-100 space-y-1.5 text-xs">
+                      <div className="flex items-center gap-1.5 text-gray-500 font-semibold">
+                        <span className="text-gray-400">🍹 Signature:</span>
+                        <span className="font-bold text-gray-800 truncate">{place.signatureDrinkOrDish}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-gray-500 font-semibold">
+                        <span className="text-gray-400">📸 Photo Spot:</span>
+                        <span className="font-bold text-gray-800 truncate">{place.bestPhotoSpot}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -206,18 +393,6 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Bottom CTA to Photobooth (on mobile) */}
-      <div className="pt-2 sm:hidden">
-        <button
-          onClick={onGoToPhotobooth}
-          className="w-full py-4 px-4 rounded-full bg-[#0F172A] hover:bg-black text-white font-extrabold text-sm shadow-xl active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <Camera className="w-4 h-4 text-[#D4FF00]" />
-          <span>Launch Photobooth Studio</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
 
     </div>
   );

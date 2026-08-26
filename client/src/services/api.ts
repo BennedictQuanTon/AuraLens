@@ -1,4 +1,6 @@
 import type {
+  AIMapAnalysisRequest,
+  AIMapAnalysisResponse,
   AITemplateRequest,
   AITemplateResponse,
   DripCheckRequest,
@@ -286,6 +288,44 @@ export class ApiService {
         : `Thời tiết nắng đẹp (${weather.temperature}°C), diện đồ này ghé quán check-in thì đảm bảo cháy máy!`,
     };
   }
+
+  /**
+   * Generates AI Weather + Outfit + Destination Report with Gemini
+   */
+  public async analyzeMapAI(request: AIMapAnalysisRequest): Promise<AIMapAnalysisResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/map/ai-analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      console.warn('Could not call /map/ai-analyze:', error);
+    }
+
+    const isEn = request.language === 'en';
+    const tag = request.aestheticTag;
+    return isEn
+      ? {
+          weatherSummary: `Saigon is sunny & clear at 29°C with pleasant dry breeze. Perfect for rooftop & outdoor photo spots!`,
+          outfitAdvice: `Rock a ${tag} layered outfit: breathable oversize blazer or crop top paired with metallic accessories and sunglasses for night glow.`,
+          destinationRec: `Head over to Neo Saigon Cyber Bar or Sunset Rooftop for cinematic neon backdrops matching your outfit!`,
+          lumiComment: `Lumi says: Your ${tag} fit is going to turn heads today! Don't forget to snap some fire photobooth shots!`,
+          curatedSpots: ['Neo Saigon Cyber Bar', 'Sunset Rooftop Lounge', 'Blank Lounge Landmark 81'],
+        }
+      : {
+          weatherSummary: `Sài Gòn hiện tại 29°C mát mẻ và khô ráo. Ánh sáng vàng cực chuẩn để săn ảnh sống ảo!`,
+          outfitAdvice: `Nên chọn set đồ ${tag}: áo blazer dáng rộng phối croptop hoặc phụ kiện bạc titan phản quang để bắt trọn ánh sáng đêm.`,
+          destinationRec: `Ghé ngay Neo Saigon Cyber Bar hoặc Sunset Rooftop – không gian tone-sur-tone cực kỳ ăn khớp với outfit của bạn!`,
+          lumiComment: `Lumi chấm điểm 10/10 cho buổi đi chơi hôm nay! Set đồ này lên hình ở rooftop là bao cháy máy luôn nha!`,
+          curatedSpots: ['Neo Saigon Cyber Bar', 'Sunset Rooftop Lounge', 'Blank Lounge Landmark 81'],
+        };
+  }
 }
 
 export const apiService = new ApiService();
+

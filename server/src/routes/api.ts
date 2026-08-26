@@ -104,3 +104,112 @@ apiRouter.post('/photobooth/ai-template', async (req: Request, res: Response) =>
   }
 });
 
+/**
+ * POST /api/v1/map/ai-analyze
+ * Analyzes weather and vibe to generate Gemini outfit and destination recommendations.
+ */
+apiRouter.post('/map/ai-analyze', async (req: Request, res: Response) => {
+  try {
+    const { aestheticTag = 'Cyber-Pop', weather, language = 'vi' } = req.body;
+    const isEn = language === 'en';
+    const temp = weather?.temperature ?? 29;
+    const isRain = weather?.isRaining ?? false;
+    const condition = weather?.condition || (isRain ? (isEn ? 'Rainy' : 'Mưa rào') : (isEn ? 'Clear & Sunny' : 'Nắng đẹp'));
+    const dateStr = isEn ? 'Thursday, Aug 27, 2026' : 'Thứ Năm, 27/08/2026';
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const geminiModel = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+
+    if (geminiApiKey) {
+      try {
+        const prompt = `You are Lumi, an expert Gen Z fashion stylist and Saigon local guide.
+Analyze the following scenario and return a JSON object with concise bullet-point recommendations:
+- Style/Vibe: ${aestheticTag}
+- Weather: ${temp}°C, Condition: ${condition}, Rain: ${isRain ? 'Yes' : 'No'}, City: Ho Chi Minh City
+- Date: ${dateStr}
+- Language: ${language}
+
+Output MUST be a valid JSON matching this schema:
+{
+  "dateStr": "${dateStr}",
+  "weatherBullets": [
+    "Nhiệt độ ${temp}°C & cảm nhận thời tiết tại Sài Gòn",
+    "Tình trạng nắng/mưa & thời điểm lý tưởng nhất trong ngày"
+  ],
+  "outfitBullets": [
+    "Gợi ý áo/quần/váy cụ thể phù hợp phong cách ${aestheticTag}",
+    "Gợi ý giày & phụ kiện bắt sáng (kính râm, túi xách, trang sức)"
+  ],
+  "destinationBullets": [
+    "Tên quán & phong cách không gian ăn khớp với set đồ",
+    "Góc chụp ảnh / Signature item đáng thử nhất"
+  ],
+  "lumiComment": "Catchy, playful Gen Z stylist comment (under 25 words)"
+}`;
+
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ role: 'user', parts: [{ text: prompt }] }],
+              generationConfig: { responseMimeType: 'application/json', temperature: 0.7 },
+            }),
+          }
+        );
+
+        if (geminiRes.ok) {
+          const data = await geminiRes.json();
+          const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (rawText) {
+            const parsed = JSON.parse(rawText);
+            return res.status(200).json(parsed);
+          }
+        }
+      } catch (e) {
+        console.warn('Gemini API call failed for map analyze, using fallback:', e);
+      }
+    }
+
+    const fallbackResponse = isEn
+      ? {
+          dateStr,
+          weatherBullets: [
+            `Current Temp: ${temp}°C (${condition}) with pleasant dry breeze`,
+            `Zero rain expected – golden sunlight ideal for outdoor photo snaps`,
+          ],
+          outfitBullets: [
+            `Top & Bottom: Breathable oversize ${aestheticTag} jacket paired with high-waisted shorts or cargo pants`,
+            `Accessories: Mirrored sunglasses, silver chain necklace, and chunky sneakers`,
+          ],
+          destinationBullets: [
+            `Neo Saigon Cyber Bar & Sunset Rooftop for neon cyberpunk vibes`,
+            `Danshari Coffee for clean minimalist aesthetic photos`,
+          ],
+          lumiComment: `Lumi says: Your ${aestheticTag} fit is going to turn heads today! Go flex your style!`,
+        }
+      : {
+          dateStr,
+          weatherBullets: [
+            `Nhiệt độ: ${temp}°C (${condition}), không khí thoáng mát dễ chịu`,
+            `Trời nắng ráo không mưa – thời điểm vàng để check-in ngoài trời & rooftop`,
+          ],
+          outfitBullets: [
+            `Trang phục chính: Set đồ ${aestheticTag} năng động, áo croptop phối quần cargo hoặc blazer dáng rộng`,
+            `Phụ kiện: Kính râm gọng bạc, dây chuyền titan và sneaker đế cao bắt sáng`,
+          ],
+          destinationBullets: [
+            `Neo Saigon Cyber Bar & Speakeasy hoặc Sunset Rooftop Landmark`,
+            `Danshari Coffee với không gian tối giản cực tôn outfit`,
+          ],
+          lumiComment: `Lumi chấm điểm 10/10 cho ngày hôm nay! Set đồ này lên hình ở rooftop là bao cháy máy luôn nha!`,
+        };
+
+    return res.status(200).json(fallbackResponse);
+  } catch (error) {
+    console.error('Error in /api/v1/map/ai-analyze:', error);
+    return res.status(500).json({ error: 'Internal Server Error analyzing map with AI' });
+  }
+});
+
+

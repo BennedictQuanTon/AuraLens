@@ -364,6 +364,7 @@ export function App() {
               }
             }
             weather={weather}
+            language={language}
             onToggleRain={handleToggleRain}
             onSelectPlace={(place) => setSelectedPlace(place)}
             onGoToPhotobooth={() => setActiveView(4)}

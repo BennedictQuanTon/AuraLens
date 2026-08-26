@@ -163,3 +163,20 @@ export interface AITemplateResponse {
   lumiComment: string;
 }
 
+export interface AIMapAnalysisRequest {
+  aestheticTag: VibeStyle;
+  weather?: Partial<WeatherContext>;
+  language?: 'en' | 'vi';
+}
+
+export interface AIMapAnalysisResponse {
+  dateStr?: string;
+  weatherBullets: string[];
+  outfitBullets: string[];
+  destinationBullets: string[];
+  weatherSummary?: string;
+  outfitAdvice?: string;
+  destinationRec?: string;
+  lumiComment: string;
+  curatedSpots?: string[];
+}
