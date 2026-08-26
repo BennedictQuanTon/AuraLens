@@ -317,7 +317,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       {/* ========================================================================= */}
       {flowState === 'camera' && (
         <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-2 sm:px-4">
-          <div className="relative w-full max-w-md sm:max-w-lg aspect-[3/4] max-h-[72vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-black flex flex-col justify-between p-5 sm:p-6 select-none">
+          <div className="relative w-full max-w-md sm:max-w-lg aspect-[3/4] max-h-[72vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-black select-none">
             
             {/* Flash Effect */}
             {isFlashActive && (
@@ -334,21 +334,21 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                 className="w-full h-full object-cover"
               />
 
-              {/* Viewfinder Target Reticle Overlay */}
-              <div className="absolute inset-7 sm:inset-9 border-2 border-white/30 rounded-3xl pointer-events-none flex flex-col justify-between p-3.5">
+              {/* Viewfinder Target Reticle Overlay - Perfectly Inset with Zero Overlap */}
+              <div className="absolute top-18 bottom-26 left-6 right-6 sm:top-20 sm:bottom-28 sm:left-8 sm:right-8 border-2 border-white/20 rounded-3xl pointer-events-none flex flex-col justify-between p-2.5 z-10">
                 <div className="flex justify-between">
-                  <div className="w-7 h-7 border-t-3 border-l-3 border-[#D4FF00]" />
-                  <div className="w-7 h-7 border-t-3 border-r-3 border-[#D4FF00]" />
+                  <div className="w-6 h-6 border-t-3 border-l-3 border-[#D4FF00] rounded-tl-lg shadow-[0_0_10px_rgba(212,255,0,0.8)]" />
+                  <div className="w-6 h-6 border-t-3 border-r-3 border-[#D4FF00] rounded-tr-lg shadow-[0_0_10px_rgba(212,255,0,0.8)]" />
                 </div>
                 <div className="flex justify-between">
-                  <div className="w-7 h-7 border-b-3 border-l-3 border-[#D4FF00]" />
-                  <div className="w-7 h-7 border-b-3 border-r-3 border-[#D4FF00]" />
+                  <div className="w-6 h-6 border-b-3 border-l-3 border-[#D4FF00] rounded-bl-lg shadow-[0_0_10px_rgba(212,255,0,0.8)]" />
+                  <div className="w-6 h-6 border-b-3 border-r-3 border-[#D4FF00] rounded-br-lg shadow-[0_0_10px_rgba(212,255,0,0.8)]" />
                 </div>
               </div>
 
               {/* Live Countdown Overlay when timer is running */}
               {countdown !== null && (
-                <div className="absolute inset-0 z-30 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center animate-fadeIn">
+                <div className="absolute inset-0 z-30 bg-black/65 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center animate-fadeIn">
                   <div className="relative flex items-center justify-center">
                     <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full border-4 border-[#D4FF00] border-t-transparent animate-spin shadow-[0_0_50px_rgba(212,255,0,0.8)]" style={{ animationDuration: '1s' }} />
                     <span className="absolute font-black text-7xl sm:text-8xl text-white tracking-tighter animate-ping drop-shadow-2xl">
@@ -375,31 +375,31 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               )}
             </div>
 
-            {/* Camera Top Bar */}
-            <div className="relative z-20 flex items-center justify-between">
-              <span className="px-4 py-2 bg-black/60 backdrop-blur-md text-white text-xs sm:text-sm font-black rounded-full border border-white/15 flex items-center gap-2 shadow-lg">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#D4FF00] animate-ping" />
+            {/* Camera Top Bar - Placed at Top Edge */}
+            <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between pointer-events-auto">
+              <span className="px-3.5 py-1.5 bg-black/65 backdrop-blur-md text-white text-xs font-black rounded-full border border-white/15 flex items-center gap-2 shadow-lg">
+                <span className="w-2 h-2 rounded-full bg-[#D4FF00] animate-ping" />
                 <span>{isEn ? 'AI Smart Lens' : 'Ống Kính AI Smart Lens'}</span>
               </span>
 
               <button
                 onClick={toggleCamera}
-                className="p-3 rounded-full bg-black/60 hover:bg-black text-white backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-lg border border-white/15"
+                className="p-2.5 rounded-full bg-black/65 hover:bg-black text-white backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-lg border border-white/15"
                 title={isEn ? 'Flip Camera' : 'Đổi Camera'}
               >
-                <SwitchCamera className="w-5 h-5" />
+                <SwitchCamera className="w-4.5 h-4.5" />
               </button>
             </div>
 
-            {/* Camera Bottom Controls: Snap, Upload & Timer Selector */}
-            <div className="relative z-20 flex items-center justify-around pt-3">
+            {/* Camera Bottom Controls: Snap, Upload & Timer Selector - Placed at Bottom Edge */}
+            <div className="absolute bottom-4 left-4 right-4 z-20 flex items-center justify-between px-2 sm:px-4 pointer-events-auto">
               {/* File Upload Button */}
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="p-3.5 rounded-full bg-black/60 hover:bg-black text-white backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-xl border border-white/25"
+                className="w-12 h-12 rounded-full bg-black/65 hover:bg-black text-white backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-xl border border-white/25 flex items-center justify-center"
                 title={isEn ? 'Upload Outfit Photo' : 'Tải Ảnh Trang Phục'}
               >
-                <Upload className="w-6 h-6 text-[#D4FF00]" />
+                <Upload className="w-5 h-5 text-[#D4FF00]" />
               </button>
               <input
                 ref={fileInputRef}
@@ -413,26 +413,26 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               <button
                 onClick={handleSnap}
                 disabled={countdown !== null}
-                className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-white flex items-center justify-center p-2 shadow-[0_0_40px_rgba(212,255,0,0.7)] active:scale-90 transition-transform cursor-pointer disabled:opacity-50"
+                className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center p-1.5 shadow-[0_0_40px_rgba(212,255,0,0.7)] active:scale-90 transition-transform cursor-pointer disabled:opacity-50"
                 title={isEn ? 'Take Photo' : 'Chụp Ảnh'}
               >
-                <div className="w-full h-full rounded-full border-4 border-gray-950 bg-[#D4FF00] flex items-center justify-center shadow-inner">
-                  <Camera className="w-8 h-8 sm:w-9 sm:h-9 text-gray-950" />
+                <div className="w-full h-full rounded-full border-3 border-gray-950 bg-[#D4FF00] flex items-center justify-center shadow-inner">
+                  <Camera className="w-7 h-7 sm:w-8 sm:h-8 text-gray-950" />
                 </div>
               </button>
 
               {/* Timer Selector Button (Off / 3s / 5s / 10s) */}
               <button
                 onClick={cycleTimer}
-                className={`w-13 h-13 rounded-full backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-xl border flex flex-col items-center justify-center relative ${
+                className={`w-12 h-12 rounded-full backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-xl border flex flex-col items-center justify-center ${
                   timerSeconds > 0
                     ? 'bg-[#D4FF00] text-gray-950 border-[#D4FF00] shadow-[0_0_20px_rgba(212,255,0,0.6)] font-black'
-                    : 'bg-black/60 hover:bg-black text-white border-white/25'
+                    : 'bg-black/65 hover:bg-black text-white border-white/25'
                 }`}
                 title={isEn ? `Timer: ${timerSeconds === 0 ? 'Off' : `${timerSeconds}s`}` : `Hẹn giờ: ${timerSeconds === 0 ? 'Tắt' : `${timerSeconds} giây`}`}
               >
-                <Timer className={`w-5 h-5 ${timerSeconds > 0 ? 'text-gray-950' : 'text-[#D4FF00]'}`} />
-                <span className={`text-[10px] font-black uppercase leading-none mt-0.5 ${timerSeconds > 0 ? 'text-gray-950' : 'text-gray-200'}`}>
+                <Timer className={`w-4.5 h-4.5 ${timerSeconds > 0 ? 'text-gray-950' : 'text-[#D4FF00]'}`} />
+                <span className={`text-[9px] font-black uppercase leading-none mt-0.5 ${timerSeconds > 0 ? 'text-gray-950' : 'text-gray-200'}`}>
                   {timerSeconds === 0 ? (isEn ? 'Off' : 'Tắt') : `${timerSeconds}s`}
                 </span>
               </button>
