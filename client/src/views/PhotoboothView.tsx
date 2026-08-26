@@ -21,10 +21,6 @@ import {
   ZoomOut,
   Star,
   Image as ImageIcon,
-  Wand2,
-  Bot,
-  MessageSquare,
-  Send,
   Layers,
 } from 'lucide-react';
 import type { PhotoboothFrame, VibeStyle, AITemplateResponse } from '../types/entityGraph.js';
@@ -219,15 +215,57 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   const [selectedTextColor, setSelectedTextColor] = useState('#FFFFFF');
   const [hasTextGlow, setHasTextGlow] = useState(true);
 
-  // 7. Active Tab selector (Now includes 'ai-template'!)
-  const [activeTab, setActiveTab] = useState<'ai-template' | 'ratio' | 'frames' | 'filters' | 'stickers' | 'text'>('ai-template');
+  // 7. Active Tab selector
+  const [activeTab, setActiveTab] = useState<'ratio' | 'frames' | 'filters' | 'stickers' | 'text' | 'ai-template'>('ratio');
 
   // 8. AI Prompt-to-Template Generator state (Powered by Gemini 3.5 Flash Lite)
   const [aiPromptInput, setAiPromptInput] = useState('');
   const [isGeneratingTemplate, setIsGeneratingTemplate] = useState(false);
   const [aiGeneratedTemplate, setAiGeneratedTemplate] = useState<AITemplateResponse | null>(null);
 
-  // 9. Camera & Export states
+  // 9. AI Templates Collection (Cards List)
+  const [aiTemplatesList, setAiTemplatesList] = useState<AITemplateResponse[]>([
+    {
+      templateName: 'Cyber Sài Gòn 2026',
+      vibeTag: 'Cyber-Pop',
+      conceptDescription: 'Futuristic neon dimension',
+      recommendedFilter: 'cyber-neon',
+      borderStyle: 'cyber-hud',
+      colorPalette: { primary: '#8B00FF', accent: '#00F5FF', text: '#D4FF00' },
+      headerText: 'SÀI GÒN 2026',
+      headerSub: 'CYBERPUNK DIMENSION // Y2K',
+      footerText: 'AURALENS X LUMI STUDIO',
+      stickers: [
+        { display: '⚡ SLAY', name: 'SLAY', x: 82, y: 18, scale: 1.0, isTextBadge: true },
+        { display: '🌟', name: 'Star', x: 18, y: 78, scale: 1.2 },
+      ],
+      customTexts: [
+        { text: 'FEEL THE FUTURE', x: 50, y: 72, fontFamily: "'Space Grotesk', monospace", color: '#00F5FF', hasGlow: true, scale: 1 },
+      ],
+      lumiComment: '',
+    },
+    {
+      templateName: 'Saigon Retro 90s Film',
+      vibeTag: 'Vintage',
+      conceptDescription: 'Warm nostalgic 35mm film',
+      recommendedFilter: 'film-1998',
+      borderStyle: 'film-strip',
+      colorPalette: { primary: '#FFA500', accent: '#FFFFFF', text: '#FFA500' },
+      headerText: 'SAIGON MEMORIES',
+      headerSub: 'EXP 24+3 // 35MM FILM',
+      footerText: 'KODAK GOLD 400 · SGN',
+      stickers: [
+        { display: '📍 SÀI GÒN', name: 'Saigon', x: 82, y: 18, scale: 1.0, isTextBadge: true },
+        { display: '✨', name: 'Sparkle', x: 18, y: 78, scale: 1.2 },
+      ],
+      customTexts: [
+        { text: 'KỶ NIỆM XƯA', x: 50, y: 72, fontFamily: "'Dancing Script', cursive", color: '#FFA500', hasGlow: false, scale: 1 },
+      ],
+      lumiComment: '',
+    },
+  ]);
+
+  // 10. Camera & Export states
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
   const [timerSeconds, setTimerSeconds] = useState<0 | 3 | 5 | 10>(0);
@@ -355,6 +393,75 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   };
 
   // =========================================================================
+  // APPLY / DESELECT AN AI TEMPLATE
+  // =========================================================================
+  const applyAITemplate = (template: AITemplateResponse | null) => {
+    if (!template) {
+      setAiGeneratedTemplate(null);
+      setSelectedFrameId('');
+      setSelectedFilterId('normal');
+      setPlacedItems([]);
+      return;
+    }
+
+    setAiGeneratedTemplate(template);
+    setSelectedFrameId('ai-custom');
+
+    // 1. Filter
+    if (template.recommendedFilter) {
+      setSelectedFilterId(template.recommendedFilter);
+    }
+
+    // 2. Placed items with clean non-overlapping coordinates
+    const newItems: PlacedCanvasItem[] = [];
+
+    // Stickers
+    if (template.stickers && template.stickers.length > 0) {
+      template.stickers.forEach((stk, idx) => {
+        const defaultPositions = [
+          { x: 82, y: 18 },
+          { x: 18, y: 78 },
+          { x: 82, y: 78 },
+          { x: 18, y: 20 },
+        ];
+        const pos = defaultPositions[idx % defaultPositions.length];
+
+        newItems.push({
+          id: `ai-stk-${Date.now()}-${idx}`,
+          type: 'sticker',
+          content: stk.display,
+          x: stk.x && stk.x !== 50 ? stk.x : pos.x,
+          y: stk.y && stk.y !== 50 ? stk.y : pos.y,
+          scale: stk.scale || 1.0,
+          rotation: stk.rotation || 0,
+          isTextBadge: stk.isTextBadge,
+        });
+      });
+    }
+
+    // Custom Text (Placed with breathing room above footer)
+    if (template.customTexts && template.customTexts.length > 0) {
+      template.customTexts.forEach((txt, idx) => {
+        newItems.push({
+          id: `ai-txt-${Date.now()}-${idx}`,
+          type: 'text',
+          content: txt.text,
+          x: txt.x || 50,
+          y: txt.y && txt.y < 82 ? txt.y : 72 + idx * 7,
+          scale: txt.scale || 1.0,
+          rotation: 0,
+          fontFamily: txt.fontFamily || "'Syne', sans-serif",
+          color: txt.color || '#FFFFFF',
+          hasGlow: txt.hasGlow ?? true,
+        });
+      });
+    }
+
+    setPlacedItems(newItems);
+    setSelectedItemId(null);
+  };
+
+  // =========================================================================
   // AI TEMPLATE GENERATION HANDLER (Gemini 3.5 Flash Lite)
   // =========================================================================
   const handleGenerateAITemplate = async (customPrompt?: string) => {
@@ -370,55 +477,9 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         aspectRatio: selectedRatio,
       });
 
-      setAiGeneratedTemplate(template);
-
-      // 1. Auto-apply recommended photo filter
-      if (template.recommendedFilter) {
-        setSelectedFilterId(template.recommendedFilter);
-      }
-
-      // 2. Set active frame to the custom AI template
-      setSelectedFrameId('ai-custom');
-
-      // 3. Clear previous items and auto-place AI stickers & custom texts
-      const newItems: PlacedCanvasItem[] = [];
-
-      // Add AI Stickers
-      if (template.stickers && template.stickers.length > 0) {
-        template.stickers.forEach((stk, idx) => {
-          newItems.push({
-            id: `ai-stk-${Date.now()}-${idx}`,
-            type: 'sticker',
-            content: stk.display,
-            x: stk.x || 50,
-            y: stk.y || 50,
-            scale: stk.scale || 1.0,
-            rotation: stk.rotation || 0,
-            isTextBadge: stk.isTextBadge,
-          });
-        });
-      }
-
-      // Add AI Custom Texts
-      if (template.customTexts && template.customTexts.length > 0) {
-        template.customTexts.forEach((txt, idx) => {
-          newItems.push({
-            id: `ai-txt-${Date.now()}-${idx}`,
-            type: 'text',
-            content: txt.text,
-            x: txt.x || 50,
-            y: txt.y || 85,
-            scale: txt.scale || 1.0,
-            rotation: 0,
-            fontFamily: txt.fontFamily || "'Syne', sans-serif",
-            color: txt.color || '#FFFFFF',
-            hasGlow: txt.hasGlow ?? true,
-          });
-        });
-      }
-
-      setPlacedItems(newItems);
-      setSelectedItemId(null);
+      // Add to templates list & apply
+      setAiTemplatesList((prev) => [template, ...prev]);
+      applyAITemplate(template);
     } catch (err) {
       console.error('Error generating AI template:', err);
     } finally {
@@ -552,19 +613,14 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2" style={{ borderColor: accent }} />
           <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2" style={{ borderColor: accent }} />
 
-          {/* Bottom Custom AI Footer */}
-          <div className="w-full flex items-center justify-between pb-1 pt-3 px-2 bg-gradient-to-t from-black/90 via-black/45 to-transparent rounded-b-2xl">
-            <div>
-              <span className="text-[11px] font-black text-white block tracking-wide">
-                {aiGeneratedTemplate.footerText || 'POWERED BY GEMINI 3.5 FLASH LITE'}
-              </span>
-              <span className="text-[8px] font-bold tracking-wider block" style={{ color: textColor }}>
-                AURALENS VIBE // #{aiGeneratedTemplate.vibeTag.toUpperCase()}
-              </span>
-            </div>
-            <div className="flex items-center gap-0.5 text-white bg-black/60 px-2 py-0.5 rounded-sm">
-              <span className="font-mono text-xs tracking-tighter select-none">█║▌║█║▌</span>
-            </div>
+          {/* Bottom Minimalist Footer Rule (Zero overlap with text) */}
+          <div className="w-full flex items-center justify-between pb-1 pt-1 px-3">
+            <span className="text-[9px] font-mono font-black text-white/90 drop-shadow-md">
+              {aiGeneratedTemplate.footerText || 'AURALENS · 2026'}
+            </span>
+            <span className="text-[8px] font-mono font-bold drop-shadow-md" style={{ color: textColor }}>
+              #{aiGeneratedTemplate.vibeTag.toUpperCase().replace(/\s+/g, '_')}
+            </span>
           </div>
         </div>
       );
@@ -863,16 +919,10 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.lineTo(W - pad, H - pad - len);
         ctx.stroke();
 
-        const botGrad = ctx.createLinearGradient(0, H, 0, H * 0.88);
-        botGrad.addColorStop(0, 'rgba(10, 10, 15, 0.95)');
-        botGrad.addColorStop(1, 'rgba(10, 10, 15, 0)');
-        ctx.fillStyle = botGrad;
-        ctx.fillRect(0, H * 0.88, W, H * 0.12);
-
         ctx.textAlign = 'left';
-        ctx.font = `900 ${Math.round(W * 0.032)}px 'Space Grotesk', sans-serif`;
+        ctx.font = `900 ${Math.round(W * 0.024)}px 'Space Grotesk', sans-serif`;
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillText(aiGeneratedTemplate.footerText || 'POWERED BY GEMINI 3.5 FLASH LITE', pad, H - pad * 1.5);
+        ctx.fillText(aiGeneratedTemplate.footerText || 'AURALENS · 2026', pad, H - pad * 1.2);
       } else if (selectedFrameId === 'frame-01') {
         const topGrad = ctx.createLinearGradient(0, 0, 0, H * 0.14);
         topGrad.addColorStop(0, 'rgba(10, 10, 15, 0.92)');
@@ -1357,26 +1407,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <Share2 className="w-4 h-4" />
           </button>
         </div>
-
-        {/* Lumi AI Commentary Bubble (If generated by Gemini) */}
-        {aiGeneratedTemplate?.lumiComment && (
-          <div className="mt-4 p-3.5 sm:p-4 rounded-2xl bg-purple-950/90 border border-purple-500/40 text-white flex items-center gap-3 shadow-lg max-w-xl w-full animate-fadeIn">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#FF2E93] to-[#D4FF00] flex items-center justify-center shrink-0 shadow-md">
-              <Bot className="w-5 h-5 text-gray-950" />
-            </div>
-            <div className="flex-1 text-left">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-black text-[#D4FF00] uppercase tracking-wider">LUMI AI ART DIRECTOR</span>
-                <span className="px-2 py-0.2 rounded-full bg-white/10 text-[9px] font-bold text-gray-300">
-                  {aiGeneratedTemplate.templateName}
-                </span>
-              </div>
-              <p className="text-xs text-gray-200 font-medium mt-0.5 leading-relaxed">
-                "{aiGeneratedTemplate.lumiComment}"
-              </p>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* ========================================================================= */}
@@ -1451,7 +1481,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <span>{isEn ? 'Add Text & Fonts' : 'Chèn Chữ & Font'}</span>
           </button>
 
-          {/* TAB 6: AI (Moved to the end!) */}
+          {/* TAB 6: AI (At the very end!) */}
           <button
             onClick={() => setActiveTab('ai-template')}
             className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
@@ -1465,103 +1495,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </button>
         </div>
 
-        {/* ==================== TAB: AI TEMPLATE (Custom Prompt Gemini) ==================== */}
-        {activeTab === 'ai-template' && (
-          <div className="space-y-4 animate-fadeIn max-w-3xl mx-auto py-2">
-            <div className="text-center space-y-1">
-              <h3 className="text-sm sm:text-base font-black text-gray-900 flex items-center justify-center gap-2">
-                <Sparkles className="w-4 h-4 text-purple-600" />
-                <span>{isEn ? 'Prompt Gemini 3.5 Flash Lite to Synthesize Any Template' : 'Mô tả ý tưởng bằng ngôn ngữ tự nhiên để Gemini 3.5 Flash Lite tạo Template riêng'}</span>
-              </h3>
-            </div>
-
-            {/* Prompt Input Box */}
-            <div className="flex items-center gap-2.5 bg-gray-50 p-2 rounded-2xl border-2 border-purple-200 focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-100 transition-all shadow-inner">
-              <input
-                type="text"
-                value={aiPromptInput}
-                onChange={(e) => setAiPromptInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleGenerateAITemplate();
-                }}
-                disabled={isGeneratingTemplate}
-                placeholder={
-                  isEn
-                    ? 'E.g. Cyberpunk Y2K neon purple template with Slay badge and laser grid...'
-                    : 'VD: Khung Cyberpunk Y2K màu tím neon có chữ Sài Gòn Night Drive và sticker tia sét...'
-                }
-                className="flex-1 px-3 py-2 bg-transparent text-xs sm:text-sm font-bold text-gray-900 placeholder:text-gray-400 focus:outline-none"
-              />
-              <button
-                onClick={() => handleGenerateAITemplate()}
-                disabled={!aiPromptInput.trim() || isGeneratingTemplate}
-                className="py-3 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-black text-xs sm:text-sm shadow-md active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2 cursor-pointer shrink-0"
-              >
-                {isGeneratingTemplate ? (
-                  <>
-                    <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                    <span>{isEn ? 'Gemini Designing...' : 'Gemini Đang Tạo...'}</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 text-white" />
-                    <span>{isEn ? 'Generate AI Template' : 'Sinh Template AI'}</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            {/* Quick Inspiration Prompts */}
-            <div className="space-y-1.5 pt-1">
-              <span className="text-[11px] font-black text-gray-400 uppercase block text-center">
-                {isEn ? 'Quick Inspiration Concepts (Tap to generate):' : 'Ý tưởng gợi ý (Chạm để tạo ngay):'}
-              </span>
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                {[
-                  {
-                    labelEn: 'Cyberpunk Night Drive 2026',
-                    labelVi: 'Cyberpunk Night Drive 2026',
-                    prompt: isEn ? 'Cyberpunk Night Drive 2026 neon laser purple and cyan' : 'Khung Cyberpunk Night Drive 2026 màu tím cyan ánh neon cực cháy',
-                  },
-                  {
-                    labelEn: 'Sài Gòn 90s Vintage Nostalgia',
-                    labelVi: 'Sài Gòn 90s Vintage Hoài Niệm',
-                    prompt: isEn ? 'Vintage 35mm Saigon 90s nostalgic film warm amber tones' : 'Khung phim cuộn 35mm Sài Gòn thập niên 90 hoài niệm màu ấm',
-                  },
-                  {
-                    labelEn: 'Y2K Pastel Dopamine Princess',
-                    labelVi: 'Y2K Pastel Dopamine Pop',
-                    prompt: isEn ? 'Y2K Pastel Dopamine Pop pink candy sparkles cute bunny' : 'Khung Y2K Dopamine kẹo ngọt màu pastel hồng có lấp lánh và thỏ cute',
-                  },
-                  {
-                    labelEn: 'Old Money Quiet Luxury Champagne',
-                    labelVi: 'Old Money Hoàng Gia Tối Giản',
-                    prompt: isEn ? 'Old Money Royal Gold minimal champagne luxury aesthetic' : 'Khung Old Money phong cách hoàng gia vàng champagne sang trọng tối giản',
-                  },
-                  {
-                    labelEn: 'Vogue High Fashion Editorial',
-                    labelVi: 'Vogue Tạp Chí Thời Trang',
-                    prompt: isEn ? 'Vogue High Fashion Editorial magazine cover black and white crisp serif' : 'Khung tạp chí Vogue thời trang bìa báo thanh lịch chữ Didot',
-                  },
-                ].map((chip, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      setAiPromptInput(chip.prompt);
-                      handleGenerateAITemplate(chip.prompt);
-                    }}
-                    disabled={isGeneratingTemplate}
-                    className="px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-purple-50 text-gray-700 hover:text-purple-900 border border-gray-200 hover:border-purple-300 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
-                  >
-                    {isEn ? chip.labelEn : chip.labelVi}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ==================== TAB 1: ASPECT RATIO (Centered) ==================== */}
+        {/* ==================== TAB 1: ASPECT RATIO ==================== */}
         {activeTab === 'ratio' && (
           <div className="flex flex-wrap items-center justify-center gap-3.5 animate-fadeIn py-2">
             {ASPECT_RATIOS.map((ratio) => {
@@ -1599,7 +1533,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </div>
         )}
 
-        {/* ==================== TAB 2: FRAMES (Centered) ==================== */}
+        {/* ==================== TAB 2: FRAMES ==================== */}
         {activeTab === 'frames' && (
           <div className="flex items-center justify-center gap-3.5 overflow-x-auto py-2 scrollbar-none snap-x animate-fadeIn flex-wrap sm:flex-nowrap">
             {/* Option: None / Raw (Nguyên Bản) */}
@@ -1660,7 +1594,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </div>
         )}
 
-        {/* ==================== TAB 3: FILTERS (Centered & Generous Spacing) ==================== */}
+        {/* ==================== TAB 3: FILTERS ==================== */}
         {activeTab === 'filters' && (
           <div className="flex items-center justify-center gap-3 overflow-x-auto py-3 px-2 scrollbar-none snap-x animate-fadeIn flex-wrap">
             {PHOTO_FILTERS.map((filter) => {
@@ -1690,7 +1624,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </div>
         )}
 
-        {/* ==================== TAB 4: STICKERS (Centered) ==================== */}
+        {/* ==================== TAB 4: STICKERS ==================== */}
         {activeTab === 'stickers' && (
           <div className="space-y-3 animate-fadeIn text-center py-2">
             <p className="text-xs sm:text-sm font-bold text-gray-600">
@@ -1714,7 +1648,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </div>
         )}
 
-        {/* ==================== TAB 5: CUSTOM TEXT & FONTS (Centered) ==================== */}
+        {/* ==================== TAB 5: CUSTOM TEXT & FONTS ==================== */}
         {activeTab === 'text' && (
           <div className="space-y-4 animate-fadeIn max-w-2xl mx-auto py-2">
             {/* Input Row */}
@@ -1815,6 +1749,194 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ==================== TAB 6: AI TEMPLATE (Custom Prompt & Collection) ==================== */}
+        {activeTab === 'ai-template' && (
+          <div className="space-y-5 animate-fadeIn max-w-3xl mx-auto py-2">
+            <div className="text-center space-y-1">
+              <h3 className="text-sm sm:text-base font-black text-gray-900 flex items-center justify-center gap-2">
+                <Sparkles className="w-4 h-4 text-purple-600" />
+                <span>{isEn ? 'Prompt Gemini 3.5 Flash Lite to Synthesize Any Template' : 'Mô tả ý tưởng bằng ngôn ngữ tự nhiên để Gemini 3.5 Flash Lite tạo Template riêng'}</span>
+              </h3>
+            </div>
+
+            {/* Prompt Input Box */}
+            <div className="flex items-center gap-2.5 bg-gray-50 p-2 rounded-2xl border-2 border-purple-200 focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-100 transition-all shadow-inner">
+              <input
+                type="text"
+                value={aiPromptInput}
+                onChange={(e) => setAiPromptInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleGenerateAITemplate();
+                }}
+                disabled={isGeneratingTemplate}
+                placeholder={
+                  isEn
+                    ? 'E.g. Cyberpunk Y2K neon purple template with Slay badge and laser grid...'
+                    : 'VD: Khung Cyberpunk Y2K màu tím neon có chữ Sài Gòn Night Drive và sticker tia sét...'
+                }
+                className="flex-1 px-3 py-2 bg-transparent text-xs sm:text-sm font-bold text-gray-900 placeholder:text-gray-400 focus:outline-none"
+              />
+              <button
+                onClick={() => handleGenerateAITemplate()}
+                disabled={!aiPromptInput.trim() || isGeneratingTemplate}
+                className="py-3 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-black text-xs sm:text-sm shadow-md active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2 cursor-pointer shrink-0"
+              >
+                {isGeneratingTemplate ? (
+                  <>
+                    <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                    <span>{isEn ? 'Gemini Designing...' : 'Gemini Đang Tạo...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-white" />
+                    <span>{isEn ? 'Generate AI Template' : 'Sinh Template AI'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Quick Inspiration Prompts */}
+            <div className="space-y-1.5 pt-1">
+              <span className="text-[11px] font-black text-gray-400 uppercase block text-center">
+                {isEn ? 'Quick Inspiration Concepts (Tap to generate):' : 'Ý tưởng gợi ý (Chạm để tạo ngay):'}
+              </span>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {[
+                  {
+                    labelEn: 'Cyberpunk Night Drive 2026',
+                    labelVi: 'Cyberpunk Night Drive 2026',
+                    prompt: isEn ? 'Cyberpunk Night Drive 2026 neon laser purple and cyan' : 'Khung Cyberpunk Night Drive 2026 màu tím cyan ánh neon cực cháy',
+                  },
+                  {
+                    labelEn: 'Sài Gòn 90s Vintage Nostalgia',
+                    labelVi: 'Sài Gòn 90s Vintage Hoài Niệm',
+                    prompt: isEn ? 'Vintage 35mm Saigon 90s nostalgic film warm amber tones' : 'Khung phim cuộn 35mm Sài Gòn thập niên 90 hoài niệm màu ấm',
+                  },
+                  {
+                    labelEn: 'Y2K Pastel Dopamine Princess',
+                    labelVi: 'Y2K Pastel Dopamine Pop',
+                    prompt: isEn ? 'Y2K Pastel Dopamine Pop pink candy sparkles cute bunny' : 'Khung Y2K Dopamine kẹo ngọt màu pastel hồng có lấp lánh và thỏ cute',
+                  },
+                  {
+                    labelEn: 'Old Money Quiet Luxury Champagne',
+                    labelVi: 'Old Money Hoàng Gia Tối Giản',
+                    prompt: isEn ? 'Old Money Royal Gold minimal champagne luxury aesthetic' : 'Khung Old Money phong cách hoàng gia vàng champagne sang trọng tối giản',
+                  },
+                  {
+                    labelEn: 'Vogue High Fashion Editorial',
+                    labelVi: 'Vogue Tạp Chí Thời Trang',
+                    prompt: isEn ? 'Vogue High Fashion Editorial magazine cover black and white crisp serif' : 'Khung tạp chí Vogue thời trang bìa báo thanh lịch chữ Didot',
+                  },
+                ].map((chip, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setAiPromptInput(chip.prompt);
+                      handleGenerateAITemplate(chip.prompt);
+                    }}
+                    disabled={isGeneratingTemplate}
+                    className="px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-purple-50 text-gray-700 hover:text-purple-900 border border-gray-200 hover:border-purple-300 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
+                  >
+                    {isEn ? chip.labelEn : chip.labelVi}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* ========================================================================= */}
+            {/* AI GENERATED TEMPLATES COLLECTION (Cards Below Input Box)                 */}
+            {/* ========================================================================= */}
+            <div className="pt-3 border-t border-gray-100 space-y-3">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-xs font-black text-gray-700 uppercase tracking-wider">
+                  {isEn ? 'Generated AI Templates' : 'Danh Sách Template AI'}
+                </span>
+                <span className="text-[11px] font-bold text-gray-400">
+                  {isEn ? `${aiTemplatesList.length} ready` : `${aiTemplatesList.length} template sẵn sàng`}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center gap-3 overflow-x-auto py-2 px-1 scrollbar-none snap-x animate-fadeIn flex-wrap sm:flex-nowrap">
+                {/* Option: None / Raw (Bỏ chọn template) */}
+                <button
+                  onClick={() => applyAITemplate(null)}
+                  className={`snap-start shrink-0 flex flex-col items-center gap-2 p-2 rounded-2xl transition-all cursor-pointer ${
+                    selectedFrameId === '' || selectedFrameId !== 'ai-custom'
+                      ? 'scale-105 bg-purple-50/90 border-2 border-purple-600 shadow-md'
+                      : 'opacity-70 hover:opacity-100 border border-transparent'
+                  }`}
+                >
+                  <div className={`w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden p-1 shadow-md flex items-center justify-center transition-all ${
+                    selectedFrameId === '' || selectedFrameId !== 'ai-custom'
+                      ? 'bg-purple-600 text-white shadow-lg'
+                      : 'bg-gray-100 border-2 border-dashed border-gray-300 text-gray-500'
+                  }`}>
+                    <span className="text-xs font-black uppercase text-center leading-tight">
+                      {isEn ? 'NO TEMPLATE' : 'KHÔNG DÙNG'}
+                    </span>
+                  </div>
+                  <span className="text-xs font-black text-gray-800">
+                    {isEn ? 'Deselect' : 'Bỏ Chọn'}
+                  </span>
+                </button>
+
+                {/* AI Template Cards */}
+                {aiTemplatesList.map((tmpl, idx) => {
+                  const isSelected = selectedFrameId === 'ai-custom' && aiGeneratedTemplate?.templateName === tmpl.templateName;
+
+                  return (
+                    <button
+                      key={`ai-tmpl-${idx}`}
+                      onClick={() => {
+                        if (isSelected) {
+                          applyAITemplate(null);
+                        } else {
+                          applyAITemplate(tmpl);
+                        }
+                      }}
+                      className={`snap-start shrink-0 flex flex-col items-center gap-2 p-2 rounded-2xl transition-all cursor-pointer ${
+                        isSelected ? 'scale-105 bg-purple-50/90 border-2 border-purple-600 shadow-md' : 'opacity-70 hover:opacity-100 border border-transparent'
+                      }`}
+                    >
+                      <div
+                        className={`w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden p-1 shadow-md transition-all flex flex-col justify-between items-center text-center ${
+                          isSelected
+                            ? 'ring-2 ring-purple-600 shadow-lg'
+                            : 'border border-gray-200'
+                        }`}
+                        style={{
+                          background: `linear-gradient(135deg, ${tmpl.colorPalette?.primary || '#8B00FF'} 0%, #0A0A0F 100%)`,
+                        }}
+                      >
+                        <span className="text-[10px] font-black text-white px-1 pt-1 truncate w-full block drop-shadow">
+                          {tmpl.headerText || 'AI TEMPLATE'}
+                        </span>
+                        <span
+                          className="text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase"
+                          style={{
+                            backgroundColor: 'rgba(0,0,0,0.6)',
+                            color: tmpl.colorPalette?.text || '#D4FF00',
+                            border: `1px solid ${tmpl.colorPalette?.accent || '#00F5FF'}`,
+                          }}
+                        >
+                          #{tmpl.vibeTag?.split(' ')[0] || 'VIBE'}
+                        </span>
+                        <span className="text-[8px] font-bold text-white/80 pb-0.5 truncate w-full block">
+                          {tmpl.recommendedFilter}
+                        </span>
+                      </div>
+                      <span className="text-xs font-black text-gray-800 truncate max-w-[85px]">
+                        {tmpl.templateName}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
           </div>
         )}
 
