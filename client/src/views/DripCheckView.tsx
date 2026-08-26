@@ -14,7 +14,6 @@ import {
   Loader2,
   Lightbulb,
   Tag,
-  Flame,
 } from 'lucide-react';
 import type { DripCheckResponse, EventContext, FashionItem } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
@@ -337,11 +336,11 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       )}
 
       {/* ========================================================================= */}
-      {/* STATE 2: 3-SECOND AI REASONING / PROCESSING ANIMATION                      */}
+      {/* STATE 2: 3-SECOND AI REASONING WITH SPACIOUS, CLEAR LOGS                  */}
       {/* ========================================================================= */}
       {flowState === 'processing' && (
         <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4">
-          <div className="relative w-full max-w-md sm:max-w-lg aspect-[3/4] max-h-[72vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-gray-950 flex flex-col items-center justify-center p-7 sm:p-10 text-center text-white">
+          <div className="relative w-full max-w-md sm:max-w-lg aspect-[3/4] max-h-[74vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-gray-950 flex flex-col items-center justify-center p-6 sm:p-10 text-center text-white">
             
             {/* Background Thumbnail preview blurred */}
             {currentPhoto && (
@@ -352,39 +351,41 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               />
             )}
 
-            <div className="relative z-10 space-y-7 flex flex-col items-center w-full">
+            <div className="relative z-10 space-y-8 flex flex-col items-center w-full max-w-md">
               
               {/* Rotating Futuristic Loader with Glow */}
-              <div className="relative flex items-center justify-center">
+              <div className="relative flex items-center justify-center my-1">
                 <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-t-[#D4FF00] border-r-[#FF2E93] border-b-[#00F5FF] border-l-[#7C3AED] animate-spin shadow-[0_0_35px_rgba(212,255,0,0.6)]" style={{ animationDuration: '1.4s' }} />
                 <Sparkles className="w-9 h-9 text-[#D4FF00] absolute animate-pulse" />
               </div>
 
-              {/* Header Title */}
-              <div className="space-y-1.5">
-                <span className="px-4 py-1.5 rounded-full bg-white/15 text-[#D4FF00] text-xs font-black uppercase tracking-wider shadow-md">
-                  AI Multimodal Reasoning
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              {/* Header Title with Generous Spacing */}
+              <div className="space-y-3 text-center">
+                <div>
+                  <span className="px-4 py-1.5 rounded-full bg-white/15 text-[#D4FF00] text-xs font-black uppercase tracking-widest shadow-md">
+                    AI Multimodal Reasoning
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight pt-1">
                   {isEn ? 'Lumi Stylist Is Cooking...' : 'Lumi Stylist Đang Phân Tích...'}
                 </h3>
               </div>
 
-              {/* Dynamic Processing Logs with Animated Spinner -> Green Tick Check */}
-              <div className="space-y-3.5 w-full text-left bg-black/75 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-white/15 text-sm font-extrabold shadow-2xl">
+              {/* Dynamic Processing Logs with Spacious Row Gaps & Line Height */}
+              <div className="space-y-4 w-full text-left bg-black/80 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-white/15 text-sm sm:text-base font-extrabold shadow-2xl">
                 
                 {/* Step 1 */}
-                <div className={`flex items-center gap-3 transition-all duration-300 ${processingStep >= 0 ? 'text-[#D4FF00]' : 'text-gray-500 opacity-40'}`}>
+                <div className={`flex items-center gap-3.5 transition-all duration-300 ${processingStep >= 0 ? 'text-[#D4FF00]' : 'text-gray-500 opacity-40'}`}>
                   {processingStep > 0 ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 animate-scaleUp" />
                   ) : (
                     <Loader2 className="w-5 h-5 text-[#D4FF00] shrink-0 animate-spin" />
                   )}
-                  <span>{isEn ? 'Spectral color & fabric analysis...' : 'Quang phổ màu & độ tương phản...'}</span>
+                  <span className="leading-snug">{isEn ? 'Spectral color & fabric analysis...' : 'Quang phổ màu & độ tương phản...'}</span>
                 </div>
 
                 {/* Step 2 */}
-                <div className={`flex items-center gap-3 transition-all duration-300 ${processingStep >= 1 ? 'text-[#00F5FF]' : 'text-gray-500 opacity-40'}`}>
+                <div className={`flex items-center gap-3.5 transition-all duration-300 ${processingStep >= 1 ? 'text-[#00F5FF]' : 'text-gray-500 opacity-40'}`}>
                   {processingStep > 1 ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 animate-scaleUp" />
                   ) : processingStep === 1 ? (
@@ -394,11 +395,11 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                       <span className="w-2.5 h-2.5 rounded-full bg-gray-600" />
                     </span>
                   )}
-                  <span>{isEn ? 'Silhouette ratio & vibe matrix...' : 'Tỷ lệ Silhouette & Vibe Matrix...'}</span>
+                  <span className="leading-snug">{isEn ? 'Silhouette ratio & vibe matrix...' : 'Tỷ lệ Silhouette & Vibe Matrix...'}</span>
                 </div>
 
                 {/* Step 3 */}
-                <div className={`flex items-center gap-3 transition-all duration-300 ${processingStep >= 2 ? 'text-[#FF2E93]' : 'text-gray-500 opacity-40'}`}>
+                <div className={`flex items-center gap-3.5 transition-all duration-300 ${processingStep >= 2 ? 'text-[#FF2E93]' : 'text-gray-500 opacity-40'}`}>
                   {processingStep > 2 ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 animate-scaleUp" />
                   ) : processingStep === 2 ? (
@@ -408,7 +409,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                       <span className="w-2.5 h-2.5 rounded-full bg-gray-600" />
                     </span>
                   )}
-                  <span>{isEn ? 'Synthesizing Fit Score...' : 'Tổng hợp Reasoning & Fit Score...'}</span>
+                  <span className="leading-snug">{isEn ? 'Synthesizing Fit Score...' : 'Tổng hợp Reasoning & Fit Score...'}</span>
                 </div>
 
               </div>
@@ -463,38 +464,40 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
           {/* RIGHT COLUMN: INTEGRATED SCORE + LUMI CARD + ACCESSORIES (cols 6-12 on lg) */}
           <div className="lg:col-span-7 space-y-5">
             
-            {/* 1. COMBINED FIT SCORE & LUMI AI STYLIST CARD (Seamless, High Visual Polish) */}
+            {/* 1. COMBINED FIT SCORE & LUMI AI STYLIST CARD (Proportional, Balanced Height) */}
             <div className="calm-card-elevated p-6 sm:p-7 rounded-3xl space-y-5 bg-white shadow-xl border border-gray-100">
               
-              {/* Top Row: Lumi Avatar (Left) & Fit Score Gauge (Right) */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-gray-100">
-                {/* Left: Lumi Mascot Title */}
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-tr from-[#D4FF00] via-[#FF2E93] to-[#7C3AED] p-0.5 shadow-md shrink-0">
-                    <img
-                      src="/lumi.png"
-                      alt="Lumi AI Stylist"
-                      className="w-full h-full object-contain bg-white rounded-2xl"
-                    />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-black text-xl sm:text-2xl text-gray-950">
-                        Lumi AI Stylist
-                      </h3>
-                      <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-black">
-                        AI Companion
-                      </span>
+              {/* Top Row: Lumi Avatar & Title (Left) + Fit Score Gauge (Right) */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-5 pb-5 border-b border-gray-100">
+                {/* Left: Lumi Mascot Title (Large & Proportional) */}
+                <div className="flex items-center gap-4 sm:gap-5">
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[#D4FF00] via-[#FF2E93] to-[#7C3AED] rounded-3xl blur-xs opacity-50 animate-pulse" />
+                    <div className="w-full h-full rounded-3xl overflow-hidden bg-gradient-to-tr from-[#D4FF00] via-[#FF2E93] to-[#7C3AED] p-0.5 shadow-xl relative z-10">
+                      <div className="w-full h-full rounded-[22px] bg-white flex items-center justify-center overflow-hidden p-1.5">
+                        <img
+                          src="/lumi.png"
+                          alt="Lumi AI Stylist"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
                     </div>
-                    <p className="text-xs sm:text-sm font-bold text-gray-500 mt-0.5">
-                      {isEn ? 'Visual Multimodal Outfit Breakdown' : 'Phân Tích Thị Giác Trang Phục Thời Gian Thực'}
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="font-black text-2xl sm:text-3xl text-gray-950 tracking-tight flex items-center gap-2">
+                      <span>Lumi AI Stylist</span>
+                      <Sparkles className="w-6 h-6 text-[#FF2E93]" />
+                    </h3>
+                    <p className="text-sm sm:text-base font-extrabold text-purple-600">
+                      {isEn ? 'Visual Multimodal Outfit Breakdown' : 'Phân Tích Thị Giác Trang Phục'}
                     </p>
                   </div>
                 </div>
 
-                {/* Right: Score Gauge */}
+                {/* Right: Score Gauge (Evenly sized) */}
                 <div className="shrink-0 flex justify-center">
-                  <ScoreGauge score={score} size={150} />
+                  <ScoreGauge score={score} size={155} />
                 </div>
               </div>
 
