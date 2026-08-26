@@ -535,26 +535,44 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
       case 'frame-04': // Dopamine Pop Pastel
         return (
-          <div className="absolute inset-0 pointer-events-none z-10 p-2.5 sm:p-3 select-none flex flex-col justify-between">
-            {/* Outer Gradient Border */}
-            <div className="absolute inset-2 sm:inset-3 rounded-2xl border-4 border-transparent bg-gradient-to-r from-[#FF2E93] via-[#00F5FF] to-[#D4FF00] -z-10 [mask:linear-gradient(#fff_0_0)_padding-box,linear-gradient(#fff_0_0)] [mask-composite:exclude]" />
+          <div className="absolute inset-0 pointer-events-none z-10 p-2 sm:p-3 select-none flex flex-col justify-between">
+            {/* SVG Gradient Perimeter Border (fill=none guarantees 100% transparent center) */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none p-2 sm:p-3" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="dopamineBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#FF2E93" />
+                  <stop offset="50%" stopColor="#00F5FF" />
+                  <stop offset="100%" stopColor="#D4FF00" />
+                </linearGradient>
+              </defs>
+              <rect
+                x="3"
+                y="3"
+                width="calc(100% - 6px)"
+                height="calc(100% - 6px)"
+                rx="16"
+                fill="none"
+                stroke="url(#dopamineBorderGrad)"
+                strokeWidth="5"
+              />
+            </svg>
 
             {/* Top Stars */}
-            <div className="flex justify-between items-center px-2 pt-1">
-              <span className="text-lg">🌟</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-black/75 text-[#D4FF00] text-[9px] font-black tracking-wider uppercase border border-[#FF2E93]">
+            <div className="relative z-20 flex justify-between items-center px-3 pt-2">
+              <span className="text-xl drop-shadow-md">🌟</span>
+              <span className="px-3 py-1 rounded-full bg-black/80 text-[#D4FF00] text-[10px] font-black tracking-wider uppercase border border-[#FF2E93] shadow-md">
                 ★ DOPAMINE POP ★
               </span>
-              <span className="text-lg">✨</span>
+              <span className="text-xl drop-shadow-md">✨</span>
             </div>
 
             {/* Bottom Stars */}
-            <div className="flex justify-between items-center px-2 pb-1">
-              <span className="text-lg">💖</span>
-              <span className="text-[9px] font-black text-white drop-shadow bg-black/60 px-2 py-0.5 rounded-full">
+            <div className="relative z-20 flex justify-between items-center px-3 pb-2">
+              <span className="text-xl drop-shadow-md">💖</span>
+              <span className="text-[10px] font-black text-white drop-shadow bg-black/70 px-3 py-1 rounded-full border border-white/20">
                 #AURALENS_GENZ
               </span>
-              <span className="text-lg">🌟</span>
+              <span className="text-xl drop-shadow-md">🌟</span>
             </div>
           </div>
         );
