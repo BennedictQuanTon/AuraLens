@@ -62,6 +62,17 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
   const [isFullLeaderboardOpen, setIsFullLeaderboardOpen] = useState(false);
   const [leaderboardSearch, setLeaderboardSearch] = useState('');
 
+  // Lock background body scroll when Full Leaderboard modal is open
+  useEffect(() => {
+    if (isFullLeaderboardOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isFullLeaderboardOpen]);
+
   // Flow states: 'camera' | 'processing' | 'result'
   const [flowState, setFlowState] = useState<'camera' | 'processing' | 'result'>(
     capturedPhoto ? 'result' : 'camera'
@@ -1174,8 +1185,13 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       {/* FULL LEADERBOARD TOP 100 MODAL (Interactive & Gamified)                    */}
       {/* ========================================================================= */}
       {isFullLeaderboardOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-md animate-fadeIn">
-          <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col max-h-[90vh] overflow-hidden">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsFullLeaderboardOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-md animate-fadeIn overscroll-none"
+        >
+          <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col max-h-[85vh] overflow-hidden overscroll-contain">
             
             {/* Modal Header */}
             <div className="p-5 sm:p-6 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-purple-50 via-pink-50/50 to-white">
@@ -1216,7 +1232,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
             </div>
 
             {/* Scrollable Leaderboard List */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-2.5">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-2.5 overscroll-contain">
               {filteredLeaderboard.length === 0 ? (
                 <div className="text-center py-12 text-gray-400 font-bold text-sm">
                   {isEn ? 'No trendsetters found.' : 'Không tìm thấy ai phù hợp.'}
@@ -1290,25 +1306,6 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                   </div>
                 ))
               )}
-            </div>
-
-            {/* Sticky Current User Footer Bar */}
-            <div className="p-4 bg-gray-950 text-white flex items-center justify-between border-t border-gray-800">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-bold text-gray-400">
-                  {isEn ? 'Your Standing:' : 'Vị trí của bạn:'}
-                </span>
-                <span className="text-sm font-black text-[#D4FF00]">
-                  #{userRankInfo.rank} • {score} pts ({userRankInfo.tierName})
-                </span>
-              </div>
-
-              <button
-                onClick={() => setIsFullLeaderboardOpen(false)}
-                className="px-4 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-black transition-all cursor-pointer"
-              >
-                {isEn ? 'Close' : 'Đóng'}
-              </button>
             </div>
 
           </div>
