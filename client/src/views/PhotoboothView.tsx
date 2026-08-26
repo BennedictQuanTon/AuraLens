@@ -21,9 +21,14 @@ import {
   ZoomOut,
   Star,
   Image as ImageIcon,
+  Wand2,
+  Bot,
+  MessageSquare,
+  Send,
 } from 'lucide-react';
-import type { PhotoboothFrame, VibeStyle } from '../types/entityGraph.js';
+import type { PhotoboothFrame, VibeStyle, AITemplateResponse } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
+import { apiService } from '../services/api.js';
 
 // Available Aspect Ratios
 export type AspectRatioType = '9:16' | '4:5' | '1:1' | '16:9' | '4:3';
@@ -190,7 +195,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   // 1. Aspect Ratio state
   const [selectedRatio, setSelectedRatio] = useState<AspectRatioType>('9:16');
   
-  // 2. Active Frame state (empty string means "No Frame / Nguyên Bản")
+  // 2. Active Frame state ('ai-custom' or frame-id or empty string for None)
   const [selectedFrameId, setSelectedFrameId] = useState<string>(
     frames[0]?.id || 'frame-01'
   );
@@ -198,7 +203,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   // 3. Color Filter state
   const [selectedFilterId, setSelectedFilterId] = useState<string>('normal');
 
-  // 4. Base Photo state (Well-framed portrait with generous headroom so no heads get cut off!)
+  // 4. Base Photo state (Well-framed portrait with headroom)
   const [activePhoto, setActivePhoto] = useState<string>(
     'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000&auto=format&fit=crop&q=80'
   );
@@ -213,10 +218,15 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   const [selectedTextColor, setSelectedTextColor] = useState('#FFFFFF');
   const [hasTextGlow, setHasTextGlow] = useState(true);
 
-  // 7. Active Tab selector
-  const [activeTab, setActiveTab] = useState<'ratio' | 'frames' | 'filters' | 'stickers' | 'text'>('frames');
+  // 7. Active Tab selector (Now includes 'ai-template'!)
+  const [activeTab, setActiveTab] = useState<'ai-template' | 'ratio' | 'frames' | 'filters' | 'stickers' | 'text'>('ai-template');
 
-  // 8. Camera & Export states
+  // 8. AI Prompt-to-Template Generator state (Powered by Gemini 3.5 Flash Lite)
+  const [aiPromptInput, setAiPromptInput] = useState('');
+  const [isGeneratingTemplate, setIsGeneratingTemplate] = useState(false);
+  const [aiGeneratedTemplate, setAiGeneratedTemplate] = useState<AITemplateResponse | null>(null);
+
+  // 9. Camera & Export states
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
   const [timerSeconds, setTimerSeconds] = useState<0 | 3 | 5 | 10>(0);
@@ -236,7 +246,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   const ratioConfig = ASPECT_RATIOS.find((r) => r.id === selectedRatio) || ASPECT_RATIOS[0];
   const activeFilter = PHOTO_FILTERS.find((f) => f.id === selectedFilterId) || PHOTO_FILTERS[0];
 
-  // Responsive Viewport Height helper (maintains tall consistent height across all ratios)
+  // Responsive Viewport Height helper
   const getContainerRatioClass = (ratio: AspectRatioType) => {
     switch (ratio) {
       case '9:16':
@@ -343,6 +353,78 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
     }
   };
 
+  // =========================================================================
+  // AI TEMPLATE GENERATION HANDLER (Gemini 3.5 Flash Lite)
+  // =========================================================================
+  const handleGenerateAITemplate = async (customPrompt?: string) => {
+    const queryPrompt = (customPrompt || aiPromptInput).trim();
+    if (!queryPrompt || isGeneratingTemplate) return;
+
+    setIsGeneratingTemplate(true);
+
+    try {
+      const template = await apiService.generateAITemplate({
+        prompt: queryPrompt,
+        language,
+        aspectRatio: selectedRatio,
+      });
+
+      setAiGeneratedTemplate(template);
+
+      // 1. Auto-apply recommended photo filter
+      if (template.recommendedFilter) {
+        setSelectedFilterId(template.recommendedFilter);
+      }
+
+      // 2. Set active frame to the custom AI template
+      setSelectedFrameId('ai-custom');
+
+      // 3. Clear previous items and auto-place AI stickers & custom texts
+      const newItems: PlacedCanvasItem[] = [];
+
+      // Add AI Stickers
+      if (template.stickers && template.stickers.length > 0) {
+        template.stickers.forEach((stk, idx) => {
+          newItems.push({
+            id: `ai-stk-${Date.now()}-${idx}`,
+            type: 'sticker',
+            content: stk.display,
+            x: stk.x || 50,
+            y: stk.y || 50,
+            scale: stk.scale || 1.0,
+            rotation: stk.rotation || 0,
+            isTextBadge: stk.isTextBadge,
+          });
+        });
+      }
+
+      // Add AI Custom Texts
+      if (template.customTexts && template.customTexts.length > 0) {
+        template.customTexts.forEach((txt, idx) => {
+          newItems.push({
+            id: `ai-txt-${Date.now()}-${idx}`,
+            type: 'text',
+            content: txt.text,
+            x: txt.x || 50,
+            y: txt.y || 85,
+            scale: txt.scale || 1.0,
+            rotation: 0,
+            fontFamily: txt.fontFamily || "'Syne', sans-serif",
+            color: txt.color || '#FFFFFF',
+            hasGlow: txt.hasGlow ?? true,
+          });
+        });
+      }
+
+      setPlacedItems(newItems);
+      setSelectedItemId(null);
+    } catch (err) {
+      console.error('Error generating AI template:', err);
+    } finally {
+      setIsGeneratingTemplate(false);
+    }
+  };
+
   // Sticker & Text placement handlers
   const handleAddSticker = (sticker: StickerItem) => {
     const newItem: PlacedCanvasItem = {
@@ -439,6 +521,54 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   const renderResponsiveFrame = (frameId: string) => {
     if (!frameId) return null; // No Frame / Nguyên Bản
 
+    // Custom AI Generated Frame
+    if (frameId === 'ai-custom' && aiGeneratedTemplate) {
+      const primary = aiGeneratedTemplate.colorPalette.primary || '#FF2E93';
+      const accent = aiGeneratedTemplate.colorPalette.accent || '#00F5FF';
+      const textColor = aiGeneratedTemplate.colorPalette.text || '#D4FF00';
+
+      return (
+        <div className="absolute inset-0 pointer-events-none z-10 flex flex-col justify-between p-3 sm:p-4 select-none">
+          {/* Top Custom AI Header */}
+          <div className="w-full text-center pt-1 pb-2 bg-gradient-to-b from-black/85 via-black/45 to-transparent rounded-t-2xl">
+            <h2
+              className="font-black text-xl sm:text-2xl tracking-widest uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
+              style={{ color: textColor, fontFamily: "'Syne', sans-serif" }}
+            >
+              {aiGeneratedTemplate.headerText || 'AURALENS AI'}
+            </h2>
+            {aiGeneratedTemplate.headerSub && (
+              <span className="text-[9px] sm:text-[10px] font-black text-white/90 tracking-widest uppercase block mt-0.5 font-mono">
+                {aiGeneratedTemplate.headerSub}
+              </span>
+            )}
+            <div className="w-4/5 mx-auto border-b border-dashed mt-1 opacity-75" style={{ borderColor: accent }} />
+          </div>
+
+          {/* Corner Brackets */}
+          <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2" style={{ borderColor: primary }} />
+          <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2" style={{ borderColor: primary }} />
+          <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2" style={{ borderColor: accent }} />
+          <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2" style={{ borderColor: accent }} />
+
+          {/* Bottom Custom AI Footer */}
+          <div className="w-full flex items-center justify-between pb-1 pt-3 px-2 bg-gradient-to-t from-black/90 via-black/45 to-transparent rounded-b-2xl">
+            <div>
+              <span className="text-[11px] font-black text-white block tracking-wide">
+                {aiGeneratedTemplate.footerText || 'POWERED BY GEMINI 3.5 FLASH LITE'}
+              </span>
+              <span className="text-[8px] font-bold tracking-wider block" style={{ color: textColor }}>
+                AURALENS VIBE // #{aiGeneratedTemplate.vibeTag.toUpperCase()}
+              </span>
+            </div>
+            <div className="flex items-center gap-0.5 text-white bg-black/60 px-2 py-0.5 rounded-sm">
+              <span className="font-mono text-xs tracking-tighter select-none">█║▌║█║▌</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     switch (frameId) {
       case 'frame-01': // Y2K Cyber Magazine
         return (
@@ -470,7 +600,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                   POWERED BY GOOGLE AI & LUMI PERSONA
                 </span>
               </div>
-              {/* Barcode graphic */}
               <div className="flex items-center gap-0.5 text-white bg-black/60 px-2 py-0.5 rounded-sm">
                 <span className="font-mono text-sm tracking-tighter select-none">█║▌║█║▌█</span>
               </div>
@@ -536,7 +665,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       case 'frame-04': // Dopamine Pop Pastel
         return (
           <div className="absolute inset-0 pointer-events-none z-10 p-2 sm:p-3 select-none flex flex-col justify-between">
-            {/* SVG Gradient Perimeter Border (fill=none guarantees 100% transparent center) */}
+            {/* Clean SVG Gradient Perimeter Border (fill=none) */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none p-2 sm:p-3" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="dopamineBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -679,15 +808,71 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       baseImg.onerror = () => resolve();
     });
 
-    // 2. Draw Frame Overlay dynamically if frame selected
+    // 2. Draw Frame Overlay dynamically
     if (selectedFrameId) {
       const W = canvas.width;
       const H = canvas.height;
 
       ctx.save();
 
-      if (selectedFrameId === 'frame-01') {
-        // Y2K Cyber Top Bar
+      if (selectedFrameId === 'ai-custom' && aiGeneratedTemplate) {
+        const topGrad = ctx.createLinearGradient(0, 0, 0, H * 0.14);
+        topGrad.addColorStop(0, 'rgba(10, 10, 15, 0.92)');
+        topGrad.addColorStop(1, 'rgba(10, 10, 15, 0)');
+        ctx.fillStyle = topGrad;
+        ctx.fillRect(0, 0, W, H * 0.14);
+
+        ctx.font = `900 ${Math.round(W * 0.065)}px 'Syne', sans-serif`;
+        ctx.fillStyle = aiGeneratedTemplate.colorPalette.text || '#D4FF00';
+        ctx.textAlign = 'center';
+        ctx.fillText(aiGeneratedTemplate.headerText || 'AURALENS AI', W / 2, H * 0.055);
+
+        ctx.font = `700 ${Math.round(W * 0.024)}px 'Space Grotesk', monospace`;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(aiGeneratedTemplate.headerSub || 'SPECIAL EDITION', W / 2, H * 0.082);
+
+        // Neon corners
+        ctx.strokeStyle = aiGeneratedTemplate.colorPalette.primary || '#FF2E93';
+        ctx.lineWidth = Math.round(W * 0.008);
+        const pad = Math.round(W * 0.035);
+        const len = Math.round(W * 0.08);
+
+        ctx.beginPath();
+        ctx.moveTo(pad, pad + len);
+        ctx.lineTo(pad, pad);
+        ctx.lineTo(pad + len, pad);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(W - pad - len, pad);
+        ctx.lineTo(W - pad, pad);
+        ctx.lineTo(W - pad, pad + len);
+        ctx.stroke();
+
+        ctx.strokeStyle = aiGeneratedTemplate.colorPalette.accent || '#00F5FF';
+        ctx.beginPath();
+        ctx.moveTo(pad, H - pad - len);
+        ctx.lineTo(pad, H - pad);
+        ctx.lineTo(pad + len, H - pad);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(W - pad - len, H - pad);
+        ctx.lineTo(W - pad, H - pad);
+        ctx.lineTo(W - pad, H - pad - len);
+        ctx.stroke();
+
+        const botGrad = ctx.createLinearGradient(0, H, 0, H * 0.88);
+        botGrad.addColorStop(0, 'rgba(10, 10, 15, 0.95)');
+        botGrad.addColorStop(1, 'rgba(10, 10, 15, 0)');
+        ctx.fillStyle = botGrad;
+        ctx.fillRect(0, H * 0.88, W, H * 0.12);
+
+        ctx.textAlign = 'left';
+        ctx.font = `900 ${Math.round(W * 0.032)}px 'Space Grotesk', sans-serif`;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(aiGeneratedTemplate.footerText || 'POWERED BY GEMINI 3.5 FLASH LITE', pad, H - pad * 1.5);
+      } else if (selectedFrameId === 'frame-01') {
         const topGrad = ctx.createLinearGradient(0, 0, 0, H * 0.14);
         topGrad.addColorStop(0, 'rgba(10, 10, 15, 0.92)');
         topGrad.addColorStop(1, 'rgba(10, 10, 15, 0)');
@@ -703,27 +888,23 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.fillStyle = '#FFFFFF';
         ctx.fillText('ISSUE 2026 // CYBERPOP SPECIAL EDITION', W / 2, H * 0.082);
 
-        // Neon corners
         ctx.strokeStyle = '#D4FF00';
         ctx.lineWidth = Math.round(W * 0.008);
         const pad = Math.round(W * 0.035);
         const len = Math.round(W * 0.08);
 
-        // Top-left
         ctx.beginPath();
         ctx.moveTo(pad, pad + len);
         ctx.lineTo(pad, pad);
         ctx.lineTo(pad + len, pad);
         ctx.stroke();
 
-        // Top-right
         ctx.beginPath();
         ctx.moveTo(W - pad - len, pad);
         ctx.lineTo(W - pad, pad);
         ctx.lineTo(W - pad, pad + len);
         ctx.stroke();
 
-        // Bottom corners
         ctx.strokeStyle = '#00F5FF';
         ctx.beginPath();
         ctx.moveTo(pad, H - pad - len);
@@ -737,7 +918,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.lineTo(W - pad, H - pad - len);
         ctx.stroke();
 
-        // Bottom Barcode Footer
         const botGrad = ctx.createLinearGradient(0, H, 0, H * 0.88);
         botGrad.addColorStop(0, 'rgba(10, 10, 15, 0.95)');
         botGrad.addColorStop(1, 'rgba(10, 10, 15, 0)');
@@ -748,12 +928,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.font = `900 ${Math.round(W * 0.032)}px 'Space Grotesk', sans-serif`;
         ctx.fillStyle = '#FFFFFF';
         ctx.fillText('FEEL THE AURA // SGN 2026', pad, H - pad * 1.5);
-
-        ctx.font = `700 ${Math.round(W * 0.02)}px 'Space Grotesk', sans-serif`;
-        ctx.fillStyle = '#D4FF00';
-        ctx.fillText('POWERED BY GOOGLE AI & LUMI PERSONA', pad, H - pad * 0.6);
       } else if (selectedFrameId === 'frame-02') {
-        // Film 35mm Strip
         const stripW = Math.round(W * 0.07);
         ctx.fillStyle = '#000000';
         ctx.fillRect(0, 0, stripW, H);
@@ -774,7 +949,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.textAlign = 'left';
         ctx.fillText("'26 08 27  KODAK GOLD 400", stripW + 20, Math.round(H * 0.05));
       } else if (selectedFrameId === 'frame-03') {
-        // Vogue Editorial
         ctx.font = `900 ${Math.round(W * 0.11)}px 'Didot', 'Playfair Display', serif`;
         ctx.fillStyle = '#FFFFFF';
         ctx.textAlign = 'center';
@@ -786,7 +960,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.font = `700 ${Math.round(W * 0.022)}px 'Space Grotesk', sans-serif`;
         ctx.fillText('AUTUMN / WINTER 2026', W / 2, Math.round(H * 0.12));
 
-        // Bottom rule
         const botY = Math.round(H * 0.94);
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
@@ -801,13 +974,11 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.textAlign = 'right';
         ctx.fillText('VIETNAM · 2026', W * 0.95, botY + Math.round(W * 0.035));
       } else if (selectedFrameId === 'frame-04') {
-        // Dopamine Pop Gradient Border
         const b = Math.round(W * 0.015);
         ctx.strokeStyle = '#FF2E93';
         ctx.lineWidth = b;
         ctx.strokeRect(b, b, W - b * 2, H - b * 2);
       } else if (selectedFrameId === 'frame-05') {
-        // Cyberpunk HUD
         ctx.strokeStyle = '#00F5FF';
         ctx.lineWidth = Math.round(W * 0.007);
         const pad = Math.round(W * 0.03);
@@ -821,10 +992,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.font = `900 ${Math.round(W * 0.024)}px monospace`;
         ctx.fillStyle = '#FF2E93';
         ctx.fillText('● REC [00:26:08]', pad * 1.5, pad * 2);
-        ctx.fillStyle = '#00F5FF';
-        ctx.fillText('GPS: 10.7769° N, 106.7009° E', pad * 1.5, H - pad * 1.5);
       } else if (selectedFrameId === 'frame-06') {
-        // Old Money Gold Inset
         const ins1 = Math.round(W * 0.035);
         const ins2 = Math.round(W * 0.045);
         ctx.strokeStyle = '#FCD34D';
@@ -833,11 +1001,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         ctx.strokeStyle = '#F59E0B';
         ctx.lineWidth = 1;
         ctx.strokeRect(ins2, ins2, W - ins2 * 2, H - ins2 * 2);
-
-        ctx.font = `900 ${Math.round(W * 0.032)}px serif`;
-        ctx.fillStyle = '#FCD34D';
-        ctx.textAlign = 'center';
-        ctx.fillText('A U R A · L E N S', W / 2, ins1 + Math.round(W * 0.04));
       }
 
       ctx.restore();
@@ -1193,6 +1356,26 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <Share2 className="w-4 h-4" />
           </button>
         </div>
+
+        {/* Lumi AI Commentary Bubble (If generated by Gemini) */}
+        {aiGeneratedTemplate?.lumiComment && (
+          <div className="mt-4 p-3.5 sm:p-4 rounded-2xl bg-purple-950/90 border border-purple-500/40 text-white flex items-center gap-3 shadow-lg max-w-xl w-full animate-fadeIn">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#FF2E93] to-[#D4FF00] flex items-center justify-center shrink-0 shadow-md">
+              <Bot className="w-5 h-5 text-gray-950" />
+            </div>
+            <div className="flex-1 text-left">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black text-[#D4FF00] uppercase tracking-wider">LUMI AI ART DIRECTOR</span>
+                <span className="px-2 py-0.2 rounded-full bg-white/10 text-[9px] font-bold text-gray-300">
+                  {aiGeneratedTemplate.templateName}
+                </span>
+              </div>
+              <p className="text-xs text-gray-200 font-medium mt-0.5 leading-relaxed">
+                "{aiGeneratedTemplate.lumiComment}"
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ========================================================================= */}
@@ -1202,6 +1385,19 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         
         {/* Tab Headers (Centered) */}
         <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-gray-100 flex-wrap">
+          {/* TAB 0: AI TEMPLATE (New Killer Feature!) */}
+          <button
+            onClick={() => setActiveTab('ai-template')}
+            className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
+              activeTab === 'ai-template'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md ring-2 ring-purple-300/40'
+                : 'text-purple-700 bg-purple-50 hover:bg-purple-100'
+            }`}
+          >
+            <Wand2 className="w-4 h-4 text-[#D4FF00]" />
+            <span>{isEn ? '✨ AI Template (Gemini)' : '✨ AI Template (Gemini)'}</span>
+          </button>
+
           <button
             onClick={() => setActiveTab('ratio')}
             className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
@@ -1262,6 +1458,107 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <span>{isEn ? 'Add Text & Fonts' : 'Chèn Chữ & Font'}</span>
           </button>
         </div>
+
+        {/* ==================== TAB 0: AI TEMPLATE (Custom Prompt Gemini) ==================== */}
+        {activeTab === 'ai-template' && (
+          <div className="space-y-4 animate-fadeIn max-w-3xl mx-auto py-2">
+            <div className="text-center space-y-1">
+              <h3 className="text-sm sm:text-base font-black text-gray-900 flex items-center justify-center gap-2">
+                <Sparkles className="w-4 h-4 text-purple-600" />
+                <span>{isEn ? 'Prompt Gemini 3.5 Flash Lite to Synthesize Any Template' : 'Mô tả ý tưởng bằng ngôn ngữ tự nhiên để Gemini 3.5 Flash Lite tạo Template riêng'}</span>
+              </h3>
+              <p className="text-xs text-gray-500 font-bold">
+                {isEn
+                  ? 'Gemini will harmonize the color filter, vector borders, typography, glow effects, and stickers for your photo in ~1.5s!'
+                  : 'Gemini sẽ tự động phối trọn bộ: Tone màu filter + Kiểu khung viền + Font chữ nghệ thuật + Sticker theo đúng mô tả của bạn chỉ trong ~1.5s!'}
+              </p>
+            </div>
+
+            {/* Prompt Input Box */}
+            <div className="flex items-center gap-2.5 bg-gray-50 p-2 rounded-2xl border-2 border-purple-200 focus-within:border-purple-600 focus-within:ring-2 focus-within:ring-purple-100 transition-all shadow-inner">
+              <input
+                type="text"
+                value={aiPromptInput}
+                onChange={(e) => setAiPromptInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleGenerateAITemplate();
+                }}
+                disabled={isGeneratingTemplate}
+                placeholder={
+                  isEn
+                    ? 'E.g. Cyberpunk Y2K neon purple template with Slay badge and laser grid...'
+                    : 'VD: Khung Cyberpunk Y2K màu tím neon có chữ Sài Gòn Night Drive và sticker tia sét...'
+                }
+                className="flex-1 px-3 py-2 bg-transparent text-xs sm:text-sm font-bold text-gray-900 placeholder:text-gray-400 focus:outline-none"
+              />
+              <button
+                onClick={() => handleGenerateAITemplate()}
+                disabled={!aiPromptInput.trim() || isGeneratingTemplate}
+                className="py-3 px-5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-black text-xs sm:text-sm shadow-md active:scale-95 disabled:opacity-50 transition-all flex items-center gap-2 cursor-pointer shrink-0"
+              >
+                {isGeneratingTemplate ? (
+                  <>
+                    <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                    <span>{isEn ? 'Gemini Designing...' : 'Gemini Đang Tạo...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="w-4 h-4 text-[#D4FF00]" />
+                    <span>{isEn ? 'Generate AI Template' : 'Sinh Template AI'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Quick Inspiration Prompts */}
+            <div className="space-y-1.5 pt-1">
+              <span className="text-[11px] font-black text-gray-400 uppercase block text-center">
+                {isEn ? '💡 Quick Inspiration Concepts (Tap to generate):' : '💡 Ý tưởng gợi ý hot (Chạm để tạo ngay):'}
+              </span>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                {[
+                  {
+                    labelEn: '🌌 Cyberpunk Night Drive 2026',
+                    labelVi: '🌌 Cyberpunk Night Drive 2026',
+                    prompt: isEn ? 'Cyberpunk Night Drive 2026 neon laser purple and cyan' : 'Khung Cyberpunk Night Drive 2026 màu tím cyan ánh neon cực cháy',
+                  },
+                  {
+                    labelEn: '🎞️ Sài Gòn 90s Vintage Nostalgia',
+                    labelVi: '🎞️ Sài Gòn 90s Vintage Hoài Niệm',
+                    prompt: isEn ? 'Vintage 35mm Saigon 90s nostalgic film warm amber tones' : 'Khung phim cuộn 35mm Sài Gòn thập niên 90 hoài niệm màu ấm',
+                  },
+                  {
+                    labelEn: '🎀 Y2K Pastel Dopamine Princess',
+                    labelVi: '🎀 Y2K Pastel Dopamine Pop',
+                    prompt: isEn ? 'Y2K Pastel Dopamine Pop pink candy sparkles cute bunny' : 'Khung Y2K Dopamine kẹo ngọt màu pastel hồng có lấp lánh và thỏ cute',
+                  },
+                  {
+                    labelEn: '🍸 Old Money Quiet Luxury Champagne',
+                    labelVi: '🍸 Old Money Hoàng Gia Tối Giản',
+                    prompt: isEn ? 'Old Money Royal Gold minimal champagne luxury aesthetic' : 'Khung Old Money phong cách hoàng gia vàng champagne sang trọng tối giản',
+                  },
+                  {
+                    labelEn: '📰 Vogue High Fashion Editorial',
+                    labelVi: '📰 Vogue Tạp Chí Thời Trang',
+                    prompt: isEn ? 'Vogue High Fashion Editorial magazine cover black and white crisp serif' : 'Khung tạp chí Vogue thời trang bìa báo thanh lịch chữ Didot',
+                  },
+                ].map((chip, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setAiPromptInput(chip.prompt);
+                      handleGenerateAITemplate(chip.prompt);
+                    }}
+                    disabled={isGeneratingTemplate}
+                    className="px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-purple-50 text-gray-700 hover:text-purple-900 border border-gray-200 hover:border-purple-300 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
+                  >
+                    {isEn ? chip.labelEn : chip.labelVi}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ==================== TAB 1: ASPECT RATIO (Centered) ==================== */}
         {activeTab === 'ratio' && (

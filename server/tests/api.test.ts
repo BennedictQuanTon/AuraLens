@@ -58,4 +58,20 @@ describe('Entity Graph & API Data Integrity Tests', () => {
     expect(response.lumiSuggestion).toBeDefined();
     expect(response.weather.city).toBe('Hồ Chí Minh');
   });
+
+  it('should generate complete photobooth template from natural language prompt', async () => {
+    const { aiTemplateService } = await import('../src/services/aiTemplateService.js');
+    const template = await aiTemplateService.generateTemplate({
+      prompt: 'Cyberpunk Y2K neon purple with Slay tag',
+      language: 'vi',
+      aspectRatio: '9:16',
+    });
+
+    expect(template.templateName).toBeDefined();
+    expect(template.recommendedFilter).toBeDefined();
+    expect(template.borderStyle).toBeDefined();
+    expect(template.stickers.length).toBeGreaterThan(0);
+    expect(template.lumiComment).toBeDefined();
+  });
 });
+

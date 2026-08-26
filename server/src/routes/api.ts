@@ -88,3 +88,19 @@ apiRouter.get('/photobooth/frames', (_req: Request, res: Response) => {
     frames: MOCK_PHOTOBOOTH_FRAMES,
   });
 });
+
+/**
+ * POST /api/v1/photobooth/ai-template
+ * Synthesizes a full Photobooth template using Gemini 3.5 Flash Lite from natural language prompt.
+ */
+apiRouter.post('/photobooth/ai-template', async (req: Request, res: Response) => {
+  try {
+    const { aiTemplateService } = await import('../services/aiTemplateService.js');
+    const template = await aiTemplateService.generateTemplate(req.body);
+    return res.status(200).json(template);
+  } catch (error) {
+    console.error('Error in /api/v1/photobooth/ai-template:', error);
+    return res.status(500).json({ error: 'Internal Server Error generating AI Photobooth Template' });
+  }
+});
+

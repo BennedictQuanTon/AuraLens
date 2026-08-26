@@ -178,3 +178,45 @@ export interface PlaceRecommendationResponse {
   >;
   lumiSuggestion: string;
 }
+
+export interface AITemplateRequest {
+  prompt: string;
+  language?: 'en' | 'vi';
+  aspectRatio?: '9:16' | '4:5' | '1:1' | '16:9' | '4:3';
+}
+
+export interface AITemplateResponse {
+  templateName: string;
+  vibeTag: string;
+  conceptDescription: string;
+  recommendedFilter: string;
+  borderStyle: 'cyber-magazine' | 'film-strip' | 'vogue-clean' | 'dopamine-pop' | 'cyber-hud' | 'royal-gold' | 'neon-minimal';
+  colorPalette: {
+    primary: string;
+    accent: string;
+    text: string;
+  };
+  headerText: string;
+  headerSub: string;
+  footerText: string;
+  stickers: Array<{
+    display: string;
+    name: string;
+    x: number;
+    y: number;
+    scale: number;
+    rotation?: number;
+    isTextBadge?: boolean;
+  }>;
+  customTexts: Array<{
+    text: string;
+    x: number;
+    y: number;
+    fontFamily: string;
+    color: string;
+    hasGlow?: boolean;
+    scale?: number;
+  }>;
+  lumiComment: string;
+}
+

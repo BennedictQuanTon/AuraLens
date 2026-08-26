@@ -1,4 +1,6 @@
 import type {
+  AITemplateRequest,
+  AITemplateResponse,
   DripCheckRequest,
   DripCheckResponse,
   FashionItem,
@@ -87,6 +89,59 @@ export class ApiService {
       console.warn('Could not fetch frames:', error);
     }
     return [];
+  }
+
+  /**
+   * Generates a complete AI Photobooth Template from natural language prompt with Gemini
+   */
+  public async generateAITemplate(request: AITemplateRequest): Promise<AITemplateResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/photobooth/ai-template`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(request),
+      });
+
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      console.warn('Could not generate AI template from server, using client fallback:', error);
+    }
+
+    return {
+      templateName: request.language === 'en' ? 'Cyber Neon 2026' : 'Cyber Neon Tương Lai',
+      vibeTag: 'Cyber-Pop',
+      conceptDescription: request.language === 'en' ? 'Futuristic cyber aesthetics' : 'Phong cách tương lai ánh sáng neon',
+      recommendedFilter: 'cyber-neon',
+      borderStyle: 'cyber-magazine',
+      colorPalette: {
+        primary: '#FF2E93',
+        accent: '#00F5FF',
+        text: '#D4FF00',
+      },
+      headerText: 'NIGHT CITY // 2026',
+      headerSub: 'CYBERPOP SPECIAL EDITION',
+      footerText: 'FEEL THE AURA // SGN 2026',
+      stickers: [
+        { display: '⚡ SLAY', name: 'SLAY', x: 80, y: 22, scale: 1.0, isTextBadge: true },
+        { display: '🌟', name: 'Star', x: 15, y: 78, scale: 1.2 },
+      ],
+      customTexts: [
+        {
+          text: request.language === 'en' ? 'FEEL THE AURA' : 'CHÁY PHỐ 2026',
+          x: 50,
+          y: 86,
+          fontFamily: "'Syne', sans-serif",
+          color: '#00F5FF',
+          hasGlow: true,
+          scale: 1,
+        },
+      ],
+      lumiComment: request.language === 'en'
+        ? "Lumi crafted a super sharp Cyberpunk template with laser glow for you!"
+        : "Lumi đã phối riêng cho bạn template Cyberpunk ánh neon cực chiến nè!",
+    };
   }
 
   // ==========================================
