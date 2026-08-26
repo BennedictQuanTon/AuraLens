@@ -21,8 +21,11 @@ import {
   convertMockToLocation,
 } from '../../data/mockLocations.js';
 
+import type { AppLanguage } from '../../types/settings.js';
+
 interface MapViewMockProps {
   weather: WeatherContext;
+  language?: AppLanguage;
   onSelectPlace: (place: Location) => void;
   onGoToPhotobooth?: () => void;
 }
@@ -78,8 +81,10 @@ function projectLatLngToPercent(lat: number, lng: number) {
 
 export const MapViewMock: React.FC<MapViewMockProps> = ({
   weather,
+  language = 'en',
   onSelectPlace,
 }) => {
+  const isEn = language === 'en';
   const [filterType, setFilterType] = useState<'all' | 'open' | 'indoor' | 'outdoor'>('all');
   const [selectedPinId, setSelectedPinId] = useState<string | null>(null);
 
@@ -177,20 +182,20 @@ export const MapViewMock: React.FC<MapViewMockProps> = ({
         {/* Filter Chips (Frosted Glassmorphism) */}
         <div className="pointer-events-auto flex items-center gap-1.5 p-1.5 rounded-full bg-white/85 backdrop-blur-md shadow-lg border border-white/60 overflow-x-auto">
           {[
-            { id: 'all', label: 'Tất cả', count: processedLocations.length },
+            { id: 'all', label: isEn ? 'All' : 'Tất cả', count: processedLocations.length },
             {
               id: 'open',
-              label: 'Đang mở',
+              label: isEn ? 'Open Now' : 'Đang mở',
               count: processedLocations.filter((l) => l.status === 'open_fit').length,
             },
             {
               id: 'indoor',
-              label: 'Trong nhà (AC)',
+              label: isEn ? 'Indoor (AC)' : 'Trong nhà (AC)',
               count: processedLocations.filter((l) => l.is_indoor).length,
             },
             {
               id: 'outdoor',
-              label: 'Ngoài trời',
+              label: isEn ? 'Outdoor' : 'Ngoài trời',
               count: processedLocations.filter((l) => !l.is_indoor).length,
             },
           ].map((chip) => {
@@ -223,12 +228,12 @@ export const MapViewMock: React.FC<MapViewMockProps> = ({
           {weather.isRaining ? (
             <>
               <CloudRain className="w-4 h-4 text-blue-500 animate-bounce" />
-              <span className="text-blue-700">Trời Mưa · Lọc An Toàn AC</span>
+              <span className="text-blue-700">{isEn ? 'Rainy · Safe Indoor AC' : 'Trời Mưa · Lọc An Toàn AC'}</span>
             </>
           ) : (
             <>
               <Sun className="w-4 h-4 text-amber-500 animate-spin" style={{ animationDuration: '8s' }} />
-              <span className="text-amber-700">Trời Nắng Đẹp · Mở Rooftop</span>
+              <span className="text-amber-700">{isEn ? 'Clear & Sunny · Rooftop Open' : 'Trời Nắng Đẹp · Mở Rooftop'}</span>
             </>
           )}
         </div>

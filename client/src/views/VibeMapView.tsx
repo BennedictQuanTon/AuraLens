@@ -120,7 +120,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
             }`}
           >
             <MapIcon className="w-4 h-4" />
-            <span>Map</span>
+            <span>{isEn ? 'Map' : 'Bản Đồ'}</span>
           </button>
 
           <button
@@ -132,7 +132,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
             }`}
           >
             <List className="w-4 h-4" />
-            <span>List ({recommendedPlaces.length})</span>
+            <span>{isEn ? `List (${recommendedPlaces.length})` : `Danh Sách (${recommendedPlaces.length})`}</span>
           </button>
         </div>
 
@@ -150,7 +150,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
           ) : (
             <>
               <Sparkles className="w-4 h-4 text-[#D4FF00]" />
-              <span>Analyze</span>
+              <span>{isEn ? 'Analyze' : 'Phân Tích'}</span>
             </>
           )}
         </button>
@@ -186,7 +186,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
               </div>
               <div>
                 <h3 className="font-black text-lg sm:text-xl leading-tight">
-                  {isEn ? 'Lumi Stylist & Weather Report' : 'Báo Cáo Thời Tiết & Gợi Ý Lên Đồ Từ Lumi'}
+                  {isEn ? 'Lumi Stylist & Weather Report' : 'Lumi Stylist & Dự Báo Thời Tiết'}
                 </h3>
               </div>
             </div>
@@ -300,6 +300,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
           >
             <MapViewMock
               weather={weather}
+              language={language}
               onSelectPlace={onSelectPlace}
               onGoToPhotobooth={onGoToPhotobooth}
             />
@@ -316,10 +317,10 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-black uppercase tracking-wider text-gray-500 flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
-                Recommended Spots ({recommendedPlaces.length} Open Now)
+                {isEn ? `Recommended Spots (${recommendedPlaces.length} Open Now)` : `Địa Điểm Đề Xuất (${recommendedPlaces.length} Quán Đang Mở)`}
               </span>
               <span className="text-xs text-gray-400 font-semibold">
-                Click card to view photo spots &amp; signature drinks
+                {isEn ? 'Click card to view photo spots & signature drinks' : 'Bấm vào thẻ để xem góc chụp ảnh & thức uống đặc trưng'}
               </span>
             </div>
 
