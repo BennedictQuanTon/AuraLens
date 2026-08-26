@@ -302,12 +302,12 @@ export const HeroView: React.FC<HeroViewProps> = ({
           <div className="lg:col-span-7 space-y-6 flex flex-col justify-between">
             
             {/* PRIMARY HEADING (The GOAT Is Back, / Sup Bennedict xD) */}
-            <div className="space-y-2">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-[62px] font-black text-gray-950 tracking-tight leading-none [word-spacing:0.35rem]">
+            <div className="space-y-2.5">
+              <h1 className="text-5xl sm:text-6xl lg:text-[66px] xl:text-[74px] font-black text-gray-950 tracking-tight leading-[1.08] [word-spacing:0.35rem]">
                 The GOAT Is Back,
               </h1>
               
-              <div className="text-4xl sm:text-5xl lg:text-6xl xl:text-[62px] font-black tracking-tight leading-none [word-spacing:0.35rem] flex items-baseline gap-3 whitespace-nowrap pt-1">
+              <div className="text-5xl sm:text-6xl lg:text-[66px] xl:text-[74px] font-black tracking-tight leading-[1.08] [word-spacing:0.35rem] flex items-baseline gap-3.5 whitespace-nowrap pt-1">
                 <span className="text-gray-950">
                   Sup
                 </span>
@@ -321,7 +321,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
 
             {/* GEN-Z SUBTITLE */}
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-gray-800 tracking-wide [word-spacing:0.25rem]">
+            <h2 className="text-2xl sm:text-[28px] lg:text-[32px] font-black text-gray-800 tracking-wide [word-spacing:0.25rem] leading-snug pt-1">
               Ready to{' '}
               <span className="text-[#FF2E93] font-black">cook</span>{' '}
               with maximum{' '}
@@ -332,25 +332,25 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </h2>
 
             {/* TWO CLEAN ACTION BUTTONS (Drip Check ⚡ & Vibe Map 📍) */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               {/* Button 1: Drip Check */}
               <button
                 onClick={onStartScanner}
-                className="py-4.5 px-8 sm:py-5 sm:px-9 rounded-full bg-[#0F172A] hover:bg-black text-white font-black text-base sm:text-lg shadow-2xl active:scale-98 transition-all flex items-center justify-center gap-3 cursor-pointer group border border-white/10"
+                className="py-5 px-9 sm:py-5.5 sm:px-10 rounded-full bg-[#0F172A] hover:bg-black text-white font-black text-lg sm:text-xl shadow-2xl active:scale-98 transition-all flex items-center justify-center gap-3.5 cursor-pointer group border border-white/10"
               >
-                <Camera className="w-5.5 h-5.5 text-[#D4FF00]" />
+                <Camera className="w-6 h-6 text-[#D4FF00]" />
                 <span>Drip Check</span>
-                <ChevronRight className="w-5 h-5 text-[#D4FF00] group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5.5 h-5.5 text-[#D4FF00] group-hover:translate-x-1 transition-transform" />
               </button>
 
               {/* Button 2: Vibe Map */}
               <button
                 onClick={onExplorePlaces}
-                className="py-4.5 px-8 sm:py-5 sm:px-9 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 hover:opacity-95 text-white font-black text-base sm:text-lg shadow-2xl active:scale-98 transition-all flex items-center justify-center gap-3 cursor-pointer group border border-white/10"
+                className="py-5 px-9 sm:py-5.5 sm:px-10 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 hover:opacity-95 text-white font-black text-lg sm:text-xl shadow-2xl active:scale-98 transition-all flex items-center justify-center gap-3.5 cursor-pointer group border border-white/10"
               >
-                <MapPin className="w-5.5 h-5.5 text-[#D4FF00]" />
+                <MapPin className="w-6 h-6 text-[#D4FF00]" />
                 <span>Vibe Map</span>
-                <ChevronRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
+                <ChevronRight className="w-5.5 h-5.5 text-white/90 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
