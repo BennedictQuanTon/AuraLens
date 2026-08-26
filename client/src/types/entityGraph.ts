@@ -81,12 +81,20 @@ export interface PhotoboothFrame {
   }>;
 }
 
+export interface FashionPillars {
+  colorHarmony: number; // 0 - 100
+  silhouetteCut: number; // 0 - 100
+  vibeMatch: number; // 0 - 100
+  accessoriesDetails: number; // 0 - 100
+}
+
 export interface OutfitBreakdown {
   dominantColors: string[];
   detectedStyle: VibeStyle;
   detectedItems: string[];
   harmonyScore: number;
   vibeMatchScore: number;
+  fashionPillars?: FashionPillars;
   pros: string[];
   cons: string[];
   styleDirectives?: {

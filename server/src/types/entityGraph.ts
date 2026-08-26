@@ -122,12 +122,20 @@ export interface DripCheckRequest {
   language?: 'en' | 'vi';
 }
 
+export interface FashionPillars {
+  colorHarmony: number; // 0 - 100 (Phối màu & Độ tương phản)
+  silhouetteCut: number; // 0 - 100 (Tỷ lệ Form dáng & Cắt may)
+  vibeMatch: number; // 0 - 100 (Độ phù hợp hoàn cảnh & Vibe)
+  accessoriesDetails: number; // 0 - 100 (Phụ kiện & Chi tiết vi mô)
+}
+
 export interface OutfitBreakdown {
   dominantColors: string[];
   detectedStyle: VibeStyle;
   detectedItems: string[];
   harmonyScore: number; // 0 - 100
   vibeMatchScore: number; // 0 - 100
+  fashionPillars?: FashionPillars;
   pros: string[];
   cons: string[];
   styleDirectives?: {

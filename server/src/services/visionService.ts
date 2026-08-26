@@ -105,8 +105,14 @@ ALL text values in your JSON response MUST BE 100% IN NATURAL, VIBRANT GEN-Z ENG
 OUTPUT JSON SCHEMA:
 Return ONLY a valid JSON object matching this schema:
 {
-  "score": number (40 to 98),
+  "score": number (40 to 98 - weighted overall Fit Score),
   "isPassing": boolean (true if score >= 70),
+  "fashionPillars": {
+    "colorHarmony": number (0 to 100 - Color palette balance & contrast),
+    "silhouetteCut": number (0 to 100 - Proportion play & tailoring fit),
+    "vibeMatch": number (0 to 100 - Appropriateness for the specified context/weather),
+    "accessoriesDetails": number (0 to 100 - Micro-details, jewelry, shoes, styling layers)
+  },
   "detectedStyle": string ("Cyber-Pop" | "Y2K" | "Streetwear" | "Minimalist" | "Clean-Fit" | "Vintage" | "Goth-Chic" | "Old Money"),
   "dominantColors": string[] (e.g. ["Midnight Black", "Metallic Silver", "Navy Blue"]),
   "detectedItems": string[] (e.g. ["Classic colorblock graphic tee", "Baggy parachute pants"]),
@@ -146,6 +152,12 @@ Bạn BẮT BUỘC phải trả về một JSON Object hợp lệ theo đúng đ
 {
   "score": number (tổng điểm từ 40 đến 98),
   "isPassing": boolean (true nếu score >= 70),
+  "fashionPillars": {
+    "colorHarmony": number (0 đến 100 - Điểm phối màu & độ tương phản),
+    "silhouetteCut": number (0 đến 100 - Điểm tỷ lệ form dáng & cắt may),
+    "vibeMatch": number (0 đến 100 - Điểm phù hợp bối cảnh & thời tiết),
+    "accessoriesDetails": number (0 đến 100 - Điểm phụ kiện & chi tiết vi mô)
+  },
   "detectedStyle": string ("Cyber-Pop" | "Y2K" | "Streetwear" | "Minimalist" | "Clean-Fit" | "Vintage" | "Goth-Chic" | "Old Money"),
   "dominantColors": string[] (2-4 màu chính bằng Tiếng Việt, ví dụ: ["Đen Midnight", "Bạc Ánh Kim", "Trắng Sữa"]),
   "detectedItems": string[] (danh sách món đồ nhận diện được bằng Tiếng Việt),
@@ -168,8 +180,8 @@ Bạn BẮT BUỘC phải trả về một JSON Object hợp lệ theo đúng đ
 `.trim();
 
     const userPrompt = isEn
-      ? `Event/Activity context: "${context}". Current Saigon weather: ${weatherSnapshot.temperature}°C, ${weatherSnapshot.condition}. Language: English. Please evaluate the attached outfit image and return pure JSON output strictly in English.`
-      : `Bối cảnh sử dụng: "${context}". Điều kiện thời tiết hiện tại tại Sài Gòn: ${weatherSnapshot.temperature}°C, ${weatherSnapshot.condition}. Ngôn ngữ yêu cầu: 100% Tiếng Việt. Hãy phân tích hình ảnh trang phục đính kèm và trả về kết quả JSON theo đúng schema.`;
+      ? `Event/Activity context: "${context}". Current Saigon weather: ${weatherSnapshot.temperature}°C, ${weatherSnapshot.condition}. Language: English. Please evaluate the attached outfit image, calculate overall score & 4 fashion pillars, and return pure JSON output strictly in English.`
+      : `Bối cảnh sử dụng: "${context}". Điều kiện thời tiết hiện tại tại Sài Gòn: ${weatherSnapshot.temperature}°C, ${weatherSnapshot.condition}. Ngôn ngữ yêu cầu: 100% Tiếng Việt. Hãy phân tích hình ảnh trang phục đính kèm, tính toán điểm tổng quát và 4 trọng số thành phần (fashionPillars), trả về kết quả JSON theo đúng schema.`;
 
     const requestUrl = `https://generativelanguage.googleapis.com/v1beta/models/${this.geminiModel}:generateContent?key=${this.geminiApiKey}`;
 
@@ -233,6 +245,15 @@ Bạn BẮT BUỘC phải trả về một JSON Object hợp lệ theo đúng đ
     const cons = Array.isArray(parsed.cons) ? parsed.cons : ['Có thể thêm phụ kiện kim loại để set đồ thêm sắc sảo.'];
     const lumiComment = parsed.lumiComment || '10 điểm không có nhưng! Set đồ này của bạn chuẩn vibe Sài Gòn luôn á!';
 
+    // Parse fashion pillars with smart fallback
+    const rawPillars = parsed.fashionPillars || {};
+    const fashionPillars = {
+      colorHarmony: typeof rawPillars.colorHarmony === 'number' ? Math.min(100, Math.max(0, rawPillars.colorHarmony)) : Math.min(100, score + 3),
+      silhouetteCut: typeof rawPillars.silhouetteCut === 'number' ? Math.min(100, Math.max(0, rawPillars.silhouetteCut)) : Math.min(100, score + 1),
+      vibeMatch: typeof rawPillars.vibeMatch === 'number' ? Math.min(100, Math.max(0, rawPillars.vibeMatch)) : Math.min(100, score + 4),
+      accessoriesDetails: typeof rawPillars.accessoriesDetails === 'number' ? Math.min(100, Math.max(0, rawPillars.accessoriesDetails)) : Math.max(35, score - 6),
+    };
+
     // Map recommended accessories from Gemini to our verified FashionItem inventory or generated items
     const suggestedAccessories: FashionItem[] = (parsed.recommendedAccessories || []).map(
       (acc: any, index: number) => ({
@@ -274,8 +295,9 @@ Bạn BẮT BUỘC phải trả về một JSON Object hợp lệ theo đúng đ
         dominantColors,
         detectedStyle,
         detectedItems,
-        harmonyScore: Math.min(100, score + 4),
-        vibeMatchScore: score,
+        harmonyScore: fashionPillars.colorHarmony,
+        vibeMatchScore: fashionPillars.vibeMatch,
+        fashionPillars,
         pros,
         cons,
         styleDirectives: parsed.styleDirectives || {

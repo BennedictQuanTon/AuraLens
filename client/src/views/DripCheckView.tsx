@@ -20,6 +20,12 @@ import {
   Medal,
   TrendingUp,
   Flame,
+  BarChart3,
+  X,
+  Search,
+  ChevronRight,
+  User,
+  Award,
 } from 'lucide-react';
 import type { DripCheckResponse, EventContext, FashionItem } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
@@ -53,6 +59,8 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
   const [isFlashActive, setIsFlashActive] = useState(false);
   const [timerSeconds, setTimerSeconds] = useState<0 | 3 | 5 | 10>(0);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const [isFullLeaderboardOpen, setIsFullLeaderboardOpen] = useState(false);
+  const [leaderboardSearch, setLeaderboardSearch] = useState('');
 
   // Flow states: 'camera' | 'processing' | 'result'
   const [flowState, setFlowState] = useState<'camera' | 'processing' | 'result'>(
@@ -67,6 +75,12 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
   const breakdown = result?.breakdown;
   const styleDirectives = breakdown?.styleDirectives;
   const suggestedAccessories = result?.suggestedAccessories;
+  const fashionPillars = breakdown?.fashionPillars || {
+    colorHarmony: Math.min(100, score + 3),
+    silhouetteCut: Math.min(100, score + 1),
+    vibeMatch: Math.min(100, score + 4),
+    accessoriesDetails: Math.max(35, score - 6),
+  };
 
   // Camera stream lifecycle
   useEffect(() => {
@@ -325,7 +339,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
         medalImg: '/medal_diamond.png',
         tierColor: 'bg-gradient-to-r from-[#00F5FF] via-[#D4FF00] to-[#FF2E93]',
         accentText: 'text-[#D4FF00]',
-        nextTierHint: isEn ? '👑 Maximum Aura Achieved! You are #1' : '👑 Bạn đang thống trị vị trí #1 Bảng Vàng Sài Gòn!',
+        nextTierHint: isEn ? '👑 Maximum Aura Achieved! You are #1' : '👑 Bạn đang thống trị vị trí #1 Bảng Vàng!',
       };
     }
     if (fitScore >= 90) {
@@ -346,7 +360,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
         tierName: isEn ? 'Platinum Vanguard' : 'Bạch Kim Đẳng Cấp',
         tierBadge: '👑 TIER 2',
         percentile: isEn ? 'Top 8% Style Icons' : 'Top 8% Dân Chơi Gu',
-        medalImg: '/medal_diamond.png',
+        medalImg: '/medal_platinum.png',
         tierColor: 'bg-gradient-to-r from-purple-500 to-[#FF2E93]',
         accentText: 'text-purple-600',
         nextTierHint: isEn ? '⚡ +10 pts to reach Tier 1 (Diamond)' : '⚡ Cần +10 điểm để thăng hạng Hạng Kim Cương',
@@ -358,7 +372,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
         tierName: isEn ? 'Gold Trendsetter' : 'Vàng Phá Cách',
         tierBadge: '⚡ TIER 3',
         percentile: isEn ? 'Top 15% Street Vibe' : 'Top 15% Phong Cách',
-        medalImg: '/medal_diamond.png',
+        medalImg: '/medal_gold.png',
         tierColor: 'bg-gradient-to-r from-amber-400 to-orange-500',
         accentText: 'text-amber-600',
         nextTierHint: isEn ? '🚀 +8 pts to reach Tier 2 (Platinum)' : '🚀 Cần +8 điểm để thăng hạng Bạch Kim',
@@ -366,12 +380,12 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
     }
     return {
       rank: 28,
-      tierName: isEn ? 'Silver Challenger' : 'Bạc Tân Binh',
+      tierName: isEn ? 'Bronze Challenger' : 'Đồng Mới Nhú',
       tierBadge: '🌱 TIER 4',
       percentile: isEn ? 'Top 35% Ready to Cook' : 'Top 35% Đang Cook Gu',
-      medalImg: '/medal_diamond.png',
-      tierColor: 'bg-gradient-to-r from-slate-400 to-slate-600',
-      accentText: 'text-slate-600',
+      medalImg: '/medal_bronze.png',
+      tierColor: 'bg-gradient-to-r from-amber-700 to-orange-800',
+      accentText: 'text-amber-800',
       nextTierHint: isEn ? '✨ Upgrade accessories to reach Gold (+15 pts)' : '✨ Phối thêm phụ kiện để lên Hạng Vàng (+15 điểm)',
     };
   };
@@ -426,6 +440,87 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       isUser: false,
     },
   ];
+
+  // Helper to generate 100 realistic mock users for the full leaderboard
+  const generateFullLeaderboard = () => {
+    const vietnameseNames = [
+      'Minh Thư', 'Quang Anh', 'Khánh Vy', 'Hoàng Long', 'Bảo Ngọc', 'Đức Huy', 'Trà My',
+      'Thanh Tùng', 'Phương Linh', 'Tuấn Kiệt', 'Hải Yến', 'Trọng Hiếu', 'Thảo Nguyên', 'Quốc Bảo',
+      'Ánh Tuyết', 'Hữu Phước', 'Yến Nhi', 'Minh Quân', 'Kim Ngân', 'Gia Huy', 'Thùy Dương',
+      'Văn Hậu', 'Quỳnh Chi', 'Tiến Đạt', 'Mai Anh', 'Nhật Minh', 'Hương Giang', 'Bảo Khang',
+      'Tuyết Mai', 'Đăng Khoa', 'Bích Trâm', 'Hồng Đăng', 'Ngọc Trâm', 'Anh Dũng', 'Mỹ Linh',
+      'Hoàng Phúc', 'Thục Quyên', 'Phúc Lâm', 'Diệu Linh', 'Bá Thông', 'Cẩm Tú', 'Thế Anh',
+      'Ngân Hà', 'Việt Anh', 'Khánh An', 'Duy Hưng', 'Thảo Ly', 'Minh Trí', 'Thùy Trang', 'Gia Bảo'
+    ];
+
+    const brandTags = ['Zune.zx', 'HADES', 'BLANCO', 'THE BEAT', 'LIDER', 'DIRTY COINS', 'DEGREY', 'SSStutter', 'Coolmate', 'Paradox'];
+    const vibes = ['Cyber-Pop', 'Y2K', 'Streetwear', 'Minimalist', 'Clean-Fit', 'Vintage', 'Goth-Chic', 'Old Money'];
+    const avatarPool = [
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=200&auto=format&fit=crop&q=80',
+    ];
+
+    const entries: Array<{
+      rank: number;
+      name: string;
+      score: number;
+      vibe: string;
+      avatarUrl: string;
+      isUser: boolean;
+      tierBadge: string;
+    }> = [];
+
+    let currentScore = 99;
+    for (let r = 1; r <= 100; r++) {
+      if (r === userRankInfo.rank) {
+        entries.push({
+          rank: r,
+          name: isEn ? 'Bennedict (You)' : 'Bennedict (Bạn)',
+          score: score,
+          vibe: breakdown?.detectedStyle || 'Streetwear',
+          avatarUrl: '/lumi.png',
+          isUser: true,
+          tierBadge: userRankInfo.tierBadge,
+        });
+        continue;
+      }
+
+      const nameIdx = (r - 1) % vietnameseNames.length;
+      const brandIdx = (r - 1) % brandTags.length;
+      const vibeIdx = (r - 1) % vibes.length;
+      const avatar = avatarPool[(r - 1) % avatarPool.length];
+      
+      if (r % 2 === 0 && currentScore > 48) {
+        currentScore -= 1;
+      }
+
+      const tierBadge = currentScore >= 95 ? '💎 TIER 1' : currentScore >= 90 ? '💎 TIER 1' : currentScore >= 80 ? '👑 TIER 2' : currentScore >= 70 ? '⚡ TIER 3' : '🌱 TIER 4';
+
+      entries.push({
+        rank: r,
+        name: `${vietnameseNames[nameIdx]} (${brandTags[brandIdx]})`,
+        score: currentScore,
+        vibe: vibes[vibeIdx],
+        avatarUrl: avatar,
+        isUser: false,
+        tierBadge,
+      });
+    }
+
+    return entries;
+  };
+
+  const fullLeaderboardList = generateFullLeaderboard();
+  const filteredLeaderboard = fullLeaderboardList.filter((item) =>
+    item.name.toLowerCase().includes(leaderboardSearch.toLowerCase()) ||
+    item.vibe.toLowerCase().includes(leaderboardSearch.toLowerCase())
+  );
 
   return (
     <div className="animate-fadeIn space-y-6 pb-16 max-w-6xl mx-auto">
@@ -705,7 +800,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               <span>{isEn ? 'Retake / Scan Another Fit' : 'Chụp Lại / Quét Outfit Khác'}</span>
             </button>
 
-            {/* 2. SAIGON DRIP LEADERBOARD & TIER RANK WIDGET */}
+            {/* 2. LEADERBOARD & TIER RANK WIDGET */}
             <div className="calm-card-elevated p-5 sm:p-6 rounded-3xl space-y-4.5 bg-white shadow-xl border border-gray-100">
               
               {/* Header: Title & Dynamic Tier Badge */}
@@ -716,7 +811,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                   </div>
                   <div>
                     <h4 className="text-sm sm:text-base font-black text-gray-950 leading-tight">
-                      {isEn ? 'Saigon Drip Leaderboard' : 'Bảng Xếp Hạng Drip Sài Gòn'}
+                      {isEn ? 'Leaderboard' : 'Bảng Xếp Hạng'}
                     </h4>
                     <span className="text-[11px] font-bold text-gray-500">
                       {isEn ? 'Live Community Ranking' : 'Xếp Hạng Cộng Đồng Trực Tiếp'}
@@ -838,6 +933,16 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                 ))}
               </div>
 
+              {/* View Full Leaderboard (Top 100) Button */}
+              <button
+                onClick={() => setIsFullLeaderboardOpen(true)}
+                className="w-full py-3 px-4 rounded-xl bg-gray-50 hover:bg-purple-50/80 text-purple-700 hover:text-purple-900 border border-gray-200 hover:border-purple-200 text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-98"
+              >
+                <Trophy className="w-4 h-4 text-purple-600" />
+                <span>{isEn ? 'View Full Leaderboard (Top 100)' : 'Xem Bảng Xếp Hạng Đầy Đủ (Top 100)'}</span>
+                <ChevronRight className="w-4 h-4 text-purple-400 ml-auto" />
+              </button>
+
             </div>
           </div>
 
@@ -911,6 +1016,77 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                         ? 'If you’re leaning into Clean Minimalist: Simplify accessories, rock basic white sneakers and a mini crossbody bag.'
                         : 'Nếu bạn muốn chuyển sang Minimalist: Đơn giản hóa phụ kiện, kết hợp giày trắng basic và túi đeo chéo mini.')}
                     </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4 CONTRIBUTING FASHION PILLARS BREAKDOWN */}
+              <div className="p-5 bg-gray-50/90 rounded-2xl border border-gray-100 space-y-3.5">
+                <div className="flex items-center justify-between pb-1 border-b border-gray-200/60">
+                  <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+                    <BarChart3 className="w-4 h-4 text-gray-500 shrink-0" />
+                    <span>{isEn ? 'Contributing Fashion Pillars' : 'Trọng Số Cấu Thành Điểm'}</span>
+                  </span>
+                  <span className="text-[11px] font-black text-purple-600 uppercase">
+                    {isEn ? 'AI Evaluated' : 'AI Chấm Điểm'}
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Pillar 1: Color Harmony */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs sm:text-sm font-black text-gray-900">
+                      <span>{isEn ? 'Color Harmony' : 'Phối Màu & Tương Phản'}</span>
+                      <span className="text-[#FF2E93] font-black">{fashionPillars.colorHarmony}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-gray-200/80 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#FF2E93] to-[#FFA500] rounded-full transition-all duration-700 shadow-xs"
+                        style={{ width: `${fashionPillars.colorHarmony}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Pillar 2: Silhouette & Cut */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs sm:text-sm font-black text-gray-900">
+                      <span>{isEn ? 'Silhouette & Cut' : 'Tỷ Lệ Form Dáng & Cắt May'}</span>
+                      <span className="text-purple-600 font-black">{fashionPillars.silhouetteCut}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-gray-200/80 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-purple-600 to-[#7C3AED] rounded-full transition-all duration-700 shadow-xs"
+                        style={{ width: `${fashionPillars.silhouetteCut}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Pillar 3: Vibe Match */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs sm:text-sm font-black text-gray-900">
+                      <span>{isEn ? 'Vibe Match' : 'Độ Phù Hợp Bối Cảnh & Vibe'}</span>
+                      <span className="text-cyan-600 font-black">{fashionPillars.vibeMatch}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-gray-200/80 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#00F5FF] to-cyan-500 rounded-full transition-all duration-700 shadow-xs"
+                        style={{ width: `${fashionPillars.vibeMatch}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Pillar 4: Accessories & Details */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs sm:text-sm font-black text-gray-900">
+                      <span>{isEn ? 'Accessories & Details' : 'Phụ Kiện & Chi Tiết Vi Mô'}</span>
+                      <span className="text-emerald-600 font-black">{fashionPillars.accessoriesDetails}%</span>
+                    </div>
+                    <div className="w-full h-3 bg-gray-200/80 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-500 to-[#D4FF00] rounded-full transition-all duration-700 shadow-xs"
+                        style={{ width: `${fashionPillars.accessoriesDetails}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -995,6 +1171,151 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
 
           </div>
 
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* FULL LEADERBOARD TOP 100 MODAL (Interactive & Gamified)                    */}
+      {/* ========================================================================= */}
+      {isFullLeaderboardOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-md animate-fadeIn">
+          <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col max-h-[90vh] overflow-hidden">
+            
+            {/* Modal Header */}
+            <div className="p-5 sm:p-6 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-purple-50 via-pink-50/50 to-white">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-md">
+                  <Trophy className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-black text-gray-950 tracking-tight">
+                    {isEn ? 'Leaderboard (Top 100)' : 'Bảng Xếp Hạng (Top 100)'}
+                  </h3>
+                  <p className="text-xs font-bold text-gray-500">
+                    {isEn ? 'Official Aura Trendsetter Standings' : 'Bảng Xếp Hạng Phong Cách Toàn Thành Phố'}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsFullLeaderboardOpen(false)}
+                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-all cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Search Filter Bar */}
+            <div className="p-4 border-b border-gray-100 bg-gray-50/50">
+              <div className="relative flex items-center">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3.5" />
+                <input
+                  type="text"
+                  value={leaderboardSearch}
+                  onChange={(e) => setLeaderboardSearch(e.target.value)}
+                  placeholder={isEn ? 'Search trendsetter or vibe...' : 'Tìm kiếm tên hoặc phong cách...'}
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs sm:text-sm font-bold text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                />
+              </div>
+            </div>
+
+            {/* Scrollable Leaderboard List */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-2.5">
+              {filteredLeaderboard.length === 0 ? (
+                <div className="text-center py-12 text-gray-400 font-bold text-sm">
+                  {isEn ? 'No trendsetters found.' : 'Không tìm thấy ai phù hợp.'}
+                </div>
+              ) : (
+                filteredLeaderboard.map((user) => (
+                  <div
+                    key={`modal-lb-${user.rank}`}
+                    className={`flex items-center justify-between p-3 rounded-2xl transition-all ${
+                      user.isUser
+                        ? 'bg-gradient-to-r from-purple-100/95 via-pink-100/90 to-purple-50 border-2 border-purple-400 shadow-md ring-2 ring-purple-300/40'
+                        : 'bg-gray-50/80 hover:bg-gray-100/80 border border-gray-100'
+                    }`}
+                  >
+                    {/* Rank & Profile */}
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span
+                        className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${
+                          user.rank === 1
+                            ? 'bg-amber-400 text-gray-950 shadow-xs'
+                            : user.rank === 2
+                            ? 'bg-slate-300 text-gray-950 shadow-xs'
+                            : user.rank === 3
+                            ? 'bg-amber-600 text-white shadow-xs'
+                            : 'bg-gray-200 text-gray-700'
+                        }`}
+                      >
+                        {user.rank}
+                      </span>
+
+                      <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-200 shrink-0 border border-white shadow-xs">
+                        <img
+                          src={user.avatarUrl}
+                          alt={user.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <h4 className={`text-xs sm:text-sm font-black truncate leading-tight flex items-center gap-1.5 ${user.isUser ? 'text-purple-950' : 'text-gray-900'}`}>
+                          <span>{user.name}</span>
+                          {user.isUser && (
+                            <span className="px-1.5 py-0.2 rounded-full bg-purple-600 text-white text-[9px] font-black uppercase">
+                              {isEn ? 'YOU' : 'BẠN'}
+                            </span>
+                          )}
+                        </h4>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px] font-bold text-gray-500">
+                            {user.vibe}
+                          </span>
+                          <span className="text-[9px] font-black px-2 py-0.2 rounded-full bg-gray-200 text-gray-700">
+                            {user.tierBadge}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Score */}
+                    <div className="text-right shrink-0 pl-2">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-black ${
+                          user.isUser
+                            ? 'bg-purple-600 text-white shadow-xs'
+                            : 'bg-white text-gray-950 border border-gray-200 shadow-xs'
+                        }`}
+                      >
+                        {user.score} pts
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Sticky Current User Footer Bar */}
+            <div className="p-4 bg-gray-950 text-white flex items-center justify-between border-t border-gray-800">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-bold text-gray-400">
+                  {isEn ? 'Your Standing:' : 'Vị trí của bạn:'}
+                </span>
+                <span className="text-sm font-black text-[#D4FF00]">
+                  #{userRankInfo.rank} • {score} pts ({userRankInfo.tierName})
+                </span>
+              </div>
+
+              <button
+                onClick={() => setIsFullLeaderboardOpen(false)}
+                className="px-4 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white text-xs font-black transition-all cursor-pointer"
+              >
+                {isEn ? 'Close' : 'Đóng'}
+              </button>
+            </div>
+
+          </div>
         </div>
       )}
 
