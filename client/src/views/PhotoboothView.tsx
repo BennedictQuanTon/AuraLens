@@ -6,17 +6,12 @@ import {
   Sparkles,
   Timer,
   Download,
-  RefreshCw,
   CheckCircle2,
   Share2,
   Type,
-  Move,
   Trash2,
-  Sliders,
   Palette,
-  Image as ImageIcon,
   Plus,
-  X,
   RotateCcw,
   Smartphone,
   Square,
@@ -24,71 +19,75 @@ import {
   Film,
   ZoomIn,
   ZoomOut,
-  Flame,
   Star,
-  Layers,
-  Heart,
-  Crown,
+  Image as ImageIcon,
 } from 'lucide-react';
 import type { PhotoboothFrame, VibeStyle } from '../types/entityGraph.js';
+import type { AppLanguage } from '../types/settings.js';
 
 // Available Aspect Ratios
 export type AspectRatioType = '9:16' | '4:5' | '1:1' | '16:9' | '4:3';
 
 interface AspectRatioConfig {
   id: AspectRatioType;
-  label: string;
-  subLabel: string;
+  labelEn: string;
+  labelVi: string;
+  subEn: string;
+  subVi: string;
   width: number;
   height: number;
-  cssAspect: string;
   icon: React.ReactNode;
 }
 
 const ASPECT_RATIOS: AspectRatioConfig[] = [
   {
     id: '9:16',
-    label: '9:16 Story',
-    subLabel: 'Reels / TikTok',
+    labelEn: '9:16 Story',
+    labelVi: '9:16 Story',
+    subEn: 'Reels / TikTok',
+    subVi: 'Reels / TikTok',
     width: 1080,
     height: 1920,
-    cssAspect: 'aspect-[9/16] max-w-[340px]',
     icon: <Smartphone className="w-4 h-4" />,
   },
   {
     id: '4:5',
-    label: '4:5 Portrait',
-    subLabel: 'Instagram Feed',
+    labelEn: '4:5 Portrait',
+    labelVi: '4:5 Chân Dung',
+    subEn: 'Instagram Feed',
+    subVi: 'Instagram Feed',
     width: 1080,
     height: 1350,
-    cssAspect: 'aspect-[4/5] max-w-[380px]',
     icon: <Film className="w-4 h-4" />,
   },
   {
     id: '1:1',
-    label: '1:1 Square',
-    subLabel: 'Classic Grid',
+    labelEn: '1:1 Square',
+    labelVi: '1:1 Vuông',
+    subEn: 'Classic Grid',
+    subVi: 'Khổ Vuông',
     width: 1080,
     height: 1080,
-    cssAspect: 'aspect-[1/1] max-w-[400px]',
     icon: <Square className="w-4 h-4" />,
   },
   {
     id: '16:9',
-    label: '16:9 Landscape',
-    subLabel: 'Cinematic / Wide',
+    labelEn: '16:9 Cinema',
+    labelVi: '16:9 Khổ Ngang',
+    subEn: 'Cinematic Wide',
+    subVi: 'Điện Ảnh Rộng',
     width: 1920,
     height: 1080,
-    cssAspect: 'aspect-[16/9] max-w-[560px]',
     icon: <Monitor className="w-4 h-4" />,
   },
   {
     id: '4:3',
-    label: '4:3 Classic',
-    subLabel: 'Retro Photo',
+    labelEn: '4:3 Classic',
+    labelVi: '4:3 Cổ Điển',
+    subEn: 'Retro Photo',
+    subVi: 'Ảnh Retro',
     width: 1440,
     height: 1080,
-    cssAspect: 'aspect-[4/3] max-w-[480px]',
     icon: <ImageIcon className="w-4 h-4" />,
   },
 ];
@@ -96,46 +95,48 @@ const ASPECT_RATIOS: AspectRatioConfig[] = [
 // Aesthetic Color Filters
 export interface PhotoFilter {
   id: string;
-  name: string;
+  nameEn: string;
+  nameVi: string;
   filterCss: string;
   canvasFilter: string;
   previewColor: string;
 }
 
 const PHOTO_FILTERS: PhotoFilter[] = [
-  { id: 'normal', name: 'Original', filterCss: 'none', canvasFilter: 'none', previewColor: 'from-gray-300 to-gray-500' },
-  { id: 'cyber-neon', name: 'Cyber Neon', filterCss: 'contrast(120%) saturate(150%) hue-rotate(-8deg)', canvasFilter: 'contrast(1.2) saturate(1.5) hue-rotate(-8deg)', previewColor: 'from-[#00F5FF] to-[#FF2E93]' },
-  { id: 'film-1998', name: 'Film 1998', filterCss: 'sepia(28%) contrast(108%) brightness(96%) saturate(125%)', canvasFilter: 'sepia(0.28) contrast(1.08) brightness(0.96) saturate(1.25)', previewColor: 'from-amber-600 to-orange-400' },
-  { id: 'noir-bw', name: 'B&W Noir', filterCss: 'grayscale(100%) contrast(140%) brightness(95%)', canvasFilter: 'grayscale(1) contrast(1.4) brightness(0.95)', previewColor: 'from-gray-900 to-gray-400' },
-  { id: 'golden-hour', name: 'Golden Hour', filterCss: 'sepia(35%) saturate(135%) brightness(106%) hue-rotate(-12deg)', canvasFilter: 'sepia(0.35) saturate(1.35) brightness(1.06) hue-rotate(-12deg)', previewColor: 'from-yellow-400 to-amber-600' },
-  { id: 'y2k-gloss', name: 'Y2K Gloss', filterCss: 'contrast(125%) saturate(160%) brightness(110%)', canvasFilter: 'contrast(1.25) saturate(1.6) brightness(1.1)', previewColor: 'from-pink-400 to-purple-600' },
-  { id: 'dream-glow', name: 'Soft Glow', filterCss: 'brightness(108%) contrast(96%) saturate(115%)', canvasFilter: 'brightness(1.08) contrast(0.96) saturate(1.15)', previewColor: 'from-purple-300 to-pink-300' },
-  { id: 'cold-chrome', name: 'Cold Chrome', filterCss: 'saturate(85%) contrast(115%) hue-rotate(170deg)', canvasFilter: 'saturate(0.85) contrast(1.15) hue-rotate(170deg)', previewColor: 'from-cyan-400 to-blue-600' },
+  { id: 'normal', nameEn: 'Original', nameVi: 'Gốc', filterCss: 'none', canvasFilter: 'none', previewColor: 'from-gray-300 to-gray-500' },
+  { id: 'cyber-neon', nameEn: 'Cyber Neon', nameVi: 'Cyber Neon', filterCss: 'contrast(120%) saturate(150%) hue-rotate(-8deg)', canvasFilter: 'contrast(1.2) saturate(1.5) hue-rotate(-8deg)', previewColor: 'from-[#00F5FF] to-[#FF2E93]' },
+  { id: 'film-1998', nameEn: 'Film 1998', nameVi: 'Film 1998', filterCss: 'sepia(28%) contrast(108%) brightness(96%) saturate(125%)', canvasFilter: 'sepia(0.28) contrast(1.08) brightness(0.96) saturate(1.25)', previewColor: 'from-amber-600 to-orange-400' },
+  { id: 'noir-bw', nameEn: 'B&W Noir', nameVi: 'Đen Trắng', filterCss: 'grayscale(100%) contrast(140%) brightness(95%)', canvasFilter: 'grayscale(1) contrast(1.4) brightness(0.95)', previewColor: 'from-gray-900 to-gray-400' },
+  { id: 'golden-hour', nameEn: 'Golden Hour', nameVi: 'Nắng Ấm', filterCss: 'sepia(35%) saturate(135%) brightness(106%) hue-rotate(-12deg)', canvasFilter: 'sepia(0.35) saturate(1.35) brightness(1.06) hue-rotate(-12deg)', previewColor: 'from-yellow-400 to-amber-600' },
+  { id: 'y2k-gloss', nameEn: 'Y2K Gloss', nameVi: 'Y2K Gloss', filterCss: 'contrast(125%) saturate(160%) brightness(110%)', canvasFilter: 'contrast(1.25) saturate(1.6) brightness(1.1)', previewColor: 'from-pink-400 to-purple-600' },
+  { id: 'dream-glow', nameEn: 'Soft Glow', nameVi: 'Mơ Màng', filterCss: 'brightness(108%) contrast(96%) saturate(115%)', canvasFilter: 'brightness(1.08) contrast(0.96) saturate(1.15)', previewColor: 'from-purple-300 to-pink-300' },
+  { id: 'cold-chrome', nameEn: 'Cold Chrome', nameVi: 'Chrome Lạnh', filterCss: 'saturate(85%) contrast(115%) hue-rotate(170deg)', canvasFilter: 'saturate(0.85) contrast(1.15) hue-rotate(170deg)', previewColor: 'from-cyan-400 to-blue-600' },
 ];
 
 // Available Stickers Library
 export interface StickerItem {
   id: string;
-  name: string;
-  display: string; // Emoji or SVG preview
+  nameEn: string;
+  nameVi: string;
+  display: string;
   isTextBadge?: boolean;
 }
 
 const STICKER_LIBRARY: StickerItem[] = [
-  { id: 'stk-sparkle', name: 'Y2K Sparkle', display: '✨' },
-  { id: 'stk-chrome-star', name: 'Chrome Star', display: '🌟' },
-  { id: 'stk-flame', name: 'Fire Flame', display: '🔥' },
-  { id: 'stk-heart', name: 'Sparkle Heart', display: '💖' },
-  { id: 'stk-crown', name: 'Aura Crown', display: '👑' },
-  { id: 'stk-sunglasses', name: 'Oval Shades', display: '🕶️' },
-  { id: 'stk-slay', name: 'SLAY Tag', display: '⚡ SLAY', isTextBadge: true },
-  { id: 'stk-nocap', name: 'NO CAP', display: '💯 NO CAP', isTextBadge: true },
-  { id: 'stk-keoly', name: 'KEO LỲ', display: '💅 KEO LỲ', isTextBadge: true },
-  { id: 'stk-saigon', name: 'SGN 2026', display: '📍 SÀI GÒN 2026', isTextBadge: true },
-  { id: 'stk-barcode', name: 'Barcode', display: '█║▌║█║▌', isTextBadge: true },
-  { id: 'stk-rec', name: 'REC Live', display: '● REC 00:26', isTextBadge: true },
-  { id: 'stk-brand', name: 'LOCAL BRAND', display: '★ VERIFIED FIT ★', isTextBadge: true },
-  { id: 'stk-tamagotchi', name: 'Tamagotchi', display: '🐰' },
+  { id: 'stk-sparkle', nameEn: 'Sparkles', nameVi: 'Lấp Lánh', display: '✨' },
+  { id: 'stk-chrome-star', nameEn: 'Chrome Star', nameVi: 'Sao Bạc', display: '🌟' },
+  { id: 'stk-flame', nameEn: 'Flame', nameVi: 'Ngọn Lửa', display: '🔥' },
+  { id: 'stk-heart', nameEn: 'Heart', nameVi: 'Trái Tim', display: '💖' },
+  { id: 'stk-crown', nameEn: 'Crown', nameVi: 'Vương Miện', display: '👑' },
+  { id: 'stk-sunglasses', nameEn: 'Oval Shades', nameVi: 'Kính Râm', display: '🕶️' },
+  { id: 'stk-slay', nameEn: 'SLAY Tag', nameVi: 'Tag SLAY', display: '⚡ SLAY', isTextBadge: true },
+  { id: 'stk-nocap', nameEn: 'NO CAP', nameVi: 'NO CAP', display: '💯 NO CAP', isTextBadge: true },
+  { id: 'stk-keoly', nameEn: 'KEO LY', nameVi: 'KEO LỲ', display: '💅 KEO LỲ', isTextBadge: true },
+  { id: 'stk-saigon', nameEn: 'SAIGON', nameVi: 'SÀI GÒN', display: '📍 SÀI GÒN 2026', isTextBadge: true },
+  { id: 'stk-barcode', nameEn: 'Barcode', nameVi: 'Mã Vạch', display: '█║▌║█║▌', isTextBadge: true },
+  { id: 'stk-rec', nameEn: 'REC Live', nameVi: 'Đang Quay', display: '● REC 00:26', isTextBadge: true },
+  { id: 'stk-brand', nameEn: 'VERIFIED', nameVi: 'CHÍNH HÃNG', display: '★ VERIFIED FIT ★', isTextBadge: true },
+  { id: 'stk-tamagotchi', nameEn: 'Bunny Charm', nameVi: 'Thỏ Cute', display: '🐰' },
 ];
 
 // Interactive Placed Canvas Item (Sticker or Text)
@@ -163,29 +164,33 @@ const FONT_OPTIONS = [
 ];
 
 const TEXT_COLORS = [
-  { hex: '#FFFFFF', name: 'Trắng' },
+  { hex: '#FFFFFF', name: 'White / Trắng' },
   { hex: '#D4FF00', name: 'Lime Neon' },
-  { hex: '#FF2E93', name: 'Hồng Cyber' },
-  { hex: '#00F5FF', name: 'Cyan Laser' },
-  { hex: '#FFA500', name: 'Cam Amber' },
-  { hex: '#10B981', name: 'Xanh Emerald' },
-  { hex: '#000000', name: 'Đen' },
+  { hex: '#FF2E93', name: 'Cyber Pink' },
+  { hex: '#00F5FF', name: 'Laser Cyan' },
+  { hex: '#FFA500', name: 'Amber Orange' },
+  { hex: '#10B981', name: 'Emerald Green' },
+  { hex: '#000000', name: 'Pitch Black' },
 ];
 
 interface PhotoboothViewProps {
   frames: PhotoboothFrame[];
   currentVibe?: VibeStyle;
   capturedPhoto?: string | null;
+  language?: AppLanguage;
   onBackToMap?: () => void;
 }
 
 export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   frames,
+  language = 'en',
 }) => {
+  const isEn = language === 'en';
+
   // 1. Aspect Ratio state
   const [selectedRatio, setSelectedRatio] = useState<AspectRatioType>('9:16');
   
-  // 2. Active Frame state
+  // 2. Active Frame state (empty string means "No Frame / Nguyên Bản")
   const [selectedFrameId, setSelectedFrameId] = useState<string>(
     frames[0]?.id || 'frame-01'
   );
@@ -193,9 +198,9 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
   // 3. Color Filter state
   const [selectedFilterId, setSelectedFilterId] = useState<string>('normal');
 
-  // 4. Base Photo state (Default stylish starter model photo, independent of fitcheck)
+  // 4. Base Photo state (Well-framed portrait with generous headroom so no heads get cut off!)
   const [activePhoto, setActivePhoto] = useState<string>(
-    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80'
+    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1000&auto=format&fit=crop&q=80'
   );
 
   // 5. Placed Items (Stickers & Custom Text)
@@ -230,7 +235,27 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
 
   const ratioConfig = ASPECT_RATIOS.find((r) => r.id === selectedRatio) || ASPECT_RATIOS[0];
   const activeFilter = PHOTO_FILTERS.find((f) => f.id === selectedFilterId) || PHOTO_FILTERS[0];
-  const activeFrame = frames.find((f) => f.id === selectedFrameId) || frames[0];
+  
+  // Selected Frame: returns NULL when 'selectedFrameId' is empty ('None / Nguyên Bản')
+  const activeFrame = selectedFrameId ? frames.find((f) => f.id === selectedFrameId) || null : null;
+
+  // Responsive Viewport Height helper (maintains tall consistent height across all ratios)
+  const getContainerRatioClass = (ratio: AspectRatioType) => {
+    switch (ratio) {
+      case '9:16':
+        return 'aspect-[9/16] h-[52vh] sm:h-[58vh] max-h-[580px] min-h-[380px] w-auto';
+      case '4:5':
+        return 'aspect-[4/5] h-[52vh] sm:h-[58vh] max-h-[580px] min-h-[380px] w-auto';
+      case '1:1':
+        return 'aspect-[1/1] h-[52vh] sm:h-[58vh] max-h-[580px] min-h-[380px] w-auto';
+      case '16:9':
+        return 'aspect-[16/9] h-[38vh] sm:h-[46vh] max-h-[460px] min-h-[300px] w-auto max-w-[94vw]';
+      case '4:3':
+        return 'aspect-[4/3] h-[48vh] sm:h-[54vh] max-h-[520px] min-h-[340px] w-auto max-w-[94vw]';
+      default:
+        return 'aspect-[9/16] h-[52vh] sm:h-[58vh] max-h-[580px] min-h-[380px] w-auto';
+    }
+  };
 
   // Camera stream lifecycle
   useEffect(() => {
@@ -426,7 +451,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       return;
     }
 
-    // 1. Draw Base Photo with selected color filter
+    // 1. Draw Base Photo with selected color filter and biased top crop
     const baseImg = new Image();
     baseImg.crossOrigin = 'anonymous';
     baseImg.src = activePhoto;
@@ -438,7 +463,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           ctx.filter = activeFilter.canvasFilter;
         }
 
-        // Center cover crop
         const imgAspect = baseImg.width / baseImg.height;
         const canvasAspect = canvas.width / canvas.height;
         let dw = canvas.width;
@@ -453,7 +477,8 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         } else {
           dw = canvas.width;
           dh = canvas.width / imgAspect;
-          dy = (canvas.height - dh) / 2;
+          // Crop with top bias so model's head is not cut off
+          dy = Math.max(-dh * 0.15, (canvas.height - dh) / 2);
         }
 
         ctx.drawImage(baseImg, dx, dy, dw, dh);
@@ -463,7 +488,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       baseImg.onerror = () => resolve();
     });
 
-    // 2. Draw Frame Overlay if present
+    // 2. Draw Frame Overlay if present (and only if activeFrame is selected)
     if (activeFrame && activeFrame.frameOverlayUrl) {
       const frameImg = new Image();
       frameImg.crossOrigin = 'anonymous';
@@ -561,7 +586,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       try {
         await navigator.share({
           title: 'AuraLens Photobooth Story',
-          text: 'Check out my custom photobooth frame crafted with AuraLens!',
+          text: isEn ? 'Check out my custom photobooth frame crafted with AuraLens!' : 'Xem ảnh OOTD cực nghệ làm từ AuraLens nè!',
           url: window.location.href,
         });
       } catch {
@@ -585,14 +610,14 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       />
 
       {/* ========================================================================= */}
-      {/* 1. CENTER STAGE CANVAS VIEWPORT                                           */}
+      {/* 1. CENTER STAGE CANVAS VIEWPORT (Consistent tall height across all ratios) */}
       {/* ========================================================================= */}
       <div className="flex flex-col items-center justify-center w-full">
         <div
           ref={canvasContainerRef}
           onPointerMove={handlePointerMoveCanvas}
           onPointerUp={handlePointerUpCanvas}
-          className={`relative w-full ${ratioConfig.cssAspect} rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-black select-none transition-all duration-300 group`}
+          className={`relative ${getContainerRatioClass(selectedRatio)} rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-black select-none transition-all duration-300 group`}
           style={{ touchAction: 'none' }}
         >
           {/* Flash Effect */}
@@ -632,7 +657,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                     </span>
                   </div>
                   <span className="text-xs font-black text-white uppercase tracking-widest block mt-4 animate-pulse">
-                    📸 Strike a pose...
+                    {isEn ? '📸 Strike a pose...' : '📸 Chuẩn bị tạo dáng...'}
                   </span>
                 </div>
               )}
@@ -640,7 +665,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
               {/* Camera Header Bar */}
               <div className="relative z-20 flex items-center justify-between">
                 <span className="px-3 py-1 bg-black/60 backdrop-blur-md rounded-full text-white text-[10px] font-black uppercase">
-                  ● Live Camera
+                  ● {isEn ? 'Live Camera' : 'Camera Trực Tiếp'}
                 </span>
                 <button
                   onClick={() => setFacingMode((p) => (p === 'user' ? 'environment' : 'user'))}
@@ -680,15 +705,15 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           ) : (
             /* PHOTO CANVAS PREVIEW MODE */
             <div className="absolute inset-0 overflow-hidden">
-              {/* 1. Base Photo Layer with CSS Filter */}
+              {/* 1. Base Photo Layer with CSS Filter and headroom crop */}
               <img
                 src={activePhoto}
                 alt="Photobooth Subject"
-                className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
+                className="absolute inset-0 w-full h-full object-cover object-[center_12%] transition-all duration-300"
                 style={{ filter: activeFilter.filterCss }}
               />
 
-              {/* 2. Vector Frame Overlay */}
+              {/* 2. Vector Frame Overlay (only if activeFrame is selected) */}
               {activeFrame?.frameOverlayUrl && (
                 <img
                   src={activeFrame.frameOverlayUrl}
@@ -749,14 +774,14 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                         <button
                           onClick={() => handleScaleItem(item.id, -0.2)}
                           className="p-1 hover:text-[#D4FF00] transition-colors cursor-pointer"
-                          title="Thu nhỏ"
+                          title={isEn ? 'Scale down' : 'Thu nhỏ'}
                         >
                           <ZoomOut className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleScaleItem(item.id, 0.2)}
                           className="p-1 hover:text-[#D4FF00] transition-colors cursor-pointer"
-                          title="Phóng to"
+                          title={isEn ? 'Scale up' : 'Phóng to'}
                         >
                           <ZoomIn className="w-3.5 h-3.5" />
                         </button>
@@ -764,7 +789,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                         <button
                           onClick={() => handleDeleteItem(item.id)}
                           className="p-1 text-red-400 hover:text-red-300 transition-colors cursor-pointer"
-                          title="Xóa item"
+                          title={isEn ? 'Delete item' : 'Xóa item'}
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -780,7 +805,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         {/* ========================================================================= */}
         {/* 2. PRIMARY ACTION CONTROLS (Harmonious below canvas)                     */}
         {/* ========================================================================= */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 mt-5 max-w-lg w-full px-2">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 mt-5 max-w-xl w-full px-2">
           {/* Snap with Camera */}
           <button
             onClick={() => setIsCameraActive(!isCameraActive)}
@@ -791,7 +816,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             }`}
           >
             <Camera className="w-4 h-4 text-purple-600" />
-            <span>{isCameraActive ? 'Đóng Camera' : 'Chụp Ảnh'}</span>
+            <span>{isCameraActive ? (isEn ? 'Close Camera' : 'Đóng Camera') : (isEn ? 'Snap Photo' : 'Chụp Ảnh')}</span>
           </button>
 
           {/* Upload Photo */}
@@ -800,18 +825,18 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             className="py-3 px-4.5 rounded-2xl bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 font-black text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
           >
             <Upload className="w-4 h-4 text-purple-600" />
-            <span>Tải Ảnh Lên</span>
+            <span>{isEn ? 'Upload Photo' : 'Tải Ảnh Lên'}</span>
           </button>
 
-          {/* Reset Canvas */}
+          {/* Reset Canvas Layers */}
           {placedItems.length > 0 && (
             <button
               onClick={handleClearAllItems}
               className="py-3 px-3.5 rounded-2xl bg-white hover:bg-gray-50 text-gray-600 hover:text-red-500 border border-gray-200 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
-              title="Xóa hết sticker & chữ"
+              title={isEn ? 'Clear all stickers & text' : 'Xóa hết sticker & chữ'}
             >
               <RotateCcw className="w-4 h-4" />
-              <span>Xóa Layer</span>
+              <span>{isEn ? 'Clear Layers' : 'Xóa Layer'}</span>
             </button>
           )}
 
@@ -824,12 +849,12 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             {downloadSuccess ? (
               <>
                 <CheckCircle2 className="w-4 h-4 text-[#D4FF00]" />
-                <span className="text-[#D4FF00]">Đã Lưu Thành Công!</span>
+                <span className="text-[#D4FF00]">{isEn ? 'Saved to Gallery!' : 'Đã Lưu Thành Công!'}</span>
               </>
             ) : (
               <>
                 <Download className="w-4 h-4 text-[#D4FF00]" />
-                <span>{isExporting ? 'Đang Xuất Ảnh...' : `Tải Ảnh ${selectedRatio}`}</span>
+                <span>{isExporting ? (isEn ? 'Exporting...' : 'Đang Xuất Ảnh...') : (isEn ? `Download ${selectedRatio}` : `Tải Ảnh ${selectedRatio}`)}</span>
               </>
             )}
           </button>
@@ -838,7 +863,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           <button
             onClick={handleShareStory}
             className="p-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white shadow-md active:scale-95 transition-all cursor-pointer"
-            title="Chia sẻ Story"
+            title={isEn ? 'Share Story' : 'Chia sẻ Story'}
           >
             <Share2 className="w-4 h-4" />
           </button>
@@ -846,76 +871,76 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. CATEGORIZED CUSTOMIZATION STUDIO DECK (Tabbed Filter Bar)               */}
+      {/* 3. CATEGORIZED CUSTOMIZATION STUDIO DECK (Centered & Expanded Box)        */}
       {/* ========================================================================= */}
-      <div className="calm-card-elevated p-4 sm:p-5 rounded-3xl bg-white shadow-xl border border-gray-100 space-y-4">
+      <div className="calm-card-elevated p-5 sm:p-7 rounded-3xl bg-white shadow-xl border border-gray-100 space-y-5 max-w-4xl mx-auto">
         
-        {/* Tab Headers */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none border-b border-gray-100">
+        {/* Tab Headers (Centered) */}
+        <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-gray-100 flex-wrap">
           <button
             onClick={() => setActiveTab('ratio')}
-            className={`py-2 px-3.5 rounded-xl font-black text-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'ratio'
-                ? 'bg-purple-600 text-white shadow-sm'
+                ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            <Smartphone className="w-3.5 h-3.5" />
-            <span>Khổ Ảnh ({selectedRatio})</span>
+            <Smartphone className="w-4 h-4" />
+            <span>{isEn ? `Ratio (${selectedRatio})` : `Khổ Ảnh (${selectedRatio})`}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('frames')}
-            className={`py-2 px-3.5 rounded-xl font-black text-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'frames'
-                ? 'bg-purple-600 text-white shadow-sm'
+                ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Khung Trend ({frames.length})</span>
+            <Sparkles className="w-4 h-4" />
+            <span>{isEn ? `Trend Frames (${frames.length})` : `Khung Trend (${frames.length})`}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('filters')}
-            className={`py-2 px-3.5 rounded-xl font-black text-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'filters'
-                ? 'bg-purple-600 text-white shadow-sm'
+                ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            <Palette className="w-3.5 h-3.5" />
-            <span>Bộ Lọc Màu ({PHOTO_FILTERS.length})</span>
+            <Palette className="w-4 h-4" />
+            <span>{isEn ? `Photo Filters (${PHOTO_FILTERS.length})` : `Bộ Lọc Màu (${PHOTO_FILTERS.length})`}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('stickers')}
-            className={`py-2 px-3.5 rounded-xl font-black text-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'stickers'
-                ? 'bg-purple-600 text-white shadow-sm'
+                ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            <Star className="w-3.5 h-3.5 text-[#D4FF00]" />
-            <span>Sticker & Nhãn ({STICKER_LIBRARY.length})</span>
+            <Star className="w-4 h-4 text-[#D4FF00]" />
+            <span>{isEn ? `Stickers & Decals (${STICKER_LIBRARY.length})` : `Sticker & Nhãn (${STICKER_LIBRARY.length})`}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('text')}
-            className={`py-2 px-3.5 rounded-xl font-black text-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer ${
+            className={`py-2.5 px-4 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
               activeTab === 'text'
-                ? 'bg-purple-600 text-white shadow-sm'
+                ? 'bg-purple-600 text-white shadow-md ring-2 ring-purple-300/40'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            <Type className="w-3.5 h-3.5" />
-            <span>Chèn Chữ & Font</span>
+            <Type className="w-4 h-4" />
+            <span>{isEn ? 'Add Text & Fonts' : 'Chèn Chữ & Font'}</span>
           </button>
         </div>
 
-        {/* ==================== TAB 1: ASPECT RATIO ==================== */}
+        {/* ==================== TAB 1: ASPECT RATIO (Centered) ==================== */}
         {activeTab === 'ratio' && (
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 animate-fadeIn">
+          <div className="flex flex-wrap items-center justify-center gap-3 animate-fadeIn">
             {ASPECT_RATIOS.map((ratio) => {
               const isSelected = ratio.id === selectedRatio;
 
@@ -923,14 +948,14 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 <button
                   key={ratio.id}
                   onClick={() => setSelectedRatio(ratio.id)}
-                  className={`p-3 rounded-2xl text-left border transition-all cursor-pointer flex flex-col justify-between gap-2 ${
+                  className={`p-3.5 sm:p-4 rounded-2xl text-left border transition-all cursor-pointer flex flex-col justify-between gap-2.5 w-[145px] sm:w-[160px] shrink-0 ${
                     isSelected
-                      ? 'bg-purple-50/90 border-purple-500 ring-2 ring-purple-300/40 shadow-sm'
-                      : 'bg-gray-50/80 hover:bg-gray-100/80 border-gray-200'
+                      ? 'bg-purple-50/90 border-purple-500 ring-2 ring-purple-300/50 shadow-md'
+                      : 'bg-gray-50/80 hover:bg-gray-100/80 border-gray-200 hover:shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className={`p-1.5 rounded-lg ${isSelected ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
+                    <span className={`p-2 rounded-xl ${isSelected ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}>
                       {ratio.icon}
                     </span>
                     <span className="text-[10px] font-black text-gray-400 uppercase">
@@ -938,8 +963,12 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                     </span>
                   </div>
                   <div>
-                    <h4 className="text-xs font-black text-gray-900">{ratio.label}</h4>
-                    <span className="text-[10px] font-bold text-gray-500">{ratio.subLabel}</span>
+                    <h4 className="text-xs sm:text-sm font-black text-gray-900 leading-tight">
+                      {isEn ? ratio.labelEn : ratio.labelVi}
+                    </h4>
+                    <span className="text-[11px] font-bold text-gray-500 mt-0.5 block">
+                      {isEn ? ratio.subEn : ratio.subVi}
+                    </span>
                   </div>
                 </button>
               );
@@ -947,22 +976,26 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </div>
         )}
 
-        {/* ==================== TAB 2: FRAMES ==================== */}
+        {/* ==================== TAB 2: FRAMES (Centered) ==================== */}
         {activeTab === 'frames' && (
-          <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none snap-x animate-fadeIn">
-            {/* Option: None / Raw */}
+          <div className="flex items-center justify-center gap-3.5 overflow-x-auto pb-2 scrollbar-none snap-x animate-fadeIn flex-wrap sm:flex-nowrap">
+            {/* Option: None / Raw (Nguyên Bản) */}
             <button
               onClick={() => setSelectedFrameId('')}
-              className={`snap-start shrink-0 flex flex-col items-center gap-1.5 p-1 rounded-2xl transition-all ${
+              className={`snap-start shrink-0 flex flex-col items-center gap-2 p-1.5 rounded-2xl transition-all cursor-pointer ${
                 selectedFrameId === '' ? 'scale-105 opacity-100' : 'opacity-70 hover:opacity-90'
               }`}
             >
-              <div className={`w-16 h-16 rounded-2xl overflow-hidden p-0.5 shadow-md flex items-center justify-center ${
-                selectedFrameId === '' ? 'ring-4 ring-[#D4FF00] bg-purple-600 text-white' : 'bg-gray-100 border border-gray-200 text-gray-600'
+              <div className={`w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden p-1 shadow-md flex items-center justify-center transition-all ${
+                selectedFrameId === '' ? 'ring-4 ring-[#D4FF00] bg-purple-600 text-white shadow-lg' : 'bg-gray-100 border-2 border-dashed border-gray-300 text-gray-500'
               }`}>
-                <span className="text-[10px] font-black uppercase">Không Khung</span>
+                <span className="text-xs font-black uppercase text-center leading-tight">
+                  {isEn ? 'NO FRAME' : 'NGUYÊN BẢN'}
+                </span>
               </div>
-              <span className="text-[10px] font-bold text-gray-700">Nguyên Bản</span>
+              <span className="text-xs font-extrabold text-gray-800">
+                {isEn ? 'Raw Photo' : 'Không Khung'}
+              </span>
             </button>
 
             {frames.map((frame) => {
@@ -972,12 +1005,12 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 <button
                   key={frame.id}
                   onClick={() => setSelectedFrameId(frame.id)}
-                  className={`snap-start shrink-0 flex flex-col items-center gap-1.5 p-1 rounded-2xl transition-all ${
+                  className={`snap-start shrink-0 flex flex-col items-center gap-2 p-1.5 rounded-2xl transition-all cursor-pointer ${
                     isSelected ? 'scale-105 opacity-100' : 'opacity-70 hover:opacity-90'
                   }`}
                 >
                   <div
-                    className={`w-16 h-16 rounded-2xl overflow-hidden p-0.5 shadow-md transition-all ${
+                    className={`w-18 h-18 sm:w-20 sm:h-20 rounded-2xl overflow-hidden p-0.5 shadow-md transition-all ${
                       isSelected
                         ? 'ring-4 ring-[#D4FF00] shadow-lg bg-gradient-to-tr from-[#FF2E93] to-[#00F5FF]'
                         : 'bg-white/80 border border-gray-200'
@@ -990,12 +1023,12 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-black/30" />
-                      <span className="absolute bottom-0.5 inset-x-0 text-[8px] font-black text-center text-white truncate px-1 drop-shadow">
+                      <span className="absolute bottom-1 inset-x-0 text-[9px] font-black text-center text-white truncate px-1 drop-shadow">
                         {frame.vibeTag}
                       </span>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold text-gray-700 truncate max-w-[70px]">
+                  <span className="text-xs font-extrabold text-gray-800 truncate max-w-[80px]">
                     {frame.name.split(' ')[0]}
                   </span>
                 </button>
@@ -1004,9 +1037,9 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </div>
         )}
 
-        {/* ==================== TAB 3: FILTERS ==================== */}
+        {/* ==================== TAB 3: FILTERS (Centered & Spacious Boxes) ==================== */}
         {activeTab === 'filters' && (
-          <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none snap-x animate-fadeIn">
+          <div className="flex items-center justify-center gap-3 overflow-x-auto pb-2 scrollbar-none snap-x animate-fadeIn flex-wrap">
             {PHOTO_FILTERS.map((filter) => {
               const isSelected = filter.id === selectedFilterId;
 
@@ -1014,19 +1047,19 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 <button
                   key={filter.id}
                   onClick={() => setSelectedFilterId(filter.id)}
-                  className={`snap-start shrink-0 flex flex-col items-center gap-1.5 p-1.5 rounded-2xl transition-all cursor-pointer ${
+                  className={`snap-start shrink-0 flex flex-col items-center gap-2 p-2 rounded-2xl transition-all cursor-pointer ${
                     isSelected
-                      ? 'scale-105 bg-purple-50 ring-2 ring-purple-400 shadow-sm'
-                      : 'opacity-75 hover:opacity-100'
+                      ? 'scale-105 bg-purple-50 ring-2 ring-purple-400 shadow-md'
+                      : 'opacity-75 hover:opacity-100 hover:bg-gray-50'
                   }`}
                 >
                   <div
-                    className={`w-14 h-14 rounded-2xl shadow-inner overflow-hidden bg-gradient-to-tr ${filter.previewColor} flex items-center justify-center text-white font-black text-[10px] border border-white/40`}
+                    className={`w-16 h-16 sm:w-18 sm:h-18 rounded-2xl shadow-inner overflow-hidden bg-gradient-to-tr ${filter.previewColor} flex items-center justify-center text-white font-black text-xs border-2 border-white/60`}
                   >
-                    {isSelected && <CheckCircle2 className="w-5 h-5 drop-shadow-md" />}
+                    {isSelected && <CheckCircle2 className="w-6 h-6 text-white drop-shadow-md" />}
                   </div>
-                  <span className="text-[10px] font-extrabold text-gray-800 truncate max-w-[65px]">
-                    {filter.name}
+                  <span className="text-xs font-black text-gray-900 truncate max-w-[75px]">
+                    {isEn ? filter.nameEn : filter.nameVi}
                   </span>
                 </button>
               );
@@ -1034,33 +1067,35 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
           </div>
         )}
 
-        {/* ==================== TAB 4: STICKERS ==================== */}
+        {/* ==================== TAB 4: STICKERS (Centered) ==================== */}
         {activeTab === 'stickers' && (
-          <div className="space-y-2 animate-fadeIn">
-            <span className="text-[11px] font-bold text-gray-500 block">
-              💡 Chạm vào sticker để thêm vào ảnh. Sau khi thêm, bạn có thể **kéo thả di chuyển** hoặc phóng to/thu nhỏ tự do!
-            </span>
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="space-y-3 animate-fadeIn text-center">
+            <p className="text-xs sm:text-sm font-bold text-gray-600">
+              {isEn
+                ? '💡 Tap any sticker to add it to your photo. Drag it freely and scale/delete directly on the preview canvas!'
+                : '💡 Chạm vào nhãn dán bất kỳ để thêm vào ảnh. Bạn có thể kéo thả di chuyển tự do và phóng to/thu nhỏ trên khung ảnh!'}
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">
               {STICKER_LIBRARY.map((stk) => (
                 <button
                   key={stk.id}
                   onClick={() => handleAddSticker(stk)}
-                  className="py-2 px-3 rounded-xl bg-gray-50 hover:bg-purple-50 text-gray-900 hover:text-purple-900 border border-gray-200 hover:border-purple-300 font-black text-xs transition-all active:scale-90 flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  className="py-2.5 px-4 rounded-xl bg-gray-50 hover:bg-purple-50 text-gray-900 hover:text-purple-950 border border-gray-200 hover:border-purple-300 font-black text-xs sm:text-sm transition-all active:scale-90 flex items-center gap-2 cursor-pointer shadow-xs"
                 >
-                  <span className="text-base">{stk.display}</span>
-                  <span className="text-[11px]">{stk.name}</span>
-                  <Plus className="w-3 h-3 text-purple-600" />
+                  <span className="text-lg">{stk.display}</span>
+                  <span className="text-xs">{isEn ? stk.nameEn : stk.nameVi}</span>
+                  <Plus className="w-3.5 h-3.5 text-purple-600" />
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* ==================== TAB 5: CUSTOM TEXT & FONTS ==================== */}
+        {/* ==================== TAB 5: CUSTOM TEXT & FONTS (Centered) ==================== */}
         {activeTab === 'text' && (
-          <div className="space-y-3.5 animate-fadeIn">
+          <div className="space-y-4 animate-fadeIn max-w-2xl mx-auto">
             {/* Input Row */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <input
                 type="text"
                 value={customTextInput}
@@ -1068,27 +1103,29 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleAddCustomText();
                 }}
-                placeholder="Nhập chữ bạn muốn chèn (VD: Vibe Sài Gòn, OOTD, Slay...)"
-                className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm font-bold text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                placeholder={isEn ? 'Enter custom text (e.g. Slay Saigon, OOTD, Main Character...)' : 'Nhập chữ bạn muốn chèn (VD: Vibe Sài Gòn, OOTD, Cháy Phố...)'}
+                className="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-xs sm:text-sm font-bold text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
               />
               <button
                 onClick={handleAddCustomText}
                 disabled={!customTextInput.trim()}
-                className="py-2.5 px-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center gap-1.5 shrink-0"
+                className="py-3 px-5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs sm:text-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center gap-1.5 shrink-0 shadow-md"
               >
                 <Plus className="w-4 h-4" />
-                <span>Thêm Chữ</span>
+                <span>{isEn ? 'Add Text' : 'Thêm Chữ'}</span>
               </button>
             </div>
 
             {/* Quick Presets */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-              <span className="text-[10px] font-black text-gray-400 uppercase shrink-0">Gợi ý:</span>
+            <div className="flex items-center justify-center gap-2 overflow-x-auto pb-1 scrollbar-none flex-wrap">
+              <span className="text-[11px] font-black text-gray-400 uppercase shrink-0">
+                {isEn ? 'Presets:' : 'Gợi ý:'}
+              </span>
               {['SLAY', 'OOTD 2026', 'CHÁY PHỐ', 'VIBE SÀI GÒN', 'MAIN CHARACTER', 'AURA +1000'].map((preset) => (
                 <button
                   key={preset}
                   onClick={() => setCustomTextInput(preset)}
-                  className="px-2.5 py-1 rounded-lg bg-gray-100 hover:bg-purple-100 text-gray-700 hover:text-purple-800 text-[10px] font-black shrink-0 transition-colors cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-purple-100 text-gray-700 hover:text-purple-800 text-xs font-black shrink-0 transition-colors cursor-pointer"
                 >
                   {preset}
                 </button>
@@ -1096,18 +1133,20 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             </div>
 
             {/* Font Style & Colors Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-gray-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
               {/* Font Selector */}
-              <div className="space-y-1">
-                <span className="text-[11px] font-black text-gray-500 uppercase">Kiểu Font</span>
-                <div className="grid grid-cols-2 gap-1.5">
+              <div className="space-y-1.5">
+                <span className="text-xs font-black text-gray-500 uppercase">
+                  {isEn ? 'Font Family' : 'Kiểu Font Chữ'}
+                </span>
+                <div className="grid grid-cols-2 gap-2">
                   {FONT_OPTIONS.map((f) => (
                     <button
                       key={f.id}
                       onClick={() => setSelectedFont(f.fontCss)}
-                      className={`p-2 rounded-xl text-xs font-bold border transition-all text-left truncate ${
+                      className={`p-2.5 rounded-xl text-xs font-black border transition-all text-left truncate cursor-pointer ${
                         selectedFont === f.fontCss
-                          ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
+                          ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
                           : 'bg-gray-50 text-gray-800 border-gray-200 hover:bg-gray-100'
                       }`}
                       style={{ fontFamily: f.fontCss }}
@@ -1119,14 +1158,16 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
               </div>
 
               {/* Color & Glow Picker */}
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-black text-gray-500 uppercase">Màu Chữ & Hiệu Ứng</span>
+                  <span className="text-xs font-black text-gray-500 uppercase">
+                    {isEn ? 'Text Color & Glow' : 'Màu Chữ & Hiệu Ứng'}
+                  </span>
                   <button
                     onClick={() => setHasTextGlow(!hasTextGlow)}
-                    className={`text-[10px] font-black px-2 py-0.5 rounded-full border transition-all cursor-pointer ${
+                    className={`text-[11px] font-black px-2.5 py-1 rounded-full border transition-all cursor-pointer ${
                       hasTextGlow
-                        ? 'bg-[#D4FF00] text-gray-950 border-[#D4FF00]'
+                        ? 'bg-[#D4FF00] text-gray-950 border-[#D4FF00] shadow-xs'
                         : 'bg-gray-100 text-gray-500 border-gray-200'
                     }`}
                   >
@@ -1134,12 +1175,12 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                   </button>
                 </div>
 
-                <div className="flex items-center gap-2 pt-1">
+                <div className="flex items-center gap-2.5 pt-1.5 flex-wrap">
                   {TEXT_COLORS.map((c) => (
                     <button
                       key={c.hex}
                       onClick={() => setSelectedTextColor(c.hex)}
-                      className={`w-7 h-7 rounded-full border-2 transition-transform ${
+                      className={`w-8 h-8 rounded-full border-2 transition-transform cursor-pointer ${
                         selectedTextColor === c.hex
                           ? 'scale-115 border-purple-600 ring-2 ring-purple-300 shadow-sm'
                           : 'border-gray-300 hover:scale-105'

@@ -376,6 +376,7 @@ export function App() {
             frames={frames}
             currentVibe={currentVibe}
             capturedPhoto={capturedPhoto}
+            language={language}
             onBackToMap={() => setActiveView(3)}
           />
         )}
