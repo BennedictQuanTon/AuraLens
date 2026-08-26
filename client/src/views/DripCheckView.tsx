@@ -392,55 +392,6 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
 
   const userRankInfo = getUserRankInfo(score);
 
-  // Dynamic Leaderboard list centering around user
-  const leaderboardEntries = [
-    {
-      id: 'lb-1',
-      rank: 1,
-      name: 'Minh Thư (Zune.zx)',
-      score: 98,
-      vibe: 'Cyber-Pop',
-      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
-      isUser: false,
-    },
-    {
-      id: 'lb-2',
-      rank: 2,
-      name: 'Quang Anh (HADES)',
-      score: 96,
-      vibe: 'Streetwear',
-      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80',
-      isUser: false,
-    },
-    {
-      id: 'lb-user',
-      rank: userRankInfo.rank,
-      name: isEn ? 'Bennedict (You)' : 'Bennedict (Bạn)',
-      score: score,
-      vibe: breakdown?.detectedStyle || 'Streetwear',
-      avatarUrl: '/lumi.png',
-      isUser: true,
-    },
-    {
-      id: 'lb-4',
-      rank: userRankInfo.rank <= 3 ? 4 : userRankInfo.rank - 1,
-      name: 'Khánh Vy (BLANCO)',
-      score: Math.max(68, score - 3),
-      vibe: 'Minimalist',
-      avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80',
-      isUser: false,
-    },
-    {
-      id: 'lb-5',
-      rank: userRankInfo.rank <= 3 ? 5 : userRankInfo.rank + 1,
-      name: 'Hoàng Long (THE BEAT)',
-      score: Math.max(65, score - 6),
-      vibe: 'Y2K Matrix',
-      avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80',
-      isUser: false,
-    },
-  ];
-
   // Helper to generate 100 realistic mock users for the full leaderboard
   const generateFullLeaderboard = () => {
     const vietnameseNames = [
@@ -467,6 +418,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
     ];
 
     const entries: Array<{
+      id: string;
       rank: number;
       name: string;
       score: number;
@@ -476,10 +428,12 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       tierBadge: string;
     }> = [];
 
-    let currentScore = 99;
+    const userRank = userRankInfo.rank;
+
     for (let r = 1; r <= 100; r++) {
-      if (r === userRankInfo.rank) {
+      if (r === userRank) {
         entries.push({
+          id: 'lb-user',
           rank: r,
           name: isEn ? 'Bennedict (You)' : 'Bennedict (Bạn)',
           score: score,
@@ -495,17 +449,29 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       const brandIdx = (r - 1) % brandTags.length;
       const vibeIdx = (r - 1) % vibes.length;
       const avatar = avatarPool[(r - 1) % avatarPool.length];
-      
-      if (r % 2 === 0 && currentScore > 48) {
-        currentScore -= 1;
+
+      // Calculate score monotonically descending
+      let itemScore: number;
+      if (r < userRank) {
+        // Interpolate smoothly from 99 down to (score + 1)
+        const range = 99 - (score + 1);
+        const step = userRank > 1 ? range / (userRank - 1) : 0;
+        itemScore = Math.round(99 - (r - 1) * step);
+      } else {
+        // Interpolate smoothly from (score - 1) down to 45
+        const remainingRanks = 100 - userRank;
+        const range = Math.max(0, (score - 1) - 45);
+        const step = remainingRanks > 0 ? range / remainingRanks : 0;
+        itemScore = Math.max(45, Math.round((score - 1) - (r - userRank - 1) * step));
       }
 
-      const tierBadge = currentScore >= 95 ? '💎 TIER 1' : currentScore >= 90 ? '💎 TIER 1' : currentScore >= 80 ? '👑 TIER 2' : currentScore >= 70 ? '⚡ TIER 3' : '🌱 TIER 4';
+      const tierBadge = itemScore >= 95 ? '💎 TIER 1' : itemScore >= 90 ? '💎 TIER 1' : itemScore >= 80 ? '👑 TIER 2' : itemScore >= 70 ? '⚡ TIER 3' : '🌱 TIER 4';
 
       entries.push({
+        id: `lb-${r}`,
         rank: r,
         name: `${vietnameseNames[nameIdx]} (${brandTags[brandIdx]})`,
-        score: currentScore,
+        score: itemScore,
         vibe: vibes[vibeIdx],
         avatarUrl: avatar,
         isUser: false,
@@ -521,6 +487,28 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
     item.name.toLowerCase().includes(leaderboardSearch.toLowerCase()) ||
     item.vibe.toLowerCase().includes(leaderboardSearch.toLowerCase())
   );
+
+  // Preview list for the Card (strictly sorted, showing Top 2 + surrounding bracket if user > 5)
+  const previewLeaderboard: Array<{
+    item: typeof fullLeaderboardList[0];
+    showDividerBefore?: boolean;
+  }> = [];
+
+  if (userRankInfo.rank <= 5) {
+    fullLeaderboardList.slice(0, 5).forEach((item) => {
+      previewLeaderboard.push({ item });
+    });
+  } else {
+    previewLeaderboard.push({ item: fullLeaderboardList[0] });
+    previewLeaderboard.push({ item: fullLeaderboardList[1] });
+    const prevItem = fullLeaderboardList[userRankInfo.rank - 2];
+    const userItem = fullLeaderboardList[userRankInfo.rank - 1];
+    const nextItem = fullLeaderboardList[userRankInfo.rank];
+
+    if (prevItem) previewLeaderboard.push({ item: prevItem, showDividerBefore: true });
+    if (userItem) previewLeaderboard.push({ item: userItem });
+    if (nextItem) previewLeaderboard.push({ item: nextItem });
+  }
 
   return (
     <div className="animate-fadeIn space-y-6 pb-16 max-w-6xl mx-auto">
@@ -859,77 +847,85 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                 </div>
               </div>
 
-              {/* Top 5 Trendsetters Leaderboard Rows */}
+              {/* Top Trendsetters Leaderboard Rows */}
               <div className="space-y-2 pt-1">
                 <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-gray-400 px-2 pb-0.5">
                   <span>{isEn ? 'Rank & Trendsetter' : 'Hạng & Trendsetter'}</span>
                   <span>{isEn ? 'Aura Score' : 'Điểm Fit'}</span>
                 </div>
 
-                {leaderboardEntries.map((entry) => (
-                  <div
-                    key={entry.id}
-                    className={`flex items-center justify-between p-2.5 rounded-2xl transition-all ${
-                      entry.isUser
-                        ? 'bg-gradient-to-r from-purple-100/95 via-pink-100/90 to-purple-50 border-2 border-purple-400 shadow-md ring-2 ring-purple-300/40'
-                        : 'bg-gray-50/80 hover:bg-gray-100/80 border border-gray-100'
-                    }`}
-                  >
-                    {/* Left: Rank badge & Avatar & Name */}
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      {/* Rank Number / Medal */}
-                      <span
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${
-                          entry.rank === 1
-                            ? 'bg-amber-400 text-gray-950 shadow-xs'
-                            : entry.rank === 2
-                            ? 'bg-slate-300 text-gray-950 shadow-xs'
-                            : entry.rank === 3
-                            ? 'bg-amber-600 text-white shadow-xs'
-                            : 'bg-gray-200 text-gray-700'
-                        }`}
-                      >
-                        {entry.rank}
-                      </span>
+                {previewLeaderboard.map(({ item, showDividerBefore }) => (
+                  <React.Fragment key={item.id}>
+                    {showDividerBefore && (
+                      <div className="flex items-center justify-center py-0.5">
+                        <span className="text-gray-300 tracking-widest text-xs font-black select-none">
+                          • • •
+                        </span>
+                      </div>
+                    )}
+                    <div
+                      className={`flex items-center justify-between p-2.5 rounded-2xl transition-all ${
+                        item.isUser
+                          ? 'bg-gradient-to-r from-purple-100/95 via-pink-100/90 to-purple-50 border-2 border-purple-400 shadow-md ring-2 ring-purple-300/40'
+                          : 'bg-gray-50/80 hover:bg-gray-100/80 border border-gray-100'
+                      }`}
+                    >
+                      {/* Left: Rank badge & Avatar & Name */}
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {/* Rank Number / Medal */}
+                        <span
+                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${
+                            item.rank === 1
+                              ? 'bg-amber-400 text-gray-950 shadow-xs'
+                              : item.rank === 2
+                              ? 'bg-slate-300 text-gray-950 shadow-xs'
+                              : item.rank === 3
+                              ? 'bg-amber-600 text-white shadow-xs'
+                              : 'bg-gray-200 text-gray-700'
+                          }`}
+                        >
+                          {item.rank}
+                        </span>
 
-                      {/* Avatar */}
-                      <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 shrink-0 border border-white shadow-xs">
-                        <img
-                          src={entry.avatarUrl}
-                          alt={entry.name}
-                          className="w-full h-full object-cover"
-                        />
+                        {/* Avatar */}
+                        <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 shrink-0 border border-white shadow-xs">
+                          <img
+                            src={item.avatarUrl}
+                            alt={item.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        {/* Name & Vibe */}
+                        <div className="min-w-0">
+                          <h5 className={`text-xs sm:text-sm font-black truncate leading-tight flex items-center gap-1.5 ${item.isUser ? 'text-purple-950' : 'text-gray-900'}`}>
+                            <span>{item.name}</span>
+                            {item.isUser && (
+                              <span className="px-1.5 py-0.2 rounded-full bg-purple-600 text-white text-[9px] font-black uppercase">
+                                {isEn ? 'YOU' : 'BẠN'}
+                              </span>
+                            )}
+                          </h5>
+                          <span className="text-[10px] font-bold text-gray-500 block truncate">
+                            {item.vibe}
+                          </span>
+                        </div>
                       </div>
 
-                      {/* Name & Vibe */}
-                      <div className="min-w-0">
-                        <h5 className={`text-xs sm:text-sm font-black truncate leading-tight flex items-center gap-1.5 ${entry.isUser ? 'text-purple-950' : 'text-gray-900'}`}>
-                          <span>{entry.name}</span>
-                          {entry.isUser && (
-                            <span className="px-1.5 py-0.2 rounded-full bg-purple-600 text-white text-[9px] font-black uppercase">
-                              {isEn ? 'YOU' : 'BẠN'}
-                            </span>
-                          )}
-                        </h5>
-                        <span className="text-[10px] font-bold text-gray-500 block truncate">
-                          {entry.vibe}
+                      {/* Right: Score Pill */}
+                      <div className="text-right shrink-0 pl-2">
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-xs font-black ${
+                            item.isUser
+                              ? 'bg-purple-600 text-white shadow-xs'
+                              : 'bg-white text-gray-950 border border-gray-200 shadow-xs'
+                          }`}
+                        >
+                          {item.score} pts
                         </span>
                       </div>
                     </div>
-
-                    {/* Right: Score Pill */}
-                    <div className="text-right shrink-0 pl-2">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-xs font-black ${
-                          entry.isUser
-                            ? 'bg-purple-600 text-white shadow-xs'
-                            : 'bg-white text-gray-950 border border-gray-200 shadow-xs'
-                        }`}
-                      >
-                        {entry.score} pts
-                      </span>
-                    </div>
-                  </div>
+                  </React.Fragment>
                 ))}
               </div>
 
