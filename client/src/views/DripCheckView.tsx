@@ -12,9 +12,9 @@ import {
   ShoppingBag,
   Shield,
   Loader2,
-  ChevronRight,
   Lightbulb,
   Tag,
+  Flame,
 } from 'lucide-react';
 import type { DripCheckResponse, EventContext, FashionItem } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
@@ -149,7 +149,6 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
     setTimeout(() => setIsFlashActive(false), 250);
 
     const canvas = document.createElement('canvas');
-    // Ensure exact 3:4 aspect ratio canvas export
     canvas.width = 900;
     canvas.height = 1200;
     const ctx = canvas.getContext('2d');
@@ -241,14 +240,14 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
   ];
 
   return (
-    <div className="animate-fadeIn space-y-5 pb-16 max-w-5xl mx-auto">
+    <div className="animate-fadeIn space-y-6 pb-16 max-w-6xl mx-auto">
       
       {/* ========================================================================= */}
-      {/* STATE 1: CAMERA VIEWFINDER (Fits single desktop viewport, fills mobile)   */}
+      {/* STATE 1: BALANCED CAMERA VIEWFINDER (Fits desktop viewport, full mobile)  */}
       {/* ========================================================================= */}
       {flowState === 'camera' && (
-        <div className="flex flex-col items-center justify-center min-h-[68vh] sm:min-h-[72vh] w-full px-2 sm:px-4">
-          <div className="relative w-full max-w-sm sm:max-w-md aspect-[3/4] max-h-[70vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-black flex flex-col justify-between p-4 sm:p-5 select-none">
+        <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-2 sm:px-4">
+          <div className="relative w-full max-w-md sm:max-w-lg aspect-[3/4] max-h-[72vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-black flex flex-col justify-between p-5 sm:p-6 select-none">
             
             {/* Flash Effect */}
             {isFlashActive && (
@@ -266,43 +265,43 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               />
 
               {/* Viewfinder Target Reticle Overlay */}
-              <div className="absolute inset-6 sm:inset-8 border-2 border-white/30 rounded-3xl pointer-events-none flex flex-col justify-between p-3">
+              <div className="absolute inset-7 sm:inset-9 border-2 border-white/30 rounded-3xl pointer-events-none flex flex-col justify-between p-3.5">
                 <div className="flex justify-between">
-                  <div className="w-6 h-6 border-t-3 border-l-3 border-[#D4FF00]" />
-                  <div className="w-6 h-6 border-t-3 border-r-3 border-[#D4FF00]" />
+                  <div className="w-7 h-7 border-t-3 border-l-3 border-[#D4FF00]" />
+                  <div className="w-7 h-7 border-t-3 border-r-3 border-[#D4FF00]" />
                 </div>
                 <div className="flex justify-between">
-                  <div className="w-6 h-6 border-b-3 border-l-3 border-[#D4FF00]" />
-                  <div className="w-6 h-6 border-b-3 border-r-3 border-[#D4FF00]" />
+                  <div className="w-7 h-7 border-b-3 border-l-3 border-[#D4FF00]" />
+                  <div className="w-7 h-7 border-b-3 border-r-3 border-[#D4FF00]" />
                 </div>
               </div>
             </div>
 
             {/* Camera Top Bar */}
             <div className="relative z-20 flex items-center justify-between">
-              <span className="px-3.5 py-1.5 bg-black/60 backdrop-blur-md text-white text-xs font-black rounded-full border border-white/15 flex items-center gap-2 shadow-lg">
-                <span className="w-2 h-2 rounded-full bg-[#D4FF00] animate-ping" />
+              <span className="px-4 py-2 bg-black/60 backdrop-blur-md text-white text-xs sm:text-sm font-black rounded-full border border-white/15 flex items-center gap-2 shadow-lg">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#D4FF00] animate-ping" />
                 <span>{isEn ? 'AI Smart Lens' : 'Ống Kính AI Smart Lens'}</span>
               </span>
 
               <button
                 onClick={toggleCamera}
-                className="p-2.5 rounded-full bg-black/60 hover:bg-black text-white backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-lg border border-white/15"
+                className="p-3 rounded-full bg-black/60 hover:bg-black text-white backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-lg border border-white/15"
                 title={isEn ? 'Flip Camera' : 'Đổi Camera'}
               >
-                <SwitchCamera className="w-4 h-4" />
+                <SwitchCamera className="w-5 h-5" />
               </button>
             </div>
 
             {/* Camera Bottom Controls: Snap & Upload */}
-            <div className="relative z-20 flex items-center justify-around pt-2">
+            <div className="relative z-20 flex items-center justify-around pt-3">
               {/* File Upload Button */}
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="p-3.5 rounded-full bg-black/60 hover:bg-black text-white backdrop-blur-md transition-all active:scale-90 cursor-pointer shadow-xl border border-white/25"
                 title={isEn ? 'Upload Outfit Photo' : 'Tải Ảnh Trang Phục'}
               >
-                <Upload className="w-5 h-5 text-[#D4FF00]" />
+                <Upload className="w-6 h-6 text-[#D4FF00]" />
               </button>
               <input
                 ref={fileInputRef}
@@ -315,23 +314,23 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               {/* Shutter Snap Button */}
               <button
                 onClick={handleSnap}
-                className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-white flex items-center justify-center p-2 shadow-[0_0_35px_rgba(212,255,0,0.7)] active:scale-90 transition-transform cursor-pointer"
+                className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-white flex items-center justify-center p-2 shadow-[0_0_40px_rgba(212,255,0,0.7)] active:scale-90 transition-transform cursor-pointer"
                 title={isEn ? 'Take Photo' : 'Chụp Ảnh'}
               >
                 <div className="w-full h-full rounded-full border-4 border-gray-950 bg-[#D4FF00] flex items-center justify-center shadow-inner">
-                  <Camera className="w-7 h-7 sm:w-8 sm:h-8 text-gray-950" />
+                  <Camera className="w-8 h-8 sm:w-9 sm:h-9 text-gray-950" />
                 </div>
               </button>
 
               {/* Placeholder empty circle for symmetric balance */}
-              <div className="w-12 h-12" />
+              <div className="w-13 h-13" />
             </div>
 
           </div>
 
           {/* Privacy Note */}
-          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-gray-400 mt-3">
-            <Shield className="w-3.5 h-3.5 text-emerald-500" />
+          <div className="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold text-gray-400 mt-4">
+            <Shield className="w-4 h-4 text-emerald-500" />
             <span>{isEn ? 'On-device visual analysis & privacy protected' : 'Bảo mật thị giác & phân tích an toàn 100%'}</span>
           </div>
         </div>
@@ -341,8 +340,8 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       {/* STATE 2: 3-SECOND AI REASONING / PROCESSING ANIMATION                      */}
       {/* ========================================================================= */}
       {flowState === 'processing' && (
-        <div className="flex flex-col items-center justify-center min-h-[68vh] sm:min-h-[72vh] w-full px-4">
-          <div className="relative w-full max-w-sm sm:max-w-md aspect-[3/4] max-h-[70vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-gray-950 flex flex-col items-center justify-center p-6 sm:p-8 text-center text-white">
+        <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4">
+          <div className="relative w-full max-w-md sm:max-w-lg aspect-[3/4] max-h-[72vh] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-gray-950 flex flex-col items-center justify-center p-7 sm:p-10 text-center text-white">
             
             {/* Background Thumbnail preview blurred */}
             {currentPhoto && (
@@ -353,60 +352,60 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               />
             )}
 
-            <div className="relative z-10 space-y-6 flex flex-col items-center w-full">
+            <div className="relative z-10 space-y-7 flex flex-col items-center w-full">
               
               {/* Rotating Futuristic Loader with Glow */}
               <div className="relative flex items-center justify-center">
-                <div className="w-22 h-22 sm:w-26 sm:h-26 rounded-full border-4 border-t-[#D4FF00] border-r-[#FF2E93] border-b-[#00F5FF] border-l-[#7C3AED] animate-spin shadow-[0_0_35px_rgba(212,255,0,0.6)]" style={{ animationDuration: '1.4s' }} />
-                <Sparkles className="w-8 h-8 text-[#D4FF00] absolute animate-pulse" />
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-t-[#D4FF00] border-r-[#FF2E93] border-b-[#00F5FF] border-l-[#7C3AED] animate-spin shadow-[0_0_35px_rgba(212,255,0,0.6)]" style={{ animationDuration: '1.4s' }} />
+                <Sparkles className="w-9 h-9 text-[#D4FF00] absolute animate-pulse" />
               </div>
 
               {/* Header Title */}
               <div className="space-y-1.5">
-                <span className="px-3.5 py-1 rounded-full bg-white/15 text-[#D4FF00] text-[11px] font-black uppercase tracking-wider shadow-md">
+                <span className="px-4 py-1.5 rounded-full bg-white/15 text-[#D4FF00] text-xs font-black uppercase tracking-wider shadow-md">
                   AI Multimodal Reasoning
                 </span>
-                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                   {isEn ? 'Lumi Stylist Is Cooking...' : 'Lumi Stylist Đang Phân Tích...'}
                 </h3>
               </div>
 
               {/* Dynamic Processing Logs with Animated Spinner -> Green Tick Check */}
-              <div className="space-y-3 w-full text-left bg-black/70 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-white/15 text-xs sm:text-sm font-extrabold shadow-2xl">
+              <div className="space-y-3.5 w-full text-left bg-black/75 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-white/15 text-sm font-extrabold shadow-2xl">
                 
                 {/* Step 1 */}
-                <div className={`flex items-center gap-2.5 transition-all duration-300 ${processingStep >= 0 ? 'text-[#D4FF00]' : 'text-gray-500 opacity-40'}`}>
+                <div className={`flex items-center gap-3 transition-all duration-300 ${processingStep >= 0 ? 'text-[#D4FF00]' : 'text-gray-500 opacity-40'}`}>
                   {processingStep > 0 ? (
-                    <CheckCircle2 className="w-4.5 h-4.5 text-emerald-400 shrink-0 animate-scaleUp" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 animate-scaleUp" />
                   ) : (
-                    <Loader2 className="w-4.5 h-4.5 text-[#D4FF00] shrink-0 animate-spin" />
+                    <Loader2 className="w-5 h-5 text-[#D4FF00] shrink-0 animate-spin" />
                   )}
                   <span>{isEn ? 'Spectral color & fabric analysis...' : 'Quang phổ màu & độ tương phản...'}</span>
                 </div>
 
                 {/* Step 2 */}
-                <div className={`flex items-center gap-2.5 transition-all duration-300 ${processingStep >= 1 ? 'text-[#00F5FF]' : 'text-gray-500 opacity-40'}`}>
+                <div className={`flex items-center gap-3 transition-all duration-300 ${processingStep >= 1 ? 'text-[#00F5FF]' : 'text-gray-500 opacity-40'}`}>
                   {processingStep > 1 ? (
-                    <CheckCircle2 className="w-4.5 h-4.5 text-emerald-400 shrink-0 animate-scaleUp" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 animate-scaleUp" />
                   ) : processingStep === 1 ? (
-                    <Loader2 className="w-4.5 h-4.5 text-[#00F5FF] shrink-0 animate-spin" />
+                    <Loader2 className="w-5 h-5 text-[#00F5FF] shrink-0 animate-spin" />
                   ) : (
-                    <span className="w-4.5 h-4.5 flex items-center justify-center shrink-0">
-                      <span className="w-2 h-2 rounded-full bg-gray-600" />
+                    <span className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-gray-600" />
                     </span>
                   )}
                   <span>{isEn ? 'Silhouette ratio & vibe matrix...' : 'Tỷ lệ Silhouette & Vibe Matrix...'}</span>
                 </div>
 
                 {/* Step 3 */}
-                <div className={`flex items-center gap-2.5 transition-all duration-300 ${processingStep >= 2 ? 'text-[#FF2E93]' : 'text-gray-500 opacity-40'}`}>
+                <div className={`flex items-center gap-3 transition-all duration-300 ${processingStep >= 2 ? 'text-[#FF2E93]' : 'text-gray-500 opacity-40'}`}>
                   {processingStep > 2 ? (
-                    <CheckCircle2 className="w-4.5 h-4.5 text-emerald-400 shrink-0 animate-scaleUp" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 animate-scaleUp" />
                   ) : processingStep === 2 ? (
-                    <Loader2 className="w-4.5 h-4.5 text-[#FF2E93] shrink-0 animate-spin" />
+                    <Loader2 className="w-5 h-5 text-[#FF2E93] shrink-0 animate-spin" />
                   ) : (
-                    <span className="w-4.5 h-4.5 flex items-center justify-center shrink-0">
-                      <span className="w-2 h-2 rounded-full bg-gray-600" />
+                    <span className="w-5 h-5 flex items-center justify-center shrink-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-gray-600" />
                     </span>
                   )}
                   <span>{isEn ? 'Synthesizing Fit Score...' : 'Tổng hợp Reasoning & Fit Score...'}</span>
@@ -420,15 +419,15 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
       )}
 
       {/* ========================================================================= */}
-      {/* STATE 3: RESULT RESPONSE (Left: 3:4 Photo Frame, Right: Lumi Breakdown)    */}
+      {/* STATE 3: RESULT RESPONSE (Harmonious Layout, Zero White Gaps, Larger Text) */}
       {/* ========================================================================= */}
       {flowState === 'result' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
-          {/* LEFT COLUMN: IDENTICAL 3:4 PHOTO FRAME & RETAKE BUTTON (cols 1-5 on lg) */}
-          <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-4">
+          {/* LEFT COLUMN: 3:4 PHOTO CONTAINER & RETAKE BUTTON (cols 1-5 on lg) */}
+          <div className="lg:col-span-5 space-y-4">
             
-            {/* Same 3:4 Aspect Ratio Container (No Cropping) */}
+            {/* 3:4 Aspect Ratio Frame (Perfect Match with Camera) */}
             <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-gray-950 flex items-center justify-center">
               {currentPhoto ? (
                 <img
@@ -444,69 +443,76 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
 
               {/* Top Left Tag */}
               <div className="absolute top-4 left-4">
-                <span className="px-3.5 py-1.5 bg-black/70 backdrop-blur-md text-white text-xs font-black rounded-full border border-white/15 flex items-center gap-2 shadow-lg">
-                  <Camera className="w-3.5 h-3.5 text-[#D4FF00]" />
+                <span className="px-4 py-1.5 bg-black/70 backdrop-blur-md text-white text-xs sm:text-sm font-black rounded-full border border-white/15 flex items-center gap-2 shadow-lg">
+                  <Camera className="w-4 h-4 text-[#D4FF00]" />
                   <span>{isEn ? 'Outfit Scanned' : 'Outfit Đã Quét'}</span>
                 </span>
               </div>
             </div>
 
-            {/* Retake Button */}
+            {/* Retake Button directly under photo (Zero empty gaps) */}
             <button
               onClick={handleRetake}
-              className="w-full py-4 px-6 rounded-2xl bg-white hover:bg-gray-50 text-gray-900 font-black text-sm sm:text-base border-2 border-gray-200 shadow-md active:scale-98 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+              className="w-full py-4.5 px-6 rounded-2xl bg-white hover:bg-gray-50 text-gray-950 font-black text-sm sm:text-base border-2 border-gray-200 shadow-md active:scale-98 transition-all flex items-center justify-center gap-2.5 cursor-pointer"
             >
-              <RefreshCw className="w-4.5 h-4.5 text-purple-600" />
+              <RefreshCw className="w-5 h-5 text-purple-600" />
               <span>{isEn ? 'Retake / Scan Another Fit' : 'Chụp Lại / Quét Outfit Khác'}</span>
             </button>
           </div>
 
-          {/* RIGHT COLUMN: FIT SCORE, UNIFIED LUMI RECS & ACCESSORIES (cols 6-12 on lg) */}
-          <div className="lg:col-span-7 space-y-5 flex flex-col justify-between">
+          {/* RIGHT COLUMN: INTEGRATED SCORE + LUMI CARD + ACCESSORIES (cols 6-12 on lg) */}
+          <div className="lg:col-span-7 space-y-5">
             
-            {/* 1. TOP FIT SCORE CARD (Pure Fit Score) */}
-            <div className="calm-card-elevated p-6 rounded-3xl flex flex-col items-center relative overflow-hidden text-center bg-white shadow-xl border border-gray-100">
-              <ScoreGauge score={score} size={185} />
-            </div>
-
-            {/* 2. UNIFIED LUMI STYLIST RECOMMENDATION CARD (Gộp lời rec + Góc nhìn của Lumi) */}
-            <div className="calm-card-elevated p-6 sm:p-7 rounded-3xl space-y-4 bg-white shadow-xl border border-gray-100 relative">
+            {/* 1. COMBINED FIT SCORE & LUMI AI STYLIST CARD (Seamless, High Visual Polish) */}
+            <div className="calm-card-elevated p-6 sm:p-7 rounded-3xl space-y-5 bg-white shadow-xl border border-gray-100">
               
-              {/* Header with Dashboard Mascot Cutout & Tag (No Volume Button) */}
-              <div className="flex items-center gap-3.5 pb-2 border-b border-gray-100">
-                <div className="w-13 h-13 rounded-2xl overflow-hidden bg-gradient-to-tr from-[#D4FF00] via-[#FF2E93] to-[#7C3AED] p-0.5 shadow-md shrink-0">
-                  <img
-                    src="/lumi.png"
-                    alt="Lumi AI Stylist"
-                    className="w-full h-full object-contain bg-white rounded-2xl"
-                  />
+              {/* Top Row: Lumi Avatar (Left) & Fit Score Gauge (Right) */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-gray-100">
+                {/* Left: Lumi Mascot Title */}
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-gradient-to-tr from-[#D4FF00] via-[#FF2E93] to-[#7C3AED] p-0.5 shadow-md shrink-0">
+                    <img
+                      src="/lumi.png"
+                      alt="Lumi AI Stylist"
+                      className="w-full h-full object-contain bg-white rounded-2xl"
+                    />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-black text-xl sm:text-2xl text-gray-950">
+                        Lumi AI Stylist
+                      </h3>
+                      <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-black">
+                        AI Companion
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm font-bold text-gray-500 mt-0.5">
+                      {isEn ? 'Visual Multimodal Outfit Breakdown' : 'Phân Tích Thị Giác Trang Phục Thời Gian Thực'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-black text-base sm:text-lg text-gray-950 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-[#FF2E93]" />
-                    <span>Lumi AI Stylist</span>
-                  </h3>
-                  <span className="text-[11px] font-extrabold text-purple-600">
-                    {isEn ? 'Personal AI Fashion Companion' : 'Stylist AI Cá Nhân Của Bạn'}
-                  </span>
+
+                {/* Right: Score Gauge */}
+                <div className="shrink-0 flex justify-center">
+                  <ScoreGauge score={score} size={150} />
                 </div>
               </div>
 
-              {/* Lumi Speech in Genuine Friendly Gen-Z Persona */}
-              <p className="text-sm font-bold text-gray-800 leading-relaxed">
+              {/* Lumi Speech in Larger, Bold Gen-Z Typography */}
+              <p className="text-base sm:text-[17px] font-bold text-gray-900 leading-relaxed">
                 {isEn
                   ? '"Hey bestie! Lumi just broke down your fit. The oversized silhouette and contrast between pieces give off effortless Saigon streetwear energy! Lumi\'s favorite part is your natural eye for layering and proportions. Slay the town and take 8,000 photos for Story!"'
                   : '"Hế nhô! Lumi vừa phân tích xong set đồ của bạn nè. Form dáng oversize hôm nay cực kỳ phóng khoáng, độ tương phản giữa áo và quần tạo visual chuẩn streetwear Sài Gòn luôn á! Lumi chấm điểm mạnh nhất là bạn có gu phối layer có chiều sâu và tôn dáng đỉnh chóp. Chuẩn bị đi quẩy và chụp 8,000 tấm ảnh thôi bà ơi! ✨"'}
               </p>
 
-              {/* Lumi Style Directives Box */}
-              <div className="p-4 bg-purple-50/70 rounded-2xl border border-purple-100 space-y-2">
-                <span className="text-xs font-black uppercase tracking-wider text-purple-700 flex items-center gap-1.5">
-                  <Lightbulb className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+              {/* Lumi Style Directives Box with Larger Text */}
+              <div className="p-4 sm:p-5 bg-purple-50/80 rounded-2xl border border-purple-100 space-y-2.5">
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-purple-700 flex items-center gap-1.5">
+                  <Lightbulb className="w-4 h-4 text-purple-600 shrink-0" />
                   <span>{isEn ? "Lumi's Style Directives" : 'Góc Nhìn Nâng Tầm Gu Của Lumi'}</span>
                 </span>
 
-                <div className="space-y-1.5 text-xs sm:text-sm font-bold text-purple-950">
+                <div className="space-y-2 text-sm sm:text-base font-bold text-purple-950 leading-snug">
                   <div className="flex items-start gap-2">
                     <span className="text-purple-600 font-black">•</span>
                     <span>
@@ -528,25 +534,25 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
 
             </div>
 
-            {/* 3. ACCESSORIES UPGRADE & RECOMMENDED BRANDS (Chỉ phụ kiện + Brand list) */}
+            {/* 2. ACCESSORIES UPGRADE & RECOMMENDED BRANDS */}
             <div className="calm-card-elevated p-6 sm:p-7 rounded-3xl space-y-4 bg-white shadow-xl border border-gray-100">
               
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black uppercase text-purple-600 tracking-wider flex items-center gap-1.5">
+                <span className="text-xs sm:text-sm font-black uppercase text-purple-600 tracking-wider flex items-center gap-1.5">
                   <ShoppingBag className="w-4 h-4 text-purple-600" />
                   <span>{isEn ? 'Recommended Accessories Upgrade' : 'Gợi Ý Phụ Kiện Phối Thêm Chuẩn Gu'}</span>
                 </span>
               </div>
 
-              {/* 4 Accessory Item Cards */}
+              {/* 4 Accessory Item Cards with Crisp Photos & Bold Text */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {accessoryItems.map((item) => (
                   <div
                     key={item.id}
                     onClick={() => onSelectBrandItem(item)}
-                    className="p-3 rounded-2xl bg-gray-50 hover:bg-purple-50/60 border border-gray-100 hover:border-purple-200 transition-all cursor-pointer flex items-center gap-3.5 group shadow-xs hover:shadow-md"
+                    className="p-3.5 rounded-2xl bg-gray-50 hover:bg-purple-50/60 border border-gray-100 hover:border-purple-200 transition-all cursor-pointer flex items-center gap-3.5 group shadow-xs hover:shadow-md"
                   >
-                    <div className="w-14 h-14 rounded-xl overflow-hidden bg-gray-200 shrink-0 shadow-inner">
+                    <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-200 shrink-0 shadow-inner">
                       <img
                         src={item.imageUrl}
                         alt={item.name}
@@ -554,13 +560,13 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <span className="text-[10px] font-black text-purple-600 uppercase block truncate">
+                      <span className="text-[11px] font-black text-purple-600 uppercase block truncate">
                         {item.brandName}
                       </span>
-                      <h4 className="text-xs font-black text-gray-950 truncate leading-snug group-hover:text-purple-600 transition-colors">
+                      <h4 className="text-sm font-black text-gray-950 truncate leading-snug group-hover:text-purple-600 transition-colors">
                         {item.name}
                       </h4>
-                      <span className="text-xs font-black text-[#FF2E93] mt-0.5 block">
+                      <span className="text-xs sm:text-sm font-black text-[#FF2E93] mt-0.5 block">
                         {item.price.toLocaleString('vi-VN')} ₫
                       </span>
                     </div>
@@ -570,7 +576,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
 
               {/* Recommended Partner Brands Row */}
               <div className="pt-3 border-t border-gray-100 space-y-2">
-                <span className="text-[11px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1">
+                <span className="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
                   <Tag className="w-3.5 h-3.5 text-gray-400" />
                   <span>{isEn ? 'Partner Local Brands' : 'Thương Hiệu Local-Brand Đề Xuất'}</span>
                 </span>
@@ -579,7 +585,7 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
                   {recommendedBrands.map((brand, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-extrabold text-xs rounded-full border border-gray-200 transition-colors cursor-pointer"
+                      className="px-3.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-extrabold text-xs rounded-full border border-gray-200 transition-colors cursor-pointer"
                     >
                       {brand.name}
                     </span>
@@ -589,11 +595,11 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
 
             </div>
 
-            {/* 4. ACTION BUTTON: EXPLORE MATCHING PLACES */}
+            {/* 3. ACTION BUTTON: EXPLORE MATCHING PLACES */}
             <div className="pt-1">
               <button
                 onClick={onExplorePlaces}
-                className="w-full py-4.5 px-6 rounded-2xl bg-[#0F172A] hover:bg-black text-white font-black text-base shadow-2xl active:scale-98 transition-all flex items-center justify-center gap-3 cursor-pointer border border-white/10"
+                className="w-full py-5 px-6 rounded-2xl bg-[#0F172A] hover:bg-black text-white font-black text-base sm:text-lg shadow-2xl active:scale-98 transition-all flex items-center justify-center gap-3 cursor-pointer border border-white/10"
               >
                 <MapPin className="w-5 h-5 text-[#D4FF00]" />
                 <span>{isEn ? 'Explore Matching Vibe Places' : 'Khám Phá Địa Điểm Hợp Vibe Set Đồ Này'}</span>
