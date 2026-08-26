@@ -227,14 +227,14 @@ export const HeroView: React.FC<HeroViewProps> = ({
     { name: isEn ? 'Accessories & Details' : 'Chi tiết & Phụ kiện', score: 90, color: 'from-[#10B981] to-[#059669]' },
   ];
 
-  // 5 Gen-Z Spot Categories with Exact Angular Arcs (Total 360 deg)
+  // 5 Gen-Z Spot Categories with Exact Angular Arcs (Combining shades of the 4 main palette colors)
   const spotCategories = [
     {
       id: 0,
       name: isEn ? 'Aesthetic Cafes' : 'Cafe Sống Ảo',
       count: 5,
       percent: '33.3%',
-      colorHex: '#FF6B00',
+      colorHex: '#9333EA', // Electric Purple
       startAngle: -90,
       endAngle: 30, // 120 deg
     },
@@ -243,7 +243,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
       name: isEn ? 'Speakeasy Bars' : 'Quán Bar & Pub',
       count: 3,
       percent: '20.0%',
-      colorHex: '#4F46E5',
+      colorHex: '#D4FF00', // Electric Lime
       startAngle: 30,
       endAngle: 102, // 72 deg
     },
@@ -252,7 +252,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
       name: isEn ? 'Art Hubs' : 'Không Gian Art',
       count: 3,
       percent: '20.0%',
-      colorHex: '#10B981',
+      colorHex: '#FF2E93', // Cyber Magenta
       startAngle: 102,
       endAngle: 174, // 72 deg
     },
@@ -261,7 +261,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
       name: isEn ? 'Streetwear Flagships' : 'Local Brand Hub',
       count: 2,
       percent: '13.3%',
-      colorHex: '#D946EF',
+      colorHex: '#C084FC', // Soft Lavender Violet
       startAngle: 174,
       endAngle: 222, // 48 deg
     },
@@ -270,7 +270,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
       name: isEn ? 'Photobooth Studios' : 'Photobooth Studios',
       count: 2,
       percent: '13.3%',
-      colorHex: '#84CC16',
+      colorHex: '#1E293B', // Deep Onyx Slate
       startAngle: 222,
       endAngle: 270, // 48 deg
     },
@@ -401,13 +401,13 @@ export const HeroView: React.FC<HeroViewProps> = ({
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
         
-        {/* CARD 1: STREAK & STYLE STATS (3-Column Clean Stats) */}
+        {/* CARD 1: STREAK & STYLE STATS (3-Column Clean Stats - Electric Purple Theme) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
           {/* Central 3D Flame Emblem & Large Titles */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
-            <div className="relative w-24 h-24 rounded-full bg-white border border-gray-100 shadow-[0_12px_32px_rgba(249,115,22,0.16)] flex items-center justify-center p-3">
-              <div className="absolute inset-0 bg-radial from-orange-400/15 via-amber-300/5 to-transparent rounded-full pointer-events-none" />
+            <div className="relative w-24 h-24 rounded-full bg-white border border-purple-100 shadow-[0_12px_32px_rgba(147,51,234,0.22)] flex items-center justify-center p-3">
+              <div className="absolute inset-0 bg-radial from-purple-500/20 via-pink-400/10 to-transparent rounded-full pointer-events-none" />
               <img
                 src="/flame_3d.png"
                 alt="3D Streak Flame"
@@ -428,7 +428,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
             </div>
           </div>
 
-          {/* Weekday Tracker Row with Checkmark Circle Pills */}
+          {/* Weekday Tracker Row with Checkmark Circle Pills (Purple Gradient Theme) */}
           <div className="flex items-center justify-between px-1 py-3 border-t border-gray-100">
             {streakWeekDays.map((d, i) => (
               <div key={i} className="flex flex-col items-center gap-1.5">
@@ -436,7 +436,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
                   {d.letter}
                 </span>
                 {d.completed ? (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-400 to-amber-500 text-white flex items-center justify-center shadow-xs">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 via-purple-500 to-pink-500 text-white flex items-center justify-center shadow-[0_4px_12px_rgba(147,51,234,0.35)]">
                     <Check className="w-4 h-4 stroke-[3]" />
                   </div>
                 ) : (
@@ -451,9 +451,9 @@ export const HeroView: React.FC<HeroViewProps> = ({
           </div>
 
           {/* Embedded Sub-Card: "YOUR STYLE STATS" (3 Columns: DAYS, FITS, SPOTS) */}
-          <div className="p-4 rounded-2xl bg-[#F8F9FB] border border-gray-100 space-y-3">
+          <div className="p-4 rounded-2xl bg-[#FAF8FF] border border-purple-100/70 space-y-3">
             <div className="text-center">
-              <span className="text-xs font-black uppercase tracking-widest text-gray-400">
+              <span className="text-xs font-black uppercase tracking-widest text-purple-600/80">
                 {isEn ? 'YOUR STYLE STATS' : 'CHỈ SỐ THỜI TRANG CỦA BẠN'}
               </span>
             </div>
@@ -465,13 +465,13 @@ export const HeroView: React.FC<HeroViewProps> = ({
                 </span>
                 <span className="text-2xl lg:text-3xl font-black text-gray-950">28</span>
               </div>
-              <div className="border-l border-gray-200">
+              <div className="border-l border-purple-200/60">
                 <span className="text-[11px] font-bold text-gray-400 block uppercase">
                   {isEn ? 'FITS' : 'OUTFIT'}
                 </span>
                 <span className="text-2xl lg:text-3xl font-black text-gray-950">42</span>
               </div>
-              <div className="border-l border-gray-200">
+              <div className="border-l border-purple-200/60">
                 <span className="text-[11px] font-bold text-gray-400 block uppercase">
                   {isEn ? 'SPOTS' : 'QUÁN'}
                 </span>
