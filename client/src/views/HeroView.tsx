@@ -982,7 +982,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
         {/* RIGHT: LEADERBOARD WIDGET (cols 8-12 on lg) */}
         <div className="lg:col-span-5 calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between h-full">
-          <HCMCVisualMap />
+          <HCMCVisualMap language={language} />
         </div>
 
       </div>
