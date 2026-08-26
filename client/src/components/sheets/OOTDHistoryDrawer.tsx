@@ -3,7 +3,6 @@ import {
   X,
   Sparkles,
   Calendar,
-  Camera,
   Download,
   Trash2,
   Flame,
@@ -19,7 +18,6 @@ interface OOTDHistoryDrawerProps {
 interface VaultItem {
   id: string;
   type: 'ootd' | 'photobooth';
-  typeLabel: string;
   date: string;
   style: VibeStyle;
   score: number;
@@ -38,7 +36,6 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     {
       id: 'vault-1',
       type: 'ootd',
-      typeLabel: 'Drip Check',
       date: 'Hôm nay, 20:30',
       style: 'Cyber-Pop',
       score: 96,
@@ -47,7 +44,6 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     {
       id: 'vault-2',
       type: 'photobooth',
-      typeLabel: 'Photobooth',
       date: 'Hôm qua, 16:45',
       style: 'Y2K',
       score: 92,
@@ -56,7 +52,6 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     {
       id: 'vault-3',
       type: 'ootd',
-      typeLabel: 'Drip Check',
       date: '24 Tháng 8, 14:15',
       style: 'Minimalist',
       score: 94,
@@ -65,7 +60,6 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     {
       id: 'vault-4',
       type: 'photobooth',
-      typeLabel: 'Photobooth',
       date: '22 Tháng 8, 21:00',
       style: 'Cyber-Pop',
       score: 95,
@@ -74,7 +68,6 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     {
       id: 'vault-5',
       type: 'ootd',
-      typeLabel: 'Drip Check',
       date: '20 Tháng 8, 17:30',
       style: 'Y2K',
       score: 91,
@@ -83,7 +76,6 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     {
       id: 'vault-6',
       type: 'photobooth',
-      typeLabel: 'Photobooth',
       date: '18 Tháng 8, 15:30',
       style: 'Minimalist',
       score: 89,
@@ -92,7 +84,6 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     {
       id: 'vault-7',
       type: 'ootd',
-      typeLabel: 'Drip Check',
       date: '16 Tháng 8, 18:45',
       style: 'Cyber-Pop',
       score: 97,
@@ -163,7 +154,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
       <div className="relative z-10 w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl bg-white h-full shadow-2xl flex flex-col justify-between overflow-hidden animate-slideLeft border-l border-gray-100">
         
         {/* ========================================================================= */}
-        {/* 1. DRAWER HEADER & 3 CLEAN FILTER TABS                                    */}
+        {/* 1. DRAWER HEADER: Kho Lưu Trữ Vault (No subtitle text) & Filter Tabs       */}
         {/* ========================================================================= */}
         <div className="p-5 sm:p-6 pb-4 border-b border-gray-100 space-y-4 shrink-0 bg-white/90 backdrop-blur-md">
           <div className="flex items-center justify-between">
@@ -173,11 +164,8 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
               </div>
               <div>
                 <h3 className="font-black text-xl sm:text-2xl text-gray-950 tracking-tight">
-                  OOTD &amp; Photobooth Vault
+                  Kho Lưu Trữ Vault
                 </h3>
-                <p className="text-xs font-bold text-gray-500 mt-0.5">
-                  Lưu trữ lịch sử outfit check &amp; photobooth kỷ niệm
-                </p>
               </div>
             </div>
 
@@ -222,7 +210,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
         </div>
 
         {/* ========================================================================= */}
-        {/* 2. VAULT ITEMS GRID (Clean Images, Loại + Điểm + Ngày + Lưu & Xóa)        */}
+        {/* 2. VAULT ITEMS GRID (Border Color Distinction: Emerald = Drip, Pink = Photo) */}
         {/* ========================================================================= */}
         <div className="flex-1 p-5 sm:p-6 overflow-y-auto space-y-4">
           {filteredItems.length === 0 ? (
@@ -238,49 +226,57 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {filteredItems.map((item) => {
+                const isDrip = item.type === 'ootd';
+
                 return (
                   <div
                     key={item.id}
                     onClick={() => setSelectedItem(item)}
-                    className="p-3.5 rounded-3xl bg-white border border-gray-100 hover:border-purple-300 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer"
+                    className={`p-3.5 rounded-3xl transition-all duration-300 flex flex-col justify-between group cursor-pointer shadow-xs hover:shadow-xl ${
+                      isDrip
+                        ? 'border-2 border-emerald-300/80 hover:border-emerald-500 bg-emerald-50/15'
+                        : 'border-2 border-pink-300/80 hover:border-pink-500 bg-pink-50/15'
+                    }`}
                   >
                     <div>
                       {/* 100% Clean Image (NO BADGES ON TOP OF IMAGE) */}
                       <div className="relative w-full h-44 sm:h-48 rounded-2xl overflow-hidden bg-gray-100 mb-3 shadow-inner">
                         <img
                           src={item.image}
-                          alt={item.typeLabel}
+                          alt={item.date}
                           className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-500"
                         />
                       </div>
 
-                      {/* Row 1: Loại Ảnh & Điểm Số */}
-                      <div className="flex items-center justify-between gap-2 mb-1.5">
-                        <span className="text-xs font-black text-purple-600 uppercase tracking-wider">
-                          {item.typeLabel}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-[#D4FF00] text-gray-950 shadow-xs flex items-center gap-1">
-                          <Flame className="w-3.5 h-3.5 text-orange-600 fill-orange-600" />
+                      {/* Row 1: Ngày Lưu (Trái) & Điểm Số (Phải) */}
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <div className="flex items-center gap-1.5 text-xs font-black text-gray-600">
+                          <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                          <span>{item.date}</span>
+                        </div>
+
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-xs font-black shadow-xs flex items-center gap-1 ${
+                            isDrip
+                              ? 'bg-[#D4FF00] text-gray-950'
+                              : 'bg-gradient-to-r from-[#FF2E93] to-[#7C3AED] text-white'
+                          }`}
+                        >
+                          <Flame className="w-3.5 h-3.5 fill-current" />
                           {item.score} Pts
                         </span>
                       </div>
-
-                      {/* Row 2: Ngày Lưu */}
-                      <div className="flex items-center gap-1.5 text-xs font-extrabold text-gray-400">
-                        <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                        <span>{item.date}</span>
-                      </div>
                     </div>
 
-                    {/* Row 3: 2 Nút Bấm: Lưu Ảnh & Xóa */}
+                    {/* Row 2: 2 Nút Bấm: Lưu Ảnh & Xóa */}
                     <div className="flex items-center justify-between pt-3 mt-3 border-t border-gray-100">
                       {/* Nút Lưu Ảnh */}
                       <button
                         onClick={(e) => handleDownloadImage(item, e)}
-                        className="py-1.5 px-3.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs font-black flex items-center gap-1.5 transition-colors cursor-pointer"
+                        className="py-1.5 px-3.5 rounded-xl bg-gray-950 hover:bg-black text-white text-xs font-black flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
                         title="Lưu ảnh về máy"
                       >
-                        <Download className="w-3.5 h-3.5 text-purple-600" />
+                        <Download className="w-3.5 h-3.5 text-[#D4FF00]" />
                         <span>Lưu Ảnh</span>
                       </button>
 
@@ -303,7 +299,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. DETAIL MODAL (With Large Clean Photo, Save Image & Delete Actions)     */}
+      {/* 3. DETAIL MODAL (Clean Photo, Save Image & Delete Actions)                */}
       {/* ========================================================================= */}
       {selectedItem && (
         <div
@@ -318,7 +314,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
             <div className="relative w-full h-72 sm:h-80 bg-gray-950">
               <img
                 src={selectedItem.image}
-                alt={selectedItem.typeLabel}
+                alt={selectedItem.date}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -332,14 +328,14 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Score & Type Badges */}
+              {/* Score Badge */}
               <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between text-white">
                 <span className="px-3.5 py-1.5 bg-[#D4FF00] text-gray-950 font-black text-xs sm:text-sm rounded-full shadow-lg flex items-center gap-1.5">
                   <Flame className="w-4 h-4 text-orange-600 fill-orange-600" />
                   {selectedItem.score} Pts Aura Index
                 </span>
-                <span className="px-3 py-1 bg-white/20 backdrop-blur-md text-white font-black text-xs rounded-full">
-                  {selectedItem.typeLabel}
+                <span className="text-xs font-bold text-white/80">
+                  {selectedItem.date}
                 </span>
               </div>
             </div>
@@ -347,14 +343,9 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
             {/* Modal Body */}
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-black text-gray-950">
-                    {selectedItem.typeLabel}
-                  </h3>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-500 mt-1">
-                    <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                    <span>{selectedItem.date}</span>
-                  </div>
+                <div className="flex items-center gap-1.5 text-sm font-black text-gray-800">
+                  <Calendar className="w-4 h-4 text-gray-500" />
+                  <span>{selectedItem.date}</span>
                 </div>
 
                 <div className="text-right">
@@ -368,7 +359,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
               </div>
 
               {/* Action Buttons: Save & Delete */}
-              <div className="pt-3 flex items-center gap-3">
+              <div className="pt-2 flex items-center gap-3">
                 <button
                   onClick={() => handleDownloadImage(selectedItem)}
                   className="flex-1 py-3.5 px-4 rounded-2xl bg-gray-950 hover:bg-black text-white font-black text-xs shadow-xl active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2"
