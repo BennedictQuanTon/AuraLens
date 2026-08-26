@@ -4,13 +4,9 @@ import {
   Sparkles,
   Calendar,
   Camera,
-  MapPin,
-  Flame,
   Download,
   Trash2,
-  CheckCircle2,
-  Layers,
-  ChevronRight,
+  Flame,
 } from 'lucide-react';
 import type { VibeStyle } from '../../types/entityGraph.js';
 
@@ -24,14 +20,10 @@ interface VaultItem {
   id: string;
   type: 'ootd' | 'photobooth';
   typeLabel: string;
-  title: string;
-  location: string;
   date: string;
   style: VibeStyle;
   score: number;
   image: string;
-  photoboothTheme?: string;
-  stylistNote: string;
 }
 
 export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
@@ -46,89 +38,65 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     {
       id: 'vault-1',
       type: 'ootd',
-      typeLabel: 'Drip Check OOTD',
-      title: 'Weekend Cyber Rave Fit',
-      location: 'Neo Saigon Cyber Bar, Q.1',
+      typeLabel: 'Drip Check',
       date: 'Hôm nay, 20:30',
       style: 'Cyber-Pop',
       score: 96,
       image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=80',
-      stylistNote: 'Áo khoác bạc bắt sáng đèn neon laser cực nét, tỷ lệ tương phản đạt 98% chuẩn vibe!',
     },
     {
       id: 'vault-2',
       type: 'photobooth',
-      typeLabel: 'Photobooth 4-Cut',
-      title: '4-Cut Y2K Flash Memory',
-      location: 'Aura Studio Saigon, Q.3',
+      typeLabel: 'Photobooth',
       date: 'Hôm qua, 16:45',
       style: 'Y2K',
       score: 92,
       image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&auto=format&fit=crop&q=80',
-      photoboothTheme: 'Y2K Holographic Glitch Strip',
-      stylistNote: 'Frame ảnh 4 khung Y2K tông tím hồng pastel siêu cuốn, tương tác sticker Lumi cực nhí nhảnh!',
     },
     {
       id: 'vault-3',
       type: 'ootd',
-      typeLabel: 'Drip Check OOTD',
-      title: 'Minimalist Wabi-Sabi Coffee',
-      location: 'Danshari Coffee, Pasteur Q.1',
+      typeLabel: 'Drip Check',
       date: '24 Tháng 8, 14:15',
       style: 'Minimalist',
       score: 94,
       image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format&fit=crop&q=80',
-      stylistNote: 'Tone màu trung tính hòa quyện 100% với giếng trời bê tông và bàn inox của Danshari.',
     },
     {
       id: 'vault-4',
       type: 'photobooth',
-      typeLabel: 'Photobooth 4-Cut',
-      title: 'Cyberpunk Neon Glow Strip',
-      location: 'Blank Lounge Landmark 81',
+      typeLabel: 'Photobooth',
       date: '22 Tháng 8, 21:00',
       style: 'Cyber-Pop',
       score: 95,
       image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&auto=format&fit=crop&q=80',
-      photoboothTheme: 'Neon Cyber City Frame',
-      stylistNote: 'Khung ảnh Skyline viền tím Cyberpunk bắt trọn toàn cảnh Sài Gòn 350m từ trên cao!',
     },
     {
       id: 'vault-5',
       type: 'ootd',
-      typeLabel: 'Drip Check OOTD',
-      title: 'Streetwear Cargo & Heavy Tee',
-      location: 'Thảo Điền, TP. Thủ Đức',
+      typeLabel: 'Drip Check',
       date: '20 Tháng 8, 17:30',
       style: 'Y2K',
       score: 91,
       image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&auto=format&fit=crop&q=80',
-      stylistNote: 'Quần parachute ống rộng kết hợp áo thun boxy chuẩn streetwear Sài Gòn.',
     },
     {
       id: 'vault-6',
       type: 'photobooth',
-      typeLabel: 'Photobooth Polaroid',
-      title: 'Retro Film Polaroid Shot',
-      location: 'S’mores Saigon Caffè, Q.3',
+      typeLabel: 'Photobooth',
       date: '18 Tháng 8, 15:30',
       style: 'Minimalist',
       score: 89,
       image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
-      photoboothTheme: 'Vintage 90s Film Grain',
-      stylistNote: 'Hiệu ứng hạt grain phim 90s tôn màu gạch thô và bóng nắng rọi xiên qua tán lá.',
     },
     {
       id: 'vault-7',
       type: 'ootd',
-      typeLabel: 'Drip Check OOTD',
-      title: 'Sunset Cocktails & High Fashion',
-      location: 'Rooftop Bar Đồng Khởi, Q.1',
+      typeLabel: 'Drip Check',
       date: '16 Tháng 8, 18:45',
       style: 'Cyber-Pop',
       score: 97,
       image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=600&auto=format&fit=crop&q=80',
-      stylistNote: 'Khoảnh khắc hoàng hôn dát vàng lên outfit ánh kim, đạt điểm thẩm mỹ Top 1 tuần!',
     },
   ];
 
@@ -191,11 +159,11 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
         </div>
       )}
 
-      {/* Spacious Full-Height Drawer (max-w-2xl on desktop) */}
+      {/* Spacious Full-Height Drawer */}
       <div className="relative z-10 w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl bg-white h-full shadow-2xl flex flex-col justify-between overflow-hidden animate-slideLeft border-l border-gray-100">
         
         {/* ========================================================================= */}
-        {/* 1. DRAWER HEADER & 3 CLEAN FILTER TABS (No Search, No Style Tags)         */}
+        {/* 1. DRAWER HEADER & 3 CLEAN FILTER TABS                                    */}
         {/* ========================================================================= */}
         <div className="p-5 sm:p-6 pb-4 border-b border-gray-100 space-y-4 shrink-0 bg-white/90 backdrop-blur-md">
           <div className="flex items-center justify-between">
@@ -222,7 +190,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
             </button>
           </div>
 
-          {/* 3 Clean Filter Tabs Only */}
+          {/* 3 Clean Filter Tabs */}
           <div className="flex items-center gap-2 pt-1">
             {[
               { id: 'all', label: `Tất Cả (${vaultItems.length})` },
@@ -254,7 +222,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
         </div>
 
         {/* ========================================================================= */}
-        {/* 2. VAULT ITEMS GRID (Clean Info: Loại ảnh, Thời gian, Nút Lưu & Xóa)      */}
+        {/* 2. VAULT ITEMS GRID (Clean Images, Loại + Điểm + Ngày + Lưu & Xóa)        */}
         {/* ========================================================================= */}
         <div className="flex-1 p-5 sm:p-6 overflow-y-auto space-y-4">
           {filteredItems.length === 0 ? (
@@ -270,8 +238,6 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {filteredItems.map((item) => {
-                const isPhotobooth = item.type === 'photobooth';
-
                 return (
                   <div
                     key={item.id}
@@ -279,75 +245,49 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
                     className="p-3.5 rounded-3xl bg-white border border-gray-100 hover:border-purple-300 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer"
                   >
                     <div>
-                      {/* Image Container with Badges */}
+                      {/* 100% Clean Image (NO BADGES ON TOP OF IMAGE) */}
                       <div className="relative w-full h-44 sm:h-48 rounded-2xl overflow-hidden bg-gray-100 mb-3 shadow-inner">
                         <img
                           src={item.image}
-                          alt={item.title}
+                          alt={item.typeLabel}
                           className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-500"
                         />
-
-                        {/* Top Left: Loại ảnh Tag */}
-                        <div className="absolute top-2.5 left-2.5">
-                          {isPhotobooth ? (
-                            <span className="px-2.5 py-1 bg-gradient-to-r from-[#FF2E93] to-[#7C3AED] text-white text-[10px] font-black rounded-full shadow-md flex items-center gap-1">
-                              <Camera className="w-3 h-3 text-[#D4FF00]" /> Photobooth
-                            </span>
-                          ) : (
-                            <span className="px-2.5 py-1 bg-black/80 backdrop-blur-xs text-white text-[10px] font-black rounded-full shadow-md">
-                              Drip Check
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Top Right: Aura Score Pill */}
-                        <div className="absolute top-2.5 right-2.5">
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black shadow-md bg-[#D4FF00] text-gray-950 flex items-center gap-1">
-                            <Flame className="w-3 h-3 text-orange-600 fill-orange-600" />
-                            {item.score} Pts
-                          </span>
-                        </div>
                       </div>
 
-                      {/* Loại Ảnh & Thời Gian Chụp */}
-                      <div className="flex items-center justify-between text-[11px] font-bold text-gray-500 mb-1">
-                        <span className="text-purple-600 font-black">
+                      {/* Row 1: Loại Ảnh & Điểm Số */}
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="text-xs font-black text-purple-600 uppercase tracking-wider">
                           {item.typeLabel}
                         </span>
-                        <div className="flex items-center gap-1 text-gray-400">
-                          <Calendar className="w-3 h-3" />
-                          <span>{item.date}</span>
-                        </div>
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-[#D4FF00] text-gray-950 shadow-xs flex items-center gap-1">
+                          <Flame className="w-3.5 h-3.5 text-orange-600 fill-orange-600" />
+                          {item.score} Pts
+                        </span>
                       </div>
 
-                      {/* Title */}
-                      <h4 className="font-black text-sm text-gray-950 line-clamp-1 leading-snug group-hover:text-purple-600 transition-colors">
-                        {item.title}
-                      </h4>
-
-                      {/* Location Name */}
-                      <p className="text-[11px] font-bold text-gray-500 flex items-center gap-1 mt-0.5 truncate">
-                        <MapPin className="w-3 h-3 text-purple-600 shrink-0" />
-                        <span className="truncate">{item.location}</span>
-                      </p>
+                      {/* Row 2: Ngày Lưu */}
+                      <div className="flex items-center gap-1.5 text-xs font-extrabold text-gray-400">
+                        <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                        <span>{item.date}</span>
+                      </div>
                     </div>
 
-                    {/* Bottom Row: Quick Action Buttons (Save Ảnh & Xóa khỏi lịch sử) */}
-                    <div className="flex items-center justify-between pt-3 mt-2.5 border-t border-gray-100">
-                      {/* Left: Save/Download Button */}
+                    {/* Row 3: 2 Nút Bấm: Lưu Ảnh & Xóa */}
+                    <div className="flex items-center justify-between pt-3 mt-3 border-t border-gray-100">
+                      {/* Nút Lưu Ảnh */}
                       <button
                         onClick={(e) => handleDownloadImage(item, e)}
-                        className="py-1.5 px-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 text-[11px] font-black flex items-center gap-1.5 transition-colors cursor-pointer"
+                        className="py-1.5 px-3.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs font-black flex items-center gap-1.5 transition-colors cursor-pointer"
                         title="Lưu ảnh về máy"
                       >
                         <Download className="w-3.5 h-3.5 text-purple-600" />
                         <span>Lưu Ảnh</span>
                       </button>
 
-                      {/* Right: Delete Button */}
+                      {/* Nút Xóa */}
                       <button
                         onClick={(e) => handleDeleteItem(item.id, e)}
-                        className="p-1.5 rounded-xl text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                        className="p-2 rounded-xl text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                         title="Xóa khỏi lịch sử"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -363,7 +303,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. DETAIL MODAL (With Large Photo, Save Image & Delete Actions)           */}
+      {/* 3. DETAIL MODAL (With Large Clean Photo, Save Image & Delete Actions)     */}
       {/* ========================================================================= */}
       {selectedItem && (
         <div
@@ -375,10 +315,10 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             {/* HD Photo Header */}
-            <div className="relative w-full h-64 sm:h-72 bg-gray-950">
+            <div className="relative w-full h-72 sm:h-80 bg-gray-950">
               <img
                 src={selectedItem.image}
-                alt={selectedItem.title}
+                alt={selectedItem.typeLabel}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -405,35 +345,30 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
             </div>
 
             {/* Modal Body */}
-            <div className="p-6 space-y-4 max-h-[60vh] overflow-y-auto">
-              <div>
-                <h3 className="text-xl font-black text-gray-950">
-                  {selectedItem.title}
-                </h3>
-                <div className="flex items-center gap-2 text-xs font-bold text-gray-500 mt-1">
-                  <span className="text-purple-600 font-black">{selectedItem.typeLabel}</span>
-                  <span>•</span>
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>{selectedItem.date}</span>
-                  <span>•</span>
-                  <MapPin className="w-3.5 h-3.5 text-purple-600" />
-                  <span>{selectedItem.location}</span>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-black text-gray-950">
+                    {selectedItem.typeLabel}
+                  </h3>
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-500 mt-1">
+                    <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                    <span>{selectedItem.date}</span>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-2xl font-black text-purple-600">
+                    {selectedItem.score}
+                  </span>
+                  <span className="text-xs font-bold text-gray-400 block">
+                    Điểm Aura
+                  </span>
                 </div>
               </div>
 
-              {/* Stylist Notes Box */}
-              <div className="p-4 bg-purple-50/70 rounded-2xl border border-purple-100 space-y-1">
-                <span className="text-[11px] font-black uppercase tracking-wider text-purple-700 block flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                  Lumi Stylist Review
-                </span>
-                <p className="text-xs font-bold text-purple-950 leading-relaxed">
-                  {selectedItem.stylistNote}
-                </p>
-              </div>
-
               {/* Action Buttons: Save & Delete */}
-              <div className="pt-2 flex items-center gap-3">
+              <div className="pt-3 flex items-center gap-3">
                 <button
                   onClick={() => handleDownloadImage(selectedItem)}
                   className="flex-1 py-3.5 px-4 rounded-2xl bg-gray-950 hover:bg-black text-white font-black text-xs shadow-xl active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2"
