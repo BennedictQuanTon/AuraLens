@@ -90,7 +90,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
   }, [speechLines.length]);
 
   // Section Category Filter & AI Analytics State for Fashion Items
-  const [selectedFashionCategory, setSelectedFashionCategory] = useState<'all' | 'outerwear' | 'tops' | 'accessories'>('all');
+  const [selectedFashionCategory, setSelectedFashionCategory] = useState<'all' | 'outerwear' | 'tops' | 'bottoms' | 'accessories'>('all');
   const [showFashionAnalytics, setShowFashionAnalytics] = useState<boolean>(false);
 
   // Background Scroll Locking when Fashion Analytics Modal is open
@@ -109,29 +109,41 @@ export const HeroView: React.FC<HeroViewProps> = ({
     {
       id: 'item-1',
       brand: 'LIDER Closet',
-      name: 'Cyber Structured Boxy Blazer',
+      name: 'Cyber Metallic Zip Windbreaker',
       price: '890,000 ₫',
       category: 'outerwear' as const,
       categoryLabel: 'Outerwear',
       matchScore: 98,
       vibe: 'Cyber-Pop',
       link: 'https://lider.vn',
-      image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&auto=format&fit=crop&q=80',
     },
     {
       id: 'item-2',
       brand: 'Grimm DC',
-      name: 'Reflective Utility Windbreaker',
+      name: 'Titanium Silver Techwear Hoodie',
       price: '750,000 ₫',
       category: 'outerwear' as const,
       categoryLabel: 'Outerwear',
       matchScore: 95,
       vibe: 'Cyber-Pop',
       link: 'https://grimmdc.com',
-      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=600&auto=format&fit=crop&q=80',
     },
     {
       id: 'item-3',
+      brand: 'DVRK Studio',
+      name: 'Cyber Matrix Hologram Heavyweight Tee',
+      price: '420,000 ₫',
+      category: 'tops' as const,
+      categoryLabel: 'Top & Shirt',
+      matchScore: 97,
+      vibe: 'Streetwear',
+      link: 'https://dvrk.vn',
+      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80',
+    },
+    {
+      id: 'item-4',
       brand: 'She By Shj',
       name: 'Acid Hologram Silver Tube Top',
       price: '380,000 ₫',
@@ -143,19 +155,31 @@ export const HeroView: React.FC<HeroViewProps> = ({
       image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=600&auto=format&fit=crop&q=80',
     },
     {
-      id: 'item-4',
-      brand: 'DVRK Studio',
-      name: 'Neon Matrix Heavyweight Boxy Tee',
-      price: '420,000 ₫',
-      category: 'tops' as const,
-      categoryLabel: 'Top & Shirt',
-      matchScore: 94,
+      id: 'item-5',
+      brand: 'Dirty Coins',
+      name: 'Cyber Multi-Pocket Parachute Cargo Pants',
+      price: '620,000 ₫',
+      category: 'bottoms' as const,
+      categoryLabel: 'Pants',
+      matchScore: 96,
       vibe: 'Streetwear',
-      link: 'https://dvrk.vn',
-      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80',
+      link: 'https://dirtycoins.vn',
+      image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&auto=format&fit=crop&q=80',
     },
     {
-      id: 'item-5',
+      id: 'item-6',
+      brand: 'Levents',
+      name: 'Wide-Leg Silver Pinstripe Denim Jeans',
+      price: '690,000 ₫',
+      category: 'bottoms' as const,
+      categoryLabel: 'Jeans',
+      matchScore: 94,
+      vibe: 'Streetwear',
+      link: 'https://levents.asia',
+      image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&auto=format&fit=crop&q=80',
+    },
+    {
+      id: 'item-7',
       brand: 'Hades Studio',
       name: 'Neon Matrix Oval Sunglasses',
       price: '320,000 ₫',
@@ -167,7 +191,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
       image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop&q=80',
     },
     {
-      id: 'item-6',
+      id: 'item-8',
       brand: 'Dirty Coins',
       name: 'Industrial Chrome Chain Necklace',
       price: '250,000 ₫',
@@ -992,10 +1016,11 @@ export const HeroView: React.FC<HeroViewProps> = ({
         {/* Section Category Filter Tabs */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
           {[
-            { id: 'all', label: isEn ? 'All Pieces (6)' : 'Tất Cả (6)' },
-            { id: 'outerwear', label: isEn ? 'Outerwear & Jackets (2)' : 'Áo Khoác (2)' },
-            { id: 'tops', label: isEn ? 'Tops & Shirts (2)' : 'Áo & Crop Top (2)' },
-            { id: 'accessories', label: isEn ? 'Accessories & Jewelry (2)' : 'Phụ Kiện (2)' },
+            { id: 'all', label: isEn ? 'All Pieces (8)' : 'Tất Cả (8)' },
+            { id: 'outerwear', label: isEn ? 'Outerwear (2)' : 'Áo Khoác (2)' },
+            { id: 'tops', label: isEn ? 'Tops (2)' : 'Áo Thun & Top (2)' },
+            { id: 'bottoms', label: isEn ? 'Bottoms (2)' : 'Quần (2)' },
+            { id: 'accessories', label: isEn ? 'Accessories (2)' : 'Phụ Kiện (2)' },
           ].map((tab) => {
             const isActive = selectedFashionCategory === tab.id;
             return (

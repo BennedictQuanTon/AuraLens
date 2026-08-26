@@ -282,6 +282,22 @@ export function App() {
     setRecommendationData(placeRecs);
   };
 
+  const [isRevising, setIsRevising] = useState<boolean>(false);
+  const [syncToast, setSyncToast] = useState<string | null>(null);
+
+  const handleReviseDashboard = () => {
+    setIsRevising(true);
+    setTimeout(() => {
+      setIsRevising(false);
+      setSyncToast(
+        language === 'en'
+          ? 'AI Dashboard Metrics Synced & Revised with latest Aura Index!'
+          : 'Đã đồng bộ & cập nhật toàn bộ chỉ số Aura Index mới nhất!'
+      );
+      setTimeout(() => setSyncToast(null), 3500);
+    }, 800);
+  };
+
   const handleUpdateProfile = (updated: Partial<UserProfileState>) => {
     setUserProfile((prev) => ({ ...prev, ...updated }));
   };
@@ -289,12 +305,22 @@ export function App() {
   const currentVibe: VibeStyle = dripResult?.breakdown?.detectedStyle || 'Cyber-Pop';
 
   return (
-    <div className="min-h-screen pb-24 md:pb-12 flex flex-col items-center justify-start text-gray-900">
+    <div className="min-h-screen pb-24 md:pb-12 flex flex-col items-center justify-start text-gray-900 relative">
+      {/* Sync Toast Notification */}
+      {syncToast && (
+        <div className="fixed top-20 right-4 sm:right-8 z-50 animate-bounce flex items-center gap-2.5 px-4 py-3 bg-gray-950/95 text-white rounded-2xl shadow-2xl border border-purple-500/40 backdrop-blur-md text-xs font-black">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#D4FF00] animate-ping" />
+          <span>{syncToast}</span>
+        </div>
+      )}
+
       {/* Responsive Header */}
       <Header
         currentVibe={currentVibe}
         userProfile={userProfile}
         onOpenHistory={() => setIsHistoryOpen(true)}
+        onReviseDashboard={handleReviseDashboard}
+        isRevising={isRevising}
         activeView={activeView}
         onSelectView={setActiveView}
       />

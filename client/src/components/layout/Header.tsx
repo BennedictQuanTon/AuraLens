@@ -1,5 +1,15 @@
 import React from 'react';
-import { History, Zap, Home, Camera, Sparkles, MapPin, Image as ImageIcon, Settings } from 'lucide-react';
+import {
+  History,
+  RotateCw,
+  Zap,
+  Home,
+  Camera,
+  Sparkles,
+  MapPin,
+  Image as ImageIcon,
+  Settings,
+} from 'lucide-react';
 import type { VibeStyle } from '../../types/entityGraph.js';
 import type { UserProfileState } from '../../types/settings.js';
 
@@ -7,12 +17,16 @@ interface HeaderProps {
   currentVibe?: VibeStyle;
   userProfile: UserProfileState;
   onOpenHistory: () => void;
+  onReviseDashboard?: () => void;
+  isRevising?: boolean;
   activeView: number;
   onSelectView: (view: number) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenHistory,
+  onReviseDashboard,
+  isRevising = false,
   activeView,
   onSelectView,
 }) => {
@@ -42,8 +56,8 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
         </div>
 
-        {/* Center: Absolute Dead-Center Desktop Icon-Only Navbar */}
-        <nav className="hidden md:flex md:absolute md:left-1/2 md:-translate-x-1/2 items-center gap-2 bg-gray-100/90 p-1.5 rounded-full border border-gray-200/80 shadow-xs">
+        {/* Center: Desktop Navigation Bar with Smooth Indicator */}
+        <nav className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-gray-100/80 backdrop-blur-md rounded-full border border-gray-200/50 shadow-inner">
           {desktopNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
@@ -75,15 +89,34 @@ export const Header: React.FC<HeaderProps> = ({
           })}
         </nav>
 
-        {/* Right: History Vault Button Only (No Alex item) */}
+        {/* Right: Revise Dashboard Button & History Vault Button (Icons only, no Vault text) */}
         <div className="flex items-center gap-2">
+          {/* Revise Dashboard Data & Sync Button */}
+          {onReviseDashboard && (
+            <button
+              onClick={onReviseDashboard}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-xs border border-gray-200/60 ${
+                isRevising
+                  ? 'bg-purple-100 text-purple-700 ring-2 ring-purple-400/50 scale-105'
+                  : 'bg-gray-100/90 hover:bg-purple-50 text-gray-700 hover:text-purple-700'
+              }`}
+              title="Revise & Sync AI Dashboard Metrics"
+            >
+              <RotateCw
+                className={`w-4 h-4 transition-transform ${
+                  isRevising ? 'animate-spin text-purple-600' : 'group-hover:rotate-45'
+                }`}
+              />
+            </button>
+          )}
+
+          {/* History Vault Button (Clean Icon Only, No Text) */}
           <button
             onClick={onOpenHistory}
-            className="h-10 px-3.5 rounded-full bg-gray-100/90 hover:bg-gray-200 text-gray-700 flex items-center gap-1.5 transition-colors active:scale-95 cursor-pointer shadow-xs text-xs font-bold"
-            title="OOTD History & Vault"
+            className="w-10 h-10 rounded-full bg-gray-100/90 hover:bg-gray-200 text-gray-700 hover:text-gray-950 flex items-center justify-center transition-colors active:scale-95 cursor-pointer shadow-xs border border-gray-200/60"
+            title="OOTD History Vault"
           >
             <History className="w-4 h-4" />
-            <span className="hidden sm:inline">Vault</span>
           </button>
         </div>
 
