@@ -634,20 +634,20 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
               {/* Grid & SVG Area */}
               <div className="relative flex-1 h-full">
-                {/* Horizontal Grid lines */}
-                <div className="absolute inset-x-0 top-[12%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 top-[28%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 top-[46%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 top-[64%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 top-[82%] border-b border-dashed border-gray-200" />
-                <div className="absolute inset-x-0 bottom-0 border-b border-gray-300" />
-
                 <svg
                   className="w-full h-full overflow-visible select-none"
                   viewBox="0 0 500 200"
                   preserveAspectRatio="none"
                   onMouseLeave={() => setHoveredChartPoint(null)}
                 >
+                  {/* Horizontal Grid lines INSIDE SVG (Drawn first so tooltip is always on top) */}
+                  <line x1="30" y1="25" x2="470" y2="25" stroke="#e2e8f0" strokeDasharray="4,4" strokeWidth="1" />
+                  <line x1="30" y1="55" x2="470" y2="55" stroke="#e2e8f0" strokeDasharray="4,4" strokeWidth="1" />
+                  <line x1="30" y1="85" x2="470" y2="85" stroke="#e2e8f0" strokeDasharray="4,4" strokeWidth="1" />
+                  <line x1="30" y1="115" x2="470" y2="115" stroke="#e2e8f0" strokeDasharray="4,4" strokeWidth="1" />
+                  <line x1="30" y1="145" x2="470" y2="145" stroke="#e2e8f0" strokeDasharray="4,4" strokeWidth="1" />
+                  <line x1="30" y1="175" x2="470" y2="175" stroke="#cbd5e1" strokeWidth="1.5" />
+
                   {/* Vertical Guide Line on Hover */}
                   {hoveredChartPoint && (
                     <line
@@ -655,9 +655,9 @@ export const HeroView: React.FC<HeroViewProps> = ({
                       y1={25}
                       x2={hoveredChartPoint.x}
                       y2={175}
-                      stroke="#cbd5e1"
+                      stroke="#94a3b8"
                       strokeDasharray="4,4"
-                      strokeWidth={1.5}
+                      strokeWidth="1.5"
                     />
                   )}
 
@@ -823,40 +823,40 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     );
                   })}
 
-                  {/* Native SVG Floating Tooltip: 100% Guaranteed Exact Alignment */}
+                  {/* Native SVG Floating Tooltip: 100% Guaranteed Topmost Layer & Precise Positioning */}
                   {hoveredChartPoint && (() => {
-                    const tooltipWidth = 148;
-                    const tooltipHeight = 40;
+                    const tooltipWidth = 156;
+                    const tooltipHeight = 46;
                     const clampedX = Math.min(Math.max(hoveredChartPoint.x - tooltipWidth / 2, 10), 500 - tooltipWidth - 10);
-                    const clampedY = Math.max(hoveredChartPoint.y - tooltipHeight - 12, 6);
+                    const clampedY = Math.max(hoveredChartPoint.y - tooltipHeight - 14, 6);
 
                     return (
-                      <g className="pointer-events-none animate-fadeIn">
+                      <g className="pointer-events-none">
                         {/* Tooltip Background Card with Shadow */}
                         <rect
                           x={clampedX}
                           y={clampedY}
                           width={tooltipWidth}
                           height={tooltipHeight}
-                          rx={10}
-                          fill="#0f172a"
+                          rx={12}
+                          fill="#090d16"
                           stroke="#334155"
-                          strokeWidth={1}
-                          style={{ filter: 'drop-shadow(0 6px 14px rgba(0,0,0,0.35))' }}
+                          strokeWidth={1.5}
+                          style={{ filter: 'drop-shadow(0 8px 18px rgba(0,0,0,0.45))' }}
                         />
-                        {/* Style Color Pill */}
+                        {/* Style Color Dot */}
                         <circle
-                          cx={clampedX + 16}
-                          cy={clampedY + 20}
-                          r={4.5}
+                          cx={clampedX + 18}
+                          cy={clampedY + 23}
+                          r={5}
                           fill={hoveredChartPoint.color}
                         />
                         {/* Style Title */}
                         <text
-                          x={clampedX + 28}
-                          y={clampedY + 16}
+                          x={clampedX + 30}
+                          y={clampedY + 19}
                           fill="#ffffff"
-                          fontSize="11"
+                          fontSize="11.5"
                           fontWeight="800"
                           fontFamily="sans-serif"
                         >
@@ -864,10 +864,10 @@ export const HeroView: React.FC<HeroViewProps> = ({
                         </text>
                         {/* Day & Fits Value */}
                         <text
-                          x={clampedX + 28}
-                          y={clampedY + 30}
+                          x={clampedX + 30}
+                          y={clampedY + 34}
                           fill="#94a3b8"
-                          fontSize="10"
+                          fontSize="10.5"
                           fontWeight="700"
                           fontFamily="sans-serif"
                         >
