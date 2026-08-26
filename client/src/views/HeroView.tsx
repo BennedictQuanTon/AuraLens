@@ -8,6 +8,11 @@ import {
   CheckSquare,
   Square,
   Check,
+  BarChart2,
+  SlidersHorizontal,
+  X,
+  Sparkles,
+  ShoppingBag,
 } from 'lucide-react';
 import type { AppLanguage, UserProfileState } from '../types/settings.js';
 import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
@@ -84,15 +89,21 @@ export const HeroView: React.FC<HeroViewProps> = ({
     return () => clearInterval(timer);
   }, [speechLines.length]);
 
-  // Interactive Checklist for Local Brand Recommendations
-  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({
-    'item-1': true,
-    'item-3': true,
-  });
+  // Section Category Filter & AI Analytics State for Fashion Items
+  const [selectedFashionCategory, setSelectedFashionCategory] = useState<'all' | 'outerwear' | 'tops' | 'accessories'>('all');
+  const [showFashionAnalytics, setShowFashionAnalytics] = useState<boolean>(false);
 
-  const toggleCheck = (id: string) => {
-    setCheckedItems((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
+  // Background Scroll Locking when Fashion Analytics Modal is open
+  useEffect(() => {
+    if (showFashionAnalytics) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showFashionAnalytics]);
 
   const recommendedBrandItems = [
     {
@@ -100,42 +111,78 @@ export const HeroView: React.FC<HeroViewProps> = ({
       brand: 'LIDER Closet',
       name: 'Cyber Structured Boxy Blazer',
       price: '890,000 ₫',
-      category: 'Outerwear',
-      tag: 'Cyber-Pop',
+      category: 'outerwear' as const,
+      categoryLabel: 'Outerwear',
+      matchScore: 98,
+      vibe: 'Cyber-Pop',
       link: 'https://lider.vn',
-      image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&auto=format&fit=crop&q=80',
     },
     {
       id: 'item-2',
-      brand: 'She By Shj',
-      name: 'Acid Hologram Silver Tube Top',
-      price: '380,000 ₫',
-      category: 'Top',
-      tag: 'Y2K',
-      link: 'https://shebyshj.com',
-      image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=400&auto=format&fit=crop&q=80',
+      brand: 'Grimm DC',
+      name: 'Reflective Utility Windbreaker',
+      price: '750,000 ₫',
+      category: 'outerwear' as const,
+      categoryLabel: 'Outerwear',
+      matchScore: 95,
+      vibe: 'Cyber-Pop',
+      link: 'https://grimmdc.com',
+      image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&auto=format&fit=crop&q=80',
     },
     {
       id: 'item-3',
-      brand: 'Hades Studio',
-      name: 'Neon Matrix Oval Sunglasses',
-      price: '320,000 ₫',
-      category: 'Accessory',
-      tag: 'Cyber-Pop',
-      link: 'https://hades.vn',
-      image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400&auto=format&fit=crop&q=80',
+      brand: 'She By Shj',
+      name: 'Acid Hologram Silver Tube Top',
+      price: '380,000 ₫',
+      category: 'tops' as const,
+      categoryLabel: 'Top & Shirt',
+      matchScore: 96,
+      vibe: 'Y2K',
+      link: 'https://shebyshj.com',
+      image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=600&auto=format&fit=crop&q=80',
     },
     {
       id: 'item-4',
+      brand: 'DVRK Studio',
+      name: 'Neon Matrix Heavyweight Boxy Tee',
+      price: '420,000 ₫',
+      category: 'tops' as const,
+      categoryLabel: 'Top & Shirt',
+      matchScore: 94,
+      vibe: 'Streetwear',
+      link: 'https://dvrk.vn',
+      image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&auto=format&fit=crop&q=80',
+    },
+    {
+      id: 'item-5',
+      brand: 'Hades Studio',
+      name: 'Neon Matrix Oval Sunglasses',
+      price: '320,000 ₫',
+      category: 'accessories' as const,
+      categoryLabel: 'Accessory',
+      matchScore: 97,
+      vibe: 'Cyber-Pop',
+      link: 'https://hades.vn',
+      image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600&auto=format&fit=crop&q=80',
+    },
+    {
+      id: 'item-6',
       brand: 'Dirty Coins',
       name: 'Industrial Chrome Chain Necklace',
       price: '250,000 ₫',
-      category: 'Jewelry',
-      tag: 'Streetwear',
+      category: 'accessories' as const,
+      categoryLabel: 'Jewelry',
+      matchScore: 96,
+      vibe: 'Streetwear',
       link: 'https://dirtycoins.vn',
-      image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&auto=format&fit=crop&q=80',
     },
   ];
+
+  const filteredBrandItems = selectedFashionCategory === 'all'
+    ? recommendedBrandItems
+    : recommendedBrandItems.filter((item) => item.category === selectedFashionCategory);
 
   // Weekday Streak Tracker Data matching Reference Design
   const streakWeekDays = [
@@ -917,76 +964,93 @@ export const HeroView: React.FC<HeroViewProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 4. BOTTOM SECTION: TOP RECOMMENDED LOCAL BRANDS CHECKLIST                 */}
+      {/* 4. BOTTOM SECTION: TOP RECOMMENDED FASHION & ACCESSORIES (BY SECTION)     */}
       {/* ========================================================================= */}
-      <div className="calm-card-elevated p-6 lg:p-8 rounded-3xl space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="calm-card-elevated p-6 lg:p-8 rounded-3xl space-y-6">
+        
+        {/* Section Header: Clean Title (No Emojis) & Small Analytics Button */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-gray-100">
           <div>
-            <span className="text-[11px] font-black uppercase tracking-wider text-gray-400">
-              {isEn ? 'Stylist Upgrade Wishlist' : 'Danh Mục Đồ Local Brand Đề Xuất Cho Bạn'}
-            </span>
             <h3 className="text-xl lg:text-2xl font-black text-gray-950">
-              {isEn ? 'Top Recommended Fashion & Accessories Checklist' : 'Top Trang Phục & Phụ Kiện Local Brand Khuyên Dùng'}
+              {isEn ? 'Top Recommended Fashion & Accessories' : 'Top Trang Phục & Phụ Kiện Đề Xuất'}
             </h3>
           </div>
 
-          <span className="text-xs font-bold text-gray-500">
-            {Object.values(checkedItems).filter(Boolean).length} / {recommendedBrandItems.length} {isEn ? 'Items Owned / Tried' : 'Món đã có / đã thử'}
-          </span>
+          {/* Small Analytics Icon Button */}
+          <button
+            onClick={() => setShowFashionAnalytics(true)}
+            className="py-1.5 px-3 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-700 transition-all cursor-pointer flex items-center gap-1.5 shadow-xs border border-purple-200 group self-start sm:self-auto"
+            title="AI Style Compatibility Analytics"
+          >
+            <BarChart2 className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
+            <span className="text-xs font-black">
+              Analytics
+            </span>
+          </button>
         </div>
 
-        {/* 4-Column Grid of Interactive Brand Cards with Checkbox */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {recommendedBrandItems.map((item) => {
-            const isChecked = !!checkedItems[item.id];
+        {/* Section Category Filter Tabs */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          {[
+            { id: 'all', label: isEn ? 'All Pieces (6)' : 'Tất Cả (6)' },
+            { id: 'outerwear', label: isEn ? 'Outerwear & Jackets (2)' : 'Áo Khoác (2)' },
+            { id: 'tops', label: isEn ? 'Tops & Shirts (2)' : 'Áo & Crop Top (2)' },
+            { id: 'accessories', label: isEn ? 'Accessories & Jewelry (2)' : 'Phụ Kiện (2)' },
+          ].map((tab) => {
+            const isActive = selectedFashionCategory === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedFashionCategory(tab.id as any)}
+                className={`py-2 px-4 rounded-full text-xs font-black transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-gray-950 text-white shadow-md'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                }`}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
 
+        {/* Multi-Column Responsive Grid of Clean Fashion Cards (No Text on Top of Images) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pt-2">
+          {filteredBrandItems.map((item) => {
             return (
               <div
                 key={item.id}
-                className={`p-3.5 rounded-3xl border-2 transition-all flex flex-col justify-between group ${
-                  isChecked
-                    ? 'border-gray-950 bg-gray-50/80 shadow-md'
-                    : 'border-gray-100 bg-white hover:border-gray-300'
-                }`}
+                className="p-3.5 rounded-3xl bg-white border border-gray-100 hover:border-purple-200 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
-                  <div className="relative w-full h-40 rounded-2xl overflow-hidden bg-gray-100 mb-3">
+                  {/* Clean Unobstructed HD Fashion Image (NO TEXT ON TOP) */}
+                  <div className="relative w-full h-48 sm:h-52 rounded-2xl overflow-hidden bg-gray-100 mb-3 shadow-inner">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-106 transition-transform duration-500"
                     />
-                    <span className="absolute top-2 left-2 px-2 py-0.5 bg-black/75 text-[#D4FF00] text-[9px] font-black rounded-full">
-                      {item.tag}
-                    </span>
-
-                    <button
-                      onClick={() => toggleCheck(item.id)}
-                      className={`absolute top-2 right-2 p-1.5 rounded-full shadow-md transition-transform active:scale-90 cursor-pointer ${
-                        isChecked
-                          ? 'bg-gray-950 text-[#D4FF00]'
-                          : 'bg-white/90 text-gray-400 hover:text-gray-900'
-                      }`}
-                      title={isChecked ? 'Marked as Owned' : 'Click to Mark as Owned'}
-                    >
-                      {isChecked ? (
-                        <CheckSquare className="w-4 h-4 fill-current" />
-                      ) : (
-                        <Square className="w-4 h-4" />
-                      )}
-                    </button>
                   </div>
 
-                  <span className="text-[10px] font-extrabold text-purple-600 uppercase block truncate">
-                    {item.brand}
-                  </span>
-                  <h4 className="text-xs font-extrabold text-gray-950 line-clamp-2 leading-snug">
+                  {/* Brand Name & AI Match Tag */}
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="text-[11px] font-black text-purple-600 uppercase tracking-wider truncate">
+                      {item.brand}
+                    </span>
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-purple-100 text-purple-800 shrink-0">
+                      {item.matchScore}% Match
+                    </span>
+                  </div>
+
+                  {/* Item Name */}
+                  <h4 className="text-xs sm:text-sm font-black text-gray-950 line-clamp-1 leading-snug group-hover:text-purple-600 transition-colors">
                     {item.name}
                   </h4>
                 </div>
 
-                <div className="flex items-center justify-between pt-3 mt-2 border-t border-gray-100">
-                  <span className="text-xs font-black text-[#FF2E93]">
+                {/* Price & Shop Direct Link */}
+                <div className="flex items-center justify-between pt-3 mt-3 border-t border-gray-100">
+                  <span className="text-sm font-black text-[#FF2E93]">
                     {item.price}
                   </span>
 
@@ -994,10 +1058,10 @@ export const HeroView: React.FC<HeroViewProps> = ({
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-[10px] font-bold text-gray-900 hover:text-purple-600"
+                    className="py-1.5 px-3.5 rounded-xl bg-gray-950 hover:bg-black text-white text-[11px] font-black flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer"
                   >
                     <span>{isEn ? 'Shop' : 'Mua'}</span>
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3 h-3 text-[#D4FF00]" />
                   </a>
                 </div>
               </div>
@@ -1005,6 +1069,99 @@ export const HeroView: React.FC<HeroViewProps> = ({
           })}
         </div>
       </div>
+
+      {/* ========================================================================= */}
+      {/* 5. AI FASHION COMPATIBILITY ANALYTICS MODAL (Spacious, Large, Concise)    */}
+      {/* ========================================================================= */}
+      {showFashionAnalytics && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setShowFashionAnalytics(false)}
+        >
+          <div
+            className="bg-white w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl border border-gray-100 animate-scaleUp p-6 sm:p-7 space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-2xl bg-purple-100 text-purple-700">
+                  <SlidersHorizontal className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl sm:text-2xl font-black text-gray-950">
+                    AI Fashion Stylist Engine
+                  </h3>
+                  <p className="text-xs font-bold text-gray-500 mt-0.5">
+                    Thuật toán gợi ý trang phục Local Brand tương thích phong cách
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowFashionAnalytics(false)}
+                className="p-2 rounded-full text-gray-400 hover:text-gray-950 hover:bg-gray-100 transition-all cursor-pointer"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* 4 Concise Calculation Pillars */}
+            <div className="space-y-3">
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                <div className="flex items-center justify-between font-black text-sm sm:text-base">
+                  <span className="text-gray-950">1. Color Contrast & Matrix (35%)</span>
+                  <span className="text-purple-600 font-black text-base">98.5%</span>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  Độ hòa hợp sắc tố giữa trang phục với bảng màu Bạc Metallic, Đen Titan, Neon Lime của bạn.
+                </p>
+              </div>
+
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                <div className="flex items-center justify-between font-black text-sm sm:text-base">
+                  <span className="text-gray-950">2. Silhouette & Fit Proportion (30%)</span>
+                  <span className="text-emerald-600 font-black text-base">96.0%</span>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  Tỉ lệ phom dáng Boxy / Oversized tôn dáng và cân đối cấu trúc cơ thể.
+                </p>
+              </div>
+
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                <div className="flex items-center justify-between font-black text-sm sm:text-base">
+                  <span className="text-gray-950">3. Saigon Climate & Comfort (20%)</span>
+                  <span className="text-pink-600 font-black text-base">94.2%</span>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  Chất liệu vải cao cấp, thoáng khí và thích ứng với thời tiết 28-32°C tại Sài Gòn.
+                </p>
+              </div>
+
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                <div className="flex items-center justify-between font-black text-sm sm:text-base">
+                  <span className="text-gray-950">4. Micro-Trend Momentum (15%)</span>
+                  <span className="text-cyan-600 font-black text-base">97.8%</span>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  Đón đầu xu hướng Cyber-Pop & Streetwear của các thương hiệu Local Brand hot nhất 2026.
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Button */}
+            <div className="pt-2">
+              <button
+                onClick={() => setShowFashionAnalytics(false)}
+                className="w-full py-4 rounded-2xl bg-gray-950 hover:bg-black text-white font-black text-sm shadow-xl transition-all cursor-pointer"
+              >
+                Đã hiểu cơ chế đề xuất
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
