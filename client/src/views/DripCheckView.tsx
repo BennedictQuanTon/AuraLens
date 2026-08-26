@@ -15,6 +15,11 @@ import {
   Lightbulb,
   Tag,
   Timer,
+  Trophy,
+  Crown,
+  Medal,
+  TrendingUp,
+  Flame,
 } from 'lucide-react';
 import type { DripCheckResponse, EventContext, FashionItem } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
@@ -309,6 +314,119 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
     { name: 'DEGREY', tag: 'Retro Asian' },
   ];
 
+  // Dynamic Tier & Rank calculation based on user's live Fit Score
+  const getUserRankInfo = (fitScore: number) => {
+    if (fitScore >= 95) {
+      return {
+        rank: 1,
+        tierName: isEn ? 'Cyber Diamond' : 'Kim Cương Siêu Phẩm',
+        tierBadge: '💎 TIER 1',
+        percentile: isEn ? 'Top 1% Saigon Drip' : 'Top 1% Thần Drip',
+        medalImg: '/medal_diamond.png',
+        tierColor: 'bg-gradient-to-r from-[#00F5FF] via-[#D4FF00] to-[#FF2E93]',
+        accentText: 'text-[#D4FF00]',
+        nextTierHint: isEn ? '👑 Maximum Aura Achieved! You are #1' : '👑 Bạn đang thống trị vị trí #1 Bảng Vàng Sài Gòn!',
+      };
+    }
+    if (fitScore >= 90) {
+      return {
+        rank: 3,
+        tierName: isEn ? 'Diamond Stylist' : 'Hạng Kim Cương',
+        tierBadge: '💎 TIER 1',
+        percentile: isEn ? 'Top 3% Trendsetters' : 'Top 3% Cháy Phố',
+        medalImg: '/medal_diamond.png',
+        tierColor: 'bg-gradient-to-r from-[#00F5FF] to-[#D4FF00]',
+        accentText: 'text-purple-600',
+        nextTierHint: isEn ? '🔥 +5 pts to reach #1 Cyber Diamond' : '🔥 Cần +5 điểm để đạt #1 Kim Cương Siêu Cấp',
+      };
+    }
+    if (fitScore >= 80) {
+      return {
+        rank: 7,
+        tierName: isEn ? 'Platinum Vanguard' : 'Bạch Kim Đẳng Cấp',
+        tierBadge: '👑 TIER 2',
+        percentile: isEn ? 'Top 8% Style Icons' : 'Top 8% Dân Chơi Gu',
+        medalImg: '/medal_diamond.png',
+        tierColor: 'bg-gradient-to-r from-purple-500 to-[#FF2E93]',
+        accentText: 'text-purple-600',
+        nextTierHint: isEn ? '⚡ +10 pts to reach Tier 1 (Diamond)' : '⚡ Cần +10 điểm để thăng hạng Hạng Kim Cương',
+      };
+    }
+    if (fitScore >= 70) {
+      return {
+        rank: 12,
+        tierName: isEn ? 'Gold Trendsetter' : 'Vàng Phá Cách',
+        tierBadge: '⚡ TIER 3',
+        percentile: isEn ? 'Top 15% Street Vibe' : 'Top 15% Phong Cách',
+        medalImg: '/medal_diamond.png',
+        tierColor: 'bg-gradient-to-r from-amber-400 to-orange-500',
+        accentText: 'text-amber-600',
+        nextTierHint: isEn ? '🚀 +8 pts to reach Tier 2 (Platinum)' : '🚀 Cần +8 điểm để thăng hạng Bạch Kim',
+      };
+    }
+    return {
+      rank: 28,
+      tierName: isEn ? 'Silver Challenger' : 'Bạc Tân Binh',
+      tierBadge: '🌱 TIER 4',
+      percentile: isEn ? 'Top 35% Ready to Cook' : 'Top 35% Đang Cook Gu',
+      medalImg: '/medal_diamond.png',
+      tierColor: 'bg-gradient-to-r from-slate-400 to-slate-600',
+      accentText: 'text-slate-600',
+      nextTierHint: isEn ? '✨ Upgrade accessories to reach Gold (+15 pts)' : '✨ Phối thêm phụ kiện để lên Hạng Vàng (+15 điểm)',
+    };
+  };
+
+  const userRankInfo = getUserRankInfo(score);
+
+  // Dynamic Leaderboard list centering around user
+  const leaderboardEntries = [
+    {
+      id: 'lb-1',
+      rank: 1,
+      name: 'Minh Thư (Zune.zx)',
+      score: 98,
+      vibe: 'Cyber-Pop',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
+      isUser: false,
+    },
+    {
+      id: 'lb-2',
+      rank: 2,
+      name: 'Quang Anh (HADES)',
+      score: 96,
+      vibe: 'Streetwear',
+      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80',
+      isUser: false,
+    },
+    {
+      id: 'lb-user',
+      rank: userRankInfo.rank,
+      name: isEn ? 'Bennedict (You)' : 'Bennedict (Bạn)',
+      score: score,
+      vibe: breakdown?.detectedStyle || 'Streetwear',
+      avatarUrl: '/lumi.png',
+      isUser: true,
+    },
+    {
+      id: 'lb-4',
+      rank: userRankInfo.rank <= 3 ? 4 : userRankInfo.rank - 1,
+      name: 'Khánh Vy (BLANCO)',
+      score: Math.max(68, score - 3),
+      vibe: 'Minimalist',
+      avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80',
+      isUser: false,
+    },
+    {
+      id: 'lb-5',
+      rank: userRankInfo.rank <= 3 ? 5 : userRankInfo.rank + 1,
+      name: 'Hoàng Long (THE BEAT)',
+      score: Math.max(65, score - 6),
+      vibe: 'Y2K Matrix',
+      avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80',
+      isUser: false,
+    },
+  ];
+
   return (
     <div className="animate-fadeIn space-y-6 pb-16 max-w-6xl mx-auto">
       
@@ -586,6 +704,141 @@ export const DripCheckView: React.FC<DripCheckViewProps> = ({
               <RefreshCw className="w-5 h-5 text-purple-600" />
               <span>{isEn ? 'Retake / Scan Another Fit' : 'Chụp Lại / Quét Outfit Khác'}</span>
             </button>
+
+            {/* 2. SAIGON DRIP LEADERBOARD & TIER RANK WIDGET */}
+            <div className="calm-card-elevated p-5 sm:p-6 rounded-3xl space-y-4.5 bg-white shadow-xl border border-gray-100">
+              
+              {/* Header: Title & Dynamic Tier Badge */}
+              <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shadow-xs">
+                    <Trophy className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm sm:text-base font-black text-gray-950 leading-tight">
+                      {isEn ? 'Saigon Drip Leaderboard' : 'Bảng Xếp Hạng Drip Sài Gòn'}
+                    </h4>
+                    <span className="text-[11px] font-bold text-gray-500">
+                      {isEn ? 'Live Community Ranking' : 'Xếp Hạng Cộng Đồng Trực Tiếp'}
+                    </span>
+                  </div>
+                </div>
+
+                <span className={`px-3 py-1 rounded-full text-white text-[11px] font-black uppercase shadow-xs ${userRankInfo.tierColor}`}>
+                  {userRankInfo.tierBadge}
+                </span>
+              </div>
+
+              {/* User Standing Summary Card with Medal & Rank */}
+              <div className="p-4 rounded-2xl bg-gradient-to-tr from-purple-50/90 via-pink-50/50 to-white border border-purple-100 flex items-center justify-between gap-3 shadow-xs">
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
+                    <img
+                      src={userRankInfo.medalImg}
+                      alt="Rank Medal"
+                      className="w-11 h-11 object-contain drop-shadow-md hover:scale-110 transition-transform"
+                    />
+                  </div>
+                  <div className="min-w-0 space-y-0.5">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs sm:text-sm font-black text-purple-900 uppercase">
+                        {userRankInfo.tierName}
+                      </span>
+                      <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-purple-200/80 text-purple-950">
+                        {userRankInfo.percentile}
+                      </span>
+                    </div>
+                    <p className="text-[11px] sm:text-xs font-bold text-gray-600 truncate">
+                      {userRankInfo.nextTierHint}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0 pl-1">
+                  <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider block">
+                    {isEn ? 'YOUR RANK' : 'THỨ HẠNG'}
+                  </span>
+                  <span className="text-2xl sm:text-3xl font-black text-gray-950 tracking-tight">
+                    #{userRankInfo.rank}
+                  </span>
+                </div>
+              </div>
+
+              {/* Top 5 Trendsetters Leaderboard Rows */}
+              <div className="space-y-2 pt-1">
+                <div className="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-gray-400 px-2 pb-0.5">
+                  <span>{isEn ? 'Rank & Trendsetter' : 'Hạng & Trendsetter'}</span>
+                  <span>{isEn ? 'Aura Score' : 'Điểm Fit'}</span>
+                </div>
+
+                {leaderboardEntries.map((entry) => (
+                  <div
+                    key={entry.id}
+                    className={`flex items-center justify-between p-2.5 rounded-2xl transition-all ${
+                      entry.isUser
+                        ? 'bg-gradient-to-r from-purple-100/95 via-pink-100/90 to-purple-50 border-2 border-purple-400 shadow-md ring-2 ring-purple-300/40'
+                        : 'bg-gray-50/80 hover:bg-gray-100/80 border border-gray-100'
+                    }`}
+                  >
+                    {/* Left: Rank badge & Avatar & Name */}
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      {/* Rank Number / Medal */}
+                      <span
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${
+                          entry.rank === 1
+                            ? 'bg-amber-400 text-gray-950 shadow-xs'
+                            : entry.rank === 2
+                            ? 'bg-slate-300 text-gray-950 shadow-xs'
+                            : entry.rank === 3
+                            ? 'bg-amber-600 text-white shadow-xs'
+                            : 'bg-gray-200 text-gray-700'
+                        }`}
+                      >
+                        {entry.rank}
+                      </span>
+
+                      {/* Avatar */}
+                      <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 shrink-0 border border-white shadow-xs">
+                        <img
+                          src={entry.avatarUrl}
+                          alt={entry.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* Name & Vibe */}
+                      <div className="min-w-0">
+                        <h5 className={`text-xs sm:text-sm font-black truncate leading-tight flex items-center gap-1.5 ${entry.isUser ? 'text-purple-950' : 'text-gray-900'}`}>
+                          <span>{entry.name}</span>
+                          {entry.isUser && (
+                            <span className="px-1.5 py-0.2 rounded-full bg-purple-600 text-white text-[9px] font-black uppercase">
+                              {isEn ? 'YOU' : 'BẠN'}
+                            </span>
+                          )}
+                        </h5>
+                        <span className="text-[10px] font-bold text-gray-500 block truncate">
+                          {entry.vibe}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Right: Score Pill */}
+                    <div className="text-right shrink-0 pl-2">
+                      <span
+                        className={`px-2.5 py-1 rounded-full text-xs font-black ${
+                          entry.isUser
+                            ? 'bg-purple-600 text-white shadow-xs'
+                            : 'bg-white text-gray-950 border border-gray-200 shadow-xs'
+                        }`}
+                      >
+                        {entry.score} pts
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
           </div>
 
           {/* RIGHT COLUMN: INTEGRATED SCORE + LUMI CARD + ACCESSORIES (cols 6-12 on lg) */}
