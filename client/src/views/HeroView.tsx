@@ -301,15 +301,15 @@ export const HeroView: React.FC<HeroViewProps> = ({
           {/* Left: Primary Heading & 2 Action Buttons (Slightly larger, matching Lumi's vertical height) */}
           <div className="lg:col-span-7 space-y-6 flex flex-col justify-between">
             
-            {/* PRIMARY HEADING (The GOAT Is Back, / Sup Bennedict xD) */}
+            {/* PRIMARY HEADING (Yo W Bro / Hí Bennedict xD) */}
             <div className="space-y-2.5">
               <h1 className="text-5xl sm:text-6xl lg:text-[66px] xl:text-[74px] font-black text-gray-950 tracking-tight leading-[1.08] [word-spacing:0.35rem]">
-                The GOAT Is Back,
+                {isEn ? 'The GOAT Is Back,' : 'Yo W Bro'}
               </h1>
               
               <div className="text-5xl sm:text-6xl lg:text-[66px] xl:text-[74px] font-black tracking-tight leading-[1.08] [word-spacing:0.35rem] flex items-baseline gap-3.5 whitespace-nowrap pt-1">
                 <span className="text-gray-950">
-                  Sup
+                  {isEn ? 'Sup' : 'Hí'}
                 </span>
                 <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent">
                   {userProfile.name}
@@ -322,13 +322,27 @@ export const HeroView: React.FC<HeroViewProps> = ({
 
             {/* GEN-Z SUBTITLE */}
             <h2 className="text-2xl sm:text-[28px] lg:text-[32px] font-black text-gray-800 tracking-wide [word-spacing:0.25rem] leading-snug pt-1">
-              Ready to{' '}
-              <span className="text-[#FF2E93] font-black">cook</span>{' '}
-              with maximum{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#00F5FF] to-[#10B981] font-black underline decoration-[#FF2E93] decoration-wavy decoration-3 underline-offset-6">
-                aura
-              </span>{' '}
-              today?
+              {isEn ? (
+                <>
+                  Ready to{' '}
+                  <span className="text-[#FF2E93] font-black">cook</span>{' '}
+                  with maximum{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#00F5FF] to-[#10B981] font-black underline decoration-[#FF2E93] decoration-wavy decoration-3 underline-offset-6">
+                    aura
+                  </span>{' '}
+                  today?
+                </>
+              ) : (
+                <>
+                  Sẵn sàng{' '}
+                  <span className="text-[#FF2E93] font-black">cook</span>{' '}
+                  với 100%{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#00F5FF] to-[#10B981] font-black underline decoration-[#FF2E93] decoration-wavy decoration-3 underline-offset-6">
+                    aura
+                  </span>{' '}
+                   chưa?
+                </>
+              )}
             </h2>
 
             {/* TWO CLEAN ACTION BUTTONS (Drip Check ⚡ & Vibe Map 📍) */}
