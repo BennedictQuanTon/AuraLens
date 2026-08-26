@@ -1386,19 +1386,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
         
         {/* Tab Headers (Centered) */}
         <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-gray-100 flex-wrap">
-          {/* TAB 0: AI TEMPLATE */}
-          <button
-            onClick={() => setActiveTab('ai-template')}
-            className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
-              activeTab === 'ai-template'
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md ring-2 ring-purple-300/40'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>{isEn ? 'AI Template (Gemini)' : 'AI Template (Gemini)'}</span>
-          </button>
-
+          {/* TAB 1: RATIO */}
           <button
             onClick={() => setActiveTab('ratio')}
             className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
@@ -1411,6 +1399,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <span>{isEn ? `Ratio (${selectedRatio})` : `Khổ Ảnh (${selectedRatio})`}</span>
           </button>
 
+          {/* TAB 2: FRAMES */}
           <button
             onClick={() => setActiveTab('frames')}
             className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
@@ -1423,6 +1412,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <span>{isEn ? `Trend Frames (${frames.length})` : `Khung Trend (${frames.length})`}</span>
           </button>
 
+          {/* TAB 3: FILTERS */}
           <button
             onClick={() => setActiveTab('filters')}
             className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
@@ -1435,6 +1425,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <span>{isEn ? `Photo Filters (${PHOTO_FILTERS.length})` : `Bộ Lọc Màu (${PHOTO_FILTERS.length})`}</span>
           </button>
 
+          {/* TAB 4: STICKERS */}
           <button
             onClick={() => setActiveTab('stickers')}
             className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
@@ -1447,6 +1438,7 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <span>{isEn ? `Stickers & Decals (${STICKER_LIBRARY.length})` : `Sticker & Nhãn (${STICKER_LIBRARY.length})`}</span>
           </button>
 
+          {/* TAB 5: TEXT */}
           <button
             onClick={() => setActiveTab('text')}
             className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
@@ -1458,9 +1450,22 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             <Type className="w-4 h-4" />
             <span>{isEn ? 'Add Text & Fonts' : 'Chèn Chữ & Font'}</span>
           </button>
+
+          {/* TAB 6: AI (Moved to the end!) */}
+          <button
+            onClick={() => setActiveTab('ai-template')}
+            className={`py-2.5 px-4.5 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center gap-2 shrink-0 cursor-pointer ${
+              activeTab === 'ai-template'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md ring-2 ring-purple-300/40'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>AI</span>
+          </button>
         </div>
 
-        {/* ==================== TAB 0: AI TEMPLATE (Custom Prompt Gemini) ==================== */}
+        {/* ==================== TAB: AI TEMPLATE (Custom Prompt Gemini) ==================== */}
         {activeTab === 'ai-template' && (
           <div className="space-y-4 animate-fadeIn max-w-3xl mx-auto py-2">
             <div className="text-center space-y-1">
@@ -1468,11 +1473,6 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
                 <Sparkles className="w-4 h-4 text-purple-600" />
                 <span>{isEn ? 'Prompt Gemini 3.5 Flash Lite to Synthesize Any Template' : 'Mô tả ý tưởng bằng ngôn ngữ tự nhiên để Gemini 3.5 Flash Lite tạo Template riêng'}</span>
               </h3>
-              <p className="text-xs text-gray-500 font-bold">
-                {isEn
-                  ? 'Gemini will harmonize the color filter, vector borders, typography, glow effects, and stickers for your photo in ~1.5s!'
-                  : 'Gemini sẽ tự động phối trọn bộ: Tone màu filter + Kiểu khung viền + Font chữ nghệ thuật + Sticker theo đúng mô tả của bạn chỉ trong ~1.5s!'}
-              </p>
             </div>
 
             {/* Prompt Input Box */}
@@ -1514,33 +1514,33 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
             {/* Quick Inspiration Prompts */}
             <div className="space-y-1.5 pt-1">
               <span className="text-[11px] font-black text-gray-400 uppercase block text-center">
-                {isEn ? '💡 Quick Inspiration Concepts (Tap to generate):' : '💡 Ý tưởng gợi ý hot (Chạm để tạo ngay):'}
+                {isEn ? 'Quick Inspiration Concepts (Tap to generate):' : 'Ý tưởng gợi ý (Chạm để tạo ngay):'}
               </span>
               <div className="flex flex-wrap items-center justify-center gap-2">
                 {[
                   {
-                    labelEn: '🌌 Cyberpunk Night Drive 2026',
-                    labelVi: '🌌 Cyberpunk Night Drive 2026',
+                    labelEn: 'Cyberpunk Night Drive 2026',
+                    labelVi: 'Cyberpunk Night Drive 2026',
                     prompt: isEn ? 'Cyberpunk Night Drive 2026 neon laser purple and cyan' : 'Khung Cyberpunk Night Drive 2026 màu tím cyan ánh neon cực cháy',
                   },
                   {
-                    labelEn: '🎞️ Sài Gòn 90s Vintage Nostalgia',
-                    labelVi: '🎞️ Sài Gòn 90s Vintage Hoài Niệm',
+                    labelEn: 'Sài Gòn 90s Vintage Nostalgia',
+                    labelVi: 'Sài Gòn 90s Vintage Hoài Niệm',
                     prompt: isEn ? 'Vintage 35mm Saigon 90s nostalgic film warm amber tones' : 'Khung phim cuộn 35mm Sài Gòn thập niên 90 hoài niệm màu ấm',
                   },
                   {
-                    labelEn: '🎀 Y2K Pastel Dopamine Princess',
-                    labelVi: '🎀 Y2K Pastel Dopamine Pop',
+                    labelEn: 'Y2K Pastel Dopamine Princess',
+                    labelVi: 'Y2K Pastel Dopamine Pop',
                     prompt: isEn ? 'Y2K Pastel Dopamine Pop pink candy sparkles cute bunny' : 'Khung Y2K Dopamine kẹo ngọt màu pastel hồng có lấp lánh và thỏ cute',
                   },
                   {
-                    labelEn: '🍸 Old Money Quiet Luxury Champagne',
-                    labelVi: '🍸 Old Money Hoàng Gia Tối Giản',
+                    labelEn: 'Old Money Quiet Luxury Champagne',
+                    labelVi: 'Old Money Hoàng Gia Tối Giản',
                     prompt: isEn ? 'Old Money Royal Gold minimal champagne luxury aesthetic' : 'Khung Old Money phong cách hoàng gia vàng champagne sang trọng tối giản',
                   },
                   {
-                    labelEn: '📰 Vogue High Fashion Editorial',
-                    labelVi: '📰 Vogue Tạp Chí Thời Trang',
+                    labelEn: 'Vogue High Fashion Editorial',
+                    labelVi: 'Vogue Tạp Chí Thời Trang',
                     prompt: isEn ? 'Vogue High Fashion Editorial magazine cover black and white crisp serif' : 'Khung tạp chí Vogue thời trang bìa báo thanh lịch chữ Didot',
                   },
                 ].map((chip, i) => (
