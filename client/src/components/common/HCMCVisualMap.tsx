@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BarChart2,
   Navigation,
@@ -12,6 +12,8 @@ import {
   Camera,
   CheckCircle2,
   SlidersHorizontal,
+  Flame,
+  Zap,
 } from 'lucide-react';
 
 interface LeaderboardVenue {
@@ -38,6 +40,18 @@ interface LeaderboardVenue {
 export const HCMCVisualMap: React.FC = () => {
   const [selectedVenue, setSelectedVenue] = useState<LeaderboardVenue | null>(null);
   const [showAnalyticsModal, setShowAnalyticsModal] = useState<boolean>(false);
+
+  // Lock background scroll when any modal is open
+  useEffect(() => {
+    if (selectedVenue || showAnalyticsModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedVenue, showAnalyticsModal]);
 
   const leaderboardVenues: LeaderboardVenue[] = [
     {
@@ -143,7 +157,7 @@ export const HCMCVisualMap: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-4 relative">
+    <div className="space-y-4 flex flex-col justify-between h-full">
       {/* Header Row: Clean Title (No Emojis) & Small Analytics Icon Button */}
       <div className="flex items-center justify-between">
         <h3 className="text-xl lg:text-2xl font-black text-gray-950">
@@ -153,18 +167,18 @@ export const HCMCVisualMap: React.FC = () => {
         {/* Small Analytics Icon Button */}
         <button
           onClick={() => setShowAnalyticsModal(true)}
-          className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-950 transition-all cursor-pointer flex items-center gap-1.5 shadow-xs group"
+          className="py-1.5 px-3 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-700 transition-all cursor-pointer flex items-center gap-1.5 shadow-xs border border-purple-200 group"
           title="AI Matching Analytics"
         >
           <BarChart2 className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
-          <span className="text-[11px] font-black hidden sm:inline text-gray-700">
+          <span className="text-xs font-black">
             Analytics
           </span>
         </button>
       </div>
 
-      {/* Top 5 Leaderboard List Container (Perfect Height Matching Multi-Line Chart) */}
-      <div className="space-y-2.5 h-72 sm:h-80 flex flex-col justify-between overflow-hidden">
+      {/* Top 5 Leaderboard List (Fully Spanning Equal Height with Chart) */}
+      <div className="space-y-2.5 flex-1 flex flex-col justify-between py-1">
         {leaderboardVenues.map((venue) => {
           const isTop1 = venue.rank === 1;
           const isTop2 = venue.rank === 2;
@@ -176,8 +190,8 @@ export const HCMCVisualMap: React.FC = () => {
               onClick={() => setSelectedVenue(venue)}
               className={`p-2.5 sm:p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 group ${
                 isTop1
-                  ? 'bg-gradient-to-r from-purple-50/60 via-pink-50/40 to-white border-purple-200/80 hover:border-purple-300 shadow-xs hover:shadow-md'
-                  : 'bg-gray-50/80 border-gray-100 hover:border-gray-200 hover:bg-white'
+                  ? 'bg-gradient-to-r from-purple-50/70 via-pink-50/50 to-white border-purple-200 hover:border-purple-300 shadow-xs hover:shadow-md'
+                  : 'bg-gray-50/90 border-gray-100 hover:border-gray-200 hover:bg-white'
               }`}
             >
               {/* Left: Rank Badge + Thumbnail + Title */}
@@ -191,14 +205,14 @@ export const HCMCVisualMap: React.FC = () => {
                       ? 'bg-gradient-to-tr from-slate-300 to-slate-400 text-white shadow-xs'
                       : isTop3
                       ? 'bg-gradient-to-tr from-amber-600 to-amber-700 text-white shadow-xs'
-                      : 'bg-gray-200/80 text-gray-600'
+                      : 'bg-gray-200/90 text-gray-700 font-extrabold'
                   }`}
                 >
                   #{venue.rank}
                 </div>
 
                 {/* Venue Thumbnail Image */}
-                <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-gray-100 shrink-0 shadow-inner">
+                <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-gray-100 shrink-0 shadow-xs">
                   <img
                     src={venue.image}
                     alt={venue.name}
@@ -211,12 +225,12 @@ export const HCMCVisualMap: React.FC = () => {
                   <h4 className="text-xs sm:text-sm font-black text-gray-950 truncate leading-snug group-hover:text-purple-600 transition-colors">
                     {venue.name}
                   </h4>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[10px] font-extrabold text-gray-500 truncate">
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-[11px] font-extrabold text-gray-600 truncate">
                       {venue.district}
                     </span>
                     <span className="text-gray-300 text-[10px]">•</span>
-                    <span className="text-[10px] font-bold text-gray-400 truncate">
+                    <span className="text-[11px] font-bold text-gray-400 truncate">
                       {venue.type}
                     </span>
                   </div>
@@ -242,108 +256,119 @@ export const HCMCVisualMap: React.FC = () => {
       </div>
 
       {/* ========================================================================= */}
-      {/* 1. VENUE FULL DETAIL MODAL (Opens on Leaderboard Item Click)              */}
+      {/* 1. VENUE FULL DETAIL MODAL (Spacious, Large Fonts, Concise Curated Info)  */}
       {/* ========================================================================= */}
       {selectedVenue && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-gray-100 animate-scaleUp">
-            {/* HD Header Cover Image with Rank & Close Button */}
-            <div className="relative w-full h-48 bg-gray-900">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setSelectedVenue(null)}
+        >
+          <div
+            className="bg-white w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl border border-gray-100 animate-scaleUp"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* HD Header Cover Image */}
+            <div className="relative w-full h-56 sm:h-64 bg-gray-900">
               <img
                 src={selectedVenue.image}
                 alt={selectedVenue.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
 
               {/* Close Button */}
               <button
                 onClick={() => setSelectedVenue(null)}
-                className="absolute top-3 right-3 p-2 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-xs transition-all cursor-pointer"
+                className="absolute top-4 right-4 p-2.5 rounded-full bg-black/60 hover:bg-black text-white backdrop-blur-sm transition-all cursor-pointer shadow-lg"
                 title="Close"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
 
               {/* Rank & Match Score Tag */}
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                <span className="px-3 py-1 bg-gradient-to-r from-amber-400 to-amber-500 text-gray-950 font-black text-xs rounded-full shadow-md">
+              <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between text-white">
+                <span className="px-3.5 py-1.5 bg-gradient-to-r from-amber-400 to-amber-500 text-gray-950 font-black text-xs sm:text-sm rounded-full shadow-lg">
                   Rank #{selectedVenue.rank} Top Pick
                 </span>
-                <span className="px-3 py-1 bg-gradient-to-r from-[#FF2E93] to-[#7C3AED] text-white font-black text-xs rounded-full shadow-md">
+                <span className="px-3.5 py-1.5 bg-gradient-to-r from-[#FF2E93] via-[#EC4899] to-[#7C3AED] text-white font-black text-xs sm:text-sm rounded-full shadow-lg">
                   {selectedVenue.matchScore}% Vibe Match
                 </span>
               </div>
             </div>
 
             {/* Modal Body Info */}
-            <div className="p-5 space-y-4 max-h-[60vh] overflow-y-auto">
+            <div className="p-6 sm:p-7 space-y-5 max-h-[62vh] overflow-y-auto">
               <div>
-                <h3 className="text-xl font-black text-gray-950">
+                <h3 className="text-2xl sm:text-3xl font-black text-gray-950 tracking-tight">
                   {selectedVenue.name}
                 </h3>
-                <p className="text-xs font-bold text-purple-600 mt-0.5">
+                <p className="text-sm font-extrabold text-purple-600 mt-1">
                   {selectedVenue.vibeStyle}
                 </p>
               </div>
 
-              {/* Essential Details Grid */}
-              <div className="grid grid-cols-2 gap-2.5 text-xs font-extrabold text-gray-700 bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
-                <div className="flex items-center gap-2">
+              {/* Essential Details Grid (Large Icons & Text) */}
+              <div className="grid grid-cols-2 gap-3 text-sm font-extrabold text-gray-800 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-purple-600 shrink-0" />
                   <span className="truncate">{selectedVenue.district}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span className="truncate">{selectedVenue.openHours}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <DollarSign className="w-4 h-4 text-amber-600 shrink-0" />
                   <span className="truncate">{selectedVenue.priceRange}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   <Camera className="w-4 h-4 text-pink-600 shrink-0" />
                   <span className="truncate">Top Spot Check-in</span>
                 </div>
               </div>
 
               {/* Address */}
-              <div className="text-xs text-gray-600 space-y-1">
-                <span className="font-black text-gray-900 block">Địa chỉ:</span>
-                <p className="bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+              <div className="space-y-1.5">
+                <span className="text-xs font-black uppercase tracking-wider text-gray-400 block">
+                  Địa Chỉ
+                </span>
+                <p className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100 text-sm font-extrabold text-gray-900">
                   {selectedVenue.address}
                 </p>
               </div>
 
               {/* Photo Spot Recommendation */}
-              <div className="text-xs text-gray-600 space-y-1">
-                <span className="font-black text-gray-900 block">Góc chụp ảnh đề xuất:</span>
-                <p className="bg-purple-50/60 p-2.5 rounded-xl border border-purple-100 text-purple-950 font-bold">
-                  {selectedVenue.photoSpot}
-                </p>
+              <div className="space-y-1.5">
+                <span className="text-xs font-black uppercase tracking-wider text-purple-600 block">
+                  Góc Check-in Đề Xuất
+                </span>
+                <div className="bg-purple-50/70 p-3.5 rounded-2xl border border-purple-100 text-sm text-purple-950 font-black flex items-center gap-2.5">
+                  <Sparkles className="w-4 h-4 text-purple-600 shrink-0" />
+                  <span>{selectedVenue.photoSpot}</span>
+                </div>
               </div>
 
               {/* AI Match Pillars Breakdown */}
-              <div className="space-y-2 pt-1 border-t border-gray-100">
-                <span className="text-[11px] font-black uppercase tracking-wider text-gray-400 block">
-                  AI Vibe Match Breakdown
+              <div className="space-y-2.5 pt-1 border-t border-gray-100">
+                <span className="text-xs font-black uppercase tracking-wider text-gray-400 block">
+                  Chỉ Số Ghép Nối AI
                 </span>
-                <div className="grid grid-cols-2 gap-2 text-xs font-bold">
-                  <div className="bg-gray-50 p-2 rounded-xl flex justify-between">
-                    <span className="text-gray-500">Color Palette</span>
-                    <span className="font-black text-gray-950">{selectedVenue.aiBreakdown.colorHarmony}%</span>
+                <div className="grid grid-cols-2 gap-2.5 text-xs sm:text-sm font-bold">
+                  <div className="bg-gray-50 p-3 rounded-2xl flex items-center justify-between border border-gray-100">
+                    <span className="text-gray-600">Color Palette</span>
+                    <span className="font-black text-gray-950 text-sm">{selectedVenue.aiBreakdown.colorHarmony}%</span>
                   </div>
-                  <div className="bg-gray-50 p-2 rounded-xl flex justify-between">
-                    <span className="text-gray-500">Lighting</span>
-                    <span className="font-black text-gray-950">{selectedVenue.aiBreakdown.lightingAtmosphere}%</span>
+                  <div className="bg-gray-50 p-3 rounded-2xl flex items-center justify-between border border-gray-100">
+                    <span className="text-gray-600">Lighting Vibe</span>
+                    <span className="font-black text-gray-950 text-sm">{selectedVenue.aiBreakdown.lightingAtmosphere}%</span>
                   </div>
-                  <div className="bg-gray-50 p-2 rounded-xl flex justify-between">
-                    <span className="text-gray-500">Dress Code</span>
-                    <span className="font-black text-gray-950">{selectedVenue.aiBreakdown.dressCodeFit}%</span>
+                  <div className="bg-gray-50 p-3 rounded-2xl flex items-center justify-between border border-gray-100">
+                    <span className="text-gray-600">Dress Code</span>
+                    <span className="font-black text-gray-950 text-sm">{selectedVenue.aiBreakdown.dressCodeFit}%</span>
                   </div>
-                  <div className="bg-gray-50 p-2 rounded-xl flex justify-between">
-                    <span className="text-gray-500">Photo Aesthetic</span>
-                    <span className="font-black text-gray-950">{selectedVenue.aiBreakdown.photoAesthetic}%</span>
+                  <div className="bg-gray-50 p-3 rounded-2xl flex items-center justify-between border border-gray-100">
+                    <span className="text-gray-600">Photo Aesthetic</span>
+                    <span className="font-black text-gray-950 text-sm">{selectedVenue.aiBreakdown.photoAesthetic}%</span>
                   </div>
                 </div>
               </div>
@@ -354,11 +379,11 @@ export const HCMCVisualMap: React.FC = () => {
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedVenue.name + ' ' + selectedVenue.address)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3.5 px-4 rounded-2xl bg-[#0F172A] hover:bg-black text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-xl active:scale-98 transition-all cursor-pointer"
+                  className="w-full py-4 px-5 rounded-2xl bg-[#0F172A] hover:bg-black text-white font-black text-sm flex items-center justify-center gap-2.5 shadow-xl active:scale-98 transition-all cursor-pointer"
                 >
                   <Navigation className="w-4 h-4 text-[#D4FF00]" />
                   <span>Mở Chỉ Đường Google Maps</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-white/60 ml-auto" />
+                  <ExternalLink className="w-4 h-4 text-white/60 ml-auto" />
                 </a>
               </div>
             </div>
@@ -367,82 +392,86 @@ export const HCMCVisualMap: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* 2. AI MATCHING ANALYTICS MODAL (Opens on small Analytics Icon Click)       */}
+      {/* 2. AI MATCHING ANALYTICS MODAL (Concise, Clean Typography, Spacious)      */}
       {/* ========================================================================= */}
       {showAnalyticsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-gray-100 animate-scaleUp p-5 space-y-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setShowAnalyticsModal(false)}
+        >
+          <div
+            className="bg-white w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl border border-gray-100 animate-scaleUp p-6 sm:p-7 space-y-5"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-              <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-purple-100 text-purple-700">
-                  <SlidersHorizontal className="w-5 h-5" />
+            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-2xl bg-purple-100 text-purple-700">
+                  <SlidersHorizontal className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-gray-950">
+                  <h3 className="text-xl sm:text-2xl font-black text-gray-950">
                     AI Vibe Match Engine
                   </h3>
-                  <p className="text-[11px] font-bold text-gray-500">
-                    Cơ chế tính điểm đề xuất địa điểm
+                  <p className="text-xs font-bold text-gray-500 mt-0.5">
+                    Thuật toán đối sánh không gian thị giác của Lumi Stylist
                   </p>
                 </div>
               </div>
 
               <button
                 onClick={() => setShowAnalyticsModal(false)}
-                className="p-1.5 rounded-full text-gray-400 hover:text-gray-950 hover:bg-gray-100 transition-all cursor-pointer"
+                className="p-2 rounded-full text-gray-400 hover:text-gray-950 hover:bg-gray-100 transition-all cursor-pointer"
                 title="Close"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Content: 4 Key Calculation Pillars */}
-            <div className="space-y-3 text-xs">
-              <p className="text-gray-600 leading-relaxed font-semibold">
-                Lumi AI Stylist sử dụng thuật toán đối sánh không gian thị giác để ghép nối outfit hôm nay của bạn với các tọa độ có vibe tương đồng cao nhất:
-              </p>
-
-              <div className="space-y-2.5">
-                <div className="p-3 bg-gray-50 rounded-2xl space-y-1">
-                  <div className="flex justify-between font-black text-gray-950">
-                    <span>1. Color Palette Harmony (35%)</span>
-                    <span className="text-purple-600">96.8%</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 font-medium">
-                    Đối chiếu tương phản giữa bảng màu trang phục (Bạc, Đen, Neon) với ánh sáng và tone kiến trúc của quán.
-                  </p>
+            {/* 4 Concise, High-Impact Calculation Pillars */}
+            <div className="space-y-3">
+              {/* Pillar 1 */}
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                <div className="flex items-center justify-between font-black text-sm sm:text-base">
+                  <span className="text-gray-950">1. Color Palette Harmony (35%)</span>
+                  <span className="text-purple-600 font-black text-base">96.8%</span>
                 </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  Đối chiếu độ tương phản bảng màu outfit (Bạc, Đen, Neon) với tone kiến trúc quán.
+                </p>
+              </div>
 
-                <div className="p-3 bg-gray-50 rounded-2xl space-y-1">
-                  <div className="flex justify-between font-black text-gray-950">
-                    <span>2. Lighting & Atmosphere (30%)</span>
-                    <span className="text-emerald-600">97.5%</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 font-medium">
-                    Tính toán độ phù hợp ánh sáng (Neon, tự nhiên, spotlight) để chất liệu vải lên ảnh đẹp nhất.
-                  </p>
+              {/* Pillar 2 */}
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                <div className="flex items-center justify-between font-black text-sm sm:text-base">
+                  <span className="text-gray-950">2. Lighting & Atmosphere (30%)</span>
+                  <span className="text-emerald-600 font-black text-base">97.5%</span>
                 </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  Tính toán độ bắt sáng của chất liệu vải dưới ánh đèn neon và spotlight của không gian.
+                </p>
+              </div>
 
-                <div className="p-3 bg-gray-50 rounded-2xl space-y-1">
-                  <div className="flex justify-between font-black text-gray-950">
-                    <span>3. Subculture & Dress Code (20%)</span>
-                    <span className="text-pink-600">95.0%</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 font-medium">
-                    Độ tương thích giữa phong cách (Cyber-Pop, Y2K) với cộng đồng khách và âm nhạc tại địa điểm.
-                  </p>
+              {/* Pillar 3 */}
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                <div className="flex items-center justify-between font-black text-sm sm:text-base">
+                  <span className="text-gray-950">3. Subculture & Dress Code (20%)</span>
+                  <span className="text-pink-600 font-black text-base">95.0%</span>
                 </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  Đo lường mức độ đồng điệu giữa phong cách (Cyber-Pop, Y2K) với vibe âm nhạc của quán.
+                </p>
+              </div>
 
-                <div className="p-3 bg-gray-50 rounded-2xl space-y-1">
-                  <div className="flex justify-between font-black text-gray-950">
-                    <span>4. Photo Angle Opportunity (15%)</span>
-                    <span className="text-cyan-600">98.2%</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 font-medium">
-                    Độ phong phú của các góc chụp OOTD / Story / Reels tại địa điểm.
-                  </p>
+              {/* Pillar 4 */}
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-1">
+                <div className="flex items-center justify-between font-black text-sm sm:text-base">
+                  <span className="text-gray-950">4. Photo Angle Opportunity (15%)</span>
+                  <span className="text-cyan-600 font-black text-base">98.2%</span>
                 </div>
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold">
+                  Đánh giá độ phong phú các góc chụp OOTD, Story và Reels triệu view tại địa điểm.
+                </p>
               </div>
             </div>
 
@@ -450,7 +479,7 @@ export const HCMCVisualMap: React.FC = () => {
             <div className="pt-2">
               <button
                 onClick={() => setShowAnalyticsModal(false)}
-                className="w-full py-3 rounded-2xl bg-gray-950 hover:bg-black text-white font-extrabold text-xs shadow-lg transition-all cursor-pointer"
+                className="w-full py-4 rounded-2xl bg-gray-950 hover:bg-black text-white font-black text-sm shadow-xl transition-all cursor-pointer"
               >
                 Đã hiểu cơ chế đề xuất
               </button>

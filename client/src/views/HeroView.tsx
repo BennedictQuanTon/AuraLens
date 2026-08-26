@@ -602,10 +602,10 @@ export const HeroView: React.FC<HeroViewProps> = ({
       {/* ========================================================================= */}
       {/* 3. MIDDLE SECTION: MULTI-LINE CHART (WITH Y-AXIS) & HCMC VISUAL MAP       */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
         
         {/* LEFT: OOTD ACTIVITY CHART WITH ACCURATE Y-AXIS (cols 1-7 on lg) */}
-        <div className="lg:col-span-7 calm-card-elevated p-6 lg:p-7 rounded-3xl space-y-5">
+        <div className="lg:col-span-7 calm-card-elevated p-6 lg:p-7 rounded-3xl space-y-5 flex flex-col justify-between h-full">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h3 className="text-xl lg:text-2xl font-black text-gray-950">
@@ -909,8 +909,8 @@ export const HeroView: React.FC<HeroViewProps> = ({
           </div>
         </div>
 
-        {/* RIGHT: HCMC INTERACTIVE VISUAL MAP RADAR (cols 8-12 on lg) */}
-        <div className="lg:col-span-5 calm-card-elevated p-6 lg:p-7 rounded-3xl">
+        {/* RIGHT: LEADERBOARD WIDGET (cols 8-12 on lg) */}
+        <div className="lg:col-span-5 calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between h-full">
           <HCMCVisualMap />
         </div>
 
