@@ -312,7 +312,10 @@ export const HeroView: React.FC<HeroViewProps> = ({
                   Sup
                 </span>
                 <span className="bg-gradient-to-r from-[#FF2E93] via-[#7C3AED] to-[#D4FF00] bg-clip-text text-transparent">
-                  {userProfile.name} xD
+                  {userProfile.name}
+                </span>
+                <span className="text-gray-950">
+                  xD
                 </span>
               </div>
             </div>
@@ -320,10 +323,10 @@ export const HeroView: React.FC<HeroViewProps> = ({
             {/* GEN-Z SUBTITLE */}
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-gray-800 tracking-wide [word-spacing:0.25rem]">
               Ready to{' '}
-              <span className="text-[#FF2E93] font-black">slay</span>{' '}
-              your{' '}
+              <span className="text-[#FF2E93] font-black">cook</span>{' '}
+              with maximum{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7C3AED] via-[#00F5FF] to-[#10B981] font-black underline decoration-[#FF2E93] decoration-wavy decoration-3 underline-offset-6">
-                vibe
+                aura
               </span>{' '}
               today?
             </h2>
