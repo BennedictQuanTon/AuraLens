@@ -291,62 +291,62 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
               </div>
 
               {/* 2. SECTION A: THE CURRENT STRUGGLE (100% Exact Image 2 Layout) */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div className="text-center space-y-2 max-w-6xl mx-auto">
-                  <h3 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight whitespace-normal lg:whitespace-nowrap">
+                  <h3 className="text-xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight whitespace-normal lg:whitespace-nowrap">
                     Why Styling & Spot Discovery is Broken Today
                   </h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 pt-2">
 
                   {/* Card 1: Outfit Anxiety (Pinned bottom-left widget 100% identical to Pest Busters in Image 2) */}
-                  <div className="rounded-3xl bg-gradient-to-b from-[#3a3a44] to-[#1e1e24] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[480px] sm:min-h-[520px] hover:border-pink-400/50 transition-all duration-300">
-                    <div className="p-7 sm:p-9 space-y-3 z-10">
-                      <h4 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                  <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#3a3a44] to-[#1e1e24] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[380px] sm:min-h-[460px] md:min-h-[520px] hover:border-pink-400/50 transition-all duration-300">
+                    <div className="p-5 sm:p-7 md:p-9 space-y-2 sm:space-y-3 z-10">
+                      <h4 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
                         Outfit Anxiety
                       </h4>
-                      <p className="text-base sm:text-lg text-white/85 font-medium leading-relaxed">
+                      <p className="text-xs sm:text-base md:text-lg text-white/85 font-medium leading-relaxed">
                         You spend 15-20 minutes every morning standing in front of your wardrobe, yet end up repeating old outfits because you can't tell if the fit truly works for the venue.
                       </p>
                     </div>
 
                     {/* Image 2 style: Corner-pinned white widget exactly like Pest Busters */}
-                    <div className="mt-auto pr-6 z-10">
-                      <div className="bg-white text-gray-950 rounded-tr-3xl rounded-br-2xl p-6 sm:p-7 shadow-2xl border-t border-r border-gray-100 space-y-3 max-w-[94%]">
-                        <div className="space-y-1">
-                          <div className="text-xl sm:text-2xl font-black text-gray-950 leading-tight">
+                    <div className="mt-auto pr-4 sm:pr-6 z-10">
+                      <div className="bg-white text-gray-950 rounded-tr-2xl sm:rounded-tr-3xl rounded-br-xl sm:rounded-br-2xl p-4 sm:p-6 md:p-7 shadow-2xl border-t border-r border-gray-100 space-y-2 sm:space-y-3 max-w-[96%] sm:max-w-[94%]">
+                        <div className="space-y-0.5 sm:space-y-1">
+                          <div className="text-base sm:text-xl md:text-2xl font-black text-gray-950 leading-tight">
                             Wardrobe Dilemma
                           </div>
-                          <div className="text-xs sm:text-sm font-bold text-gray-700">
+                          <div className="text-[11px] sm:text-xs md:text-sm font-bold text-gray-700">
                             <span className="text-red-600 font-black">0 reviews</span> · Outfit Repeat
                           </div>
-                          <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                          <div className="text-[10px] sm:text-xs md:text-sm text-gray-500 font-medium">
                             3+ outfits wasted this week
                           </div>
                         </div>
 
                         {/* 3 Blue Action Buttons like Website / Call / Directions in Image 2 */}
-                        <div className="flex items-center gap-5 pt-2 border-t border-gray-100">
-                          <div className="flex flex-col items-center gap-1 cursor-pointer">
-                            <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-black shadow-xs">
-                              <Globe2 className="w-4 h-4" />
+                        <div className="flex items-center gap-3 sm:gap-5 pt-2 border-t border-gray-100">
+                          <div className="flex flex-col items-center gap-0.5 sm:gap-1 cursor-pointer">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-black shadow-xs">
+                              <Globe2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </div>
-                            <span className="text-[10px] font-black text-blue-600 tracking-wider uppercase">PINTEREST</span>
+                            <span className="text-[9px] sm:text-[10px] font-black text-blue-600 tracking-wider uppercase">PINTEREST</span>
                           </div>
 
-                          <div className="flex flex-col items-center gap-1 cursor-pointer">
-                            <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-black shadow-xs">
-                              <Camera className="w-4 h-4" />
+                          <div className="flex flex-col items-center gap-0.5 sm:gap-1 cursor-pointer">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-black shadow-xs">
+                              <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                             </div>
-                            <span className="text-[10px] font-black text-blue-600 tracking-wider uppercase">TIKTOK</span>
+                            <span className="text-[9px] sm:text-[10px] font-black text-blue-600 tracking-wider uppercase">TIKTOK</span>
                           </div>
 
-                          <div className="flex flex-col items-center gap-1 cursor-pointer">
-                            <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black shadow-xs rotate-45">
-                              <Compass className="w-4 h-4 -rotate-45" />
+                          <div className="flex flex-col items-center gap-0.5 sm:gap-1 cursor-pointer">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black shadow-xs rotate-45">
+                              <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 -rotate-45" />
                             </div>
-                            <span className="text-[10px] font-black text-blue-600 tracking-wider uppercase">RETRY FIT</span>
+                            <span className="text-[9px] sm:text-[10px] font-black text-blue-600 tracking-wider uppercase">RETRY FIT</span>
                           </div>
                         </div>
                       </div>
@@ -354,18 +354,18 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
                   </div>
 
                   {/* Card 2: Seeding Fatigue (Full-bleed photo of person with laptop like Image 2) */}
-                  <div className="rounded-3xl bg-gradient-to-b from-[#4a3528] via-[#2f2219] to-[#1a120c] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[480px] sm:min-h-[520px] hover:border-amber-400/50 transition-all duration-300">
-                    <div className="p-7 sm:p-9 space-y-3 z-10 relative">
-                      <h4 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                  <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#4a3528] via-[#2f2219] to-[#1a120c] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[380px] sm:min-h-[460px] md:min-h-[520px] hover:border-amber-400/50 transition-all duration-300">
+                    <div className="p-5 sm:p-7 md:p-9 space-y-2 sm:space-y-3 z-10 relative">
+                      <h4 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
                         Seeding Fatigue
                       </h4>
-                      <p className="text-base sm:text-lg text-white/85 font-medium leading-relaxed">
+                      <p className="text-xs sm:text-base md:text-lg text-white/85 font-medium leading-relaxed">
                         Viral social reviews turn out to be paid seeding. You arrive only to find the spot closed, poorly lit, or outdoor in sudden monsoon downpours.
                       </p>
                     </div>
 
                     {/* Image 2 style: Full bleed bottom photo of person sitting at desk with laptop */}
-                    <div className="relative w-full h-60 sm:h-72 mt-auto overflow-hidden">
+                    <div className="relative w-full h-44 sm:h-60 md:h-72 mt-auto overflow-hidden">
                       <img
                         src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=800&auto=format&fit=crop&q=80"
                         alt="Seeding Fatigue Illustration"
@@ -376,32 +376,32 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
                   </div>
 
                   {/* Card 3: Fragmented Flow (Stepped Red Bars + Floating Metric Pill like Image 2) */}
-                  <div className="rounded-3xl bg-gradient-to-b from-[#3d1922] via-[#2d1219] to-[#1a080d] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[480px] sm:min-h-[520px] hover:border-rose-400/50 transition-all duration-300">
-                    <div className="p-7 sm:p-9 space-y-3 z-10 relative">
-                      <h4 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                  <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#3d1922] via-[#2d1219] to-[#1a080d] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[380px] sm:min-h-[460px] md:min-h-[520px] hover:border-rose-400/50 transition-all duration-300">
+                    <div className="p-5 sm:p-7 md:p-9 space-y-2 sm:space-y-3 z-10 relative">
+                      <h4 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight">
                         Fragmented Flow
                       </h4>
-                      <p className="text-base sm:text-lg text-white/85 font-medium leading-relaxed">
+                      <p className="text-xs sm:text-base md:text-lg text-white/85 font-medium leading-relaxed">
                         Planning one outing forces you to juggle 4–5 disconnected apps for weather radar, fit inspiration, map discovery, and photo filters.
                       </p>
                     </div>
 
                     {/* Image 2 style: Descending Stepped Red Bars & Floating Stat Pill */}
-                    <div className="relative w-full h-56 mt-auto flex flex-col items-center justify-end px-6 pb-0 overflow-hidden">
+                    <div className="relative w-full h-40 sm:h-56 mt-auto flex flex-col items-center justify-end px-4 sm:px-6 pb-0 overflow-hidden">
 
                       {/* Floating Pink/Red Stat Pill */}
-                      <div className="relative z-20 mb-3 px-6 py-2 rounded-2xl bg-[#ffccd5] text-[#d90429] font-black text-xl sm:text-2xl shadow-2xl flex items-center gap-2">
+                      <div className="relative z-20 mb-2 sm:mb-3 px-4 sm:px-6 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-[#ffccd5] text-[#d90429] font-black text-base sm:text-xl md:text-2xl shadow-2xl flex items-center gap-1.5 sm:gap-2">
                         <span>-45%</span>
-                        <span className="text-base">▼</span>
+                        <span className="text-xs sm:text-base">▼</span>
                       </div>
 
                       {/* Descending red stepped rounded bars rising from bottom */}
-                      <div className="w-full flex items-end justify-center gap-3 relative z-10">
-                        <div className="w-1/3 h-20 bg-[#ef233c] rounded-t-2xl opacity-90 shadow-md" />
-                        <div className="w-1/3 h-32 bg-[#d90429] rounded-t-2xl opacity-95 shadow-lg flex items-center justify-center">
-                          <span className="text-[10px] font-black text-white uppercase tracking-wider -rotate-90">Time Lost</span>
+                      <div className="w-full flex items-end justify-center gap-2 sm:gap-3 relative z-10">
+                        <div className="w-1/3 h-14 sm:h-20 bg-[#ef233c] rounded-t-xl sm:rounded-t-2xl opacity-90 shadow-md" />
+                        <div className="w-1/3 h-24 sm:h-32 bg-[#d90429] rounded-t-xl sm:rounded-t-2xl opacity-95 shadow-lg flex items-center justify-center">
+                          <span className="text-[9px] sm:text-[10px] font-black text-white uppercase tracking-wider -rotate-90">Time Lost</span>
                         </div>
-                        <div className="w-1/3 h-14 bg-[#ff4d6d] rounded-t-2xl opacity-85 shadow-sm" />
+                        <div className="w-1/3 h-10 sm:h-14 bg-[#ff4d6d] rounded-t-xl sm:rounded-t-2xl opacity-85 shadow-sm" />
                       </div>
                     </div>
                   </div>
@@ -409,34 +409,34 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
                 </div>
               </div>
 
-              {/* 3. SECTION B: WHY CHOOSE AURALENS (Styled like Image 2 - Minimalist Dark Cards, Large Font) */}
-              <div className="space-y-6 pt-6">
+              {/* 3. SECTION B: WHY CHOOSE AURALENS (Styled like Image 2 - Minimalist Dark Cards, 2-col on Mobile) */}
+              <div className="space-y-4 sm:space-y-6 pt-4 sm:pt-6">
                 <div className="text-center max-w-6xl mx-auto">
-                  <h3 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase whitespace-normal lg:whitespace-nowrap">
+                  <h3 className="text-xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white uppercase whitespace-normal lg:whitespace-nowrap">
                     Why Choose <span className="text-[#D4FF00]">AuraLens</span>?
                   </h3>
                 </div>
 
-                {/* 6 Minimalist Dark Cards in 3x2 Grid (Large Typography matching Section A) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+                {/* 6 Minimalist Dark Cards: 2 Columns on Mobile, 3 Columns on Desktop */}
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6 pt-2">
                   {WHY_CHOOSE_SOLUTIONS.map((sol, idx) => {
                     const Icon = sol.icon;
                     return (
                       <div
                         key={idx}
-                        className="p-7 sm:p-8 rounded-3xl bg-black/50 border border-white/10 hover:border-white/30 backdrop-blur-xl shadow-xl space-y-4 transition-all duration-300 hover:scale-102 flex flex-col justify-start"
+                        className="p-3.5 sm:p-7 md:p-8 rounded-2xl sm:rounded-3xl bg-black/50 border border-white/10 hover:border-white/30 backdrop-blur-xl shadow-xl space-y-2 sm:space-y-4 transition-all duration-300 hover:scale-102 flex flex-col justify-start"
                       >
                         {/* Minimalist White Icon Box like Image 2 */}
-                        <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shrink-0 shadow-sm">
-                          <Icon className="w-6 h-6" />
+                        <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white shrink-0 shadow-sm">
+                          <Icon className="w-4 h-4 sm:w-6 sm:h-6" />
                         </div>
 
-                        {/* Bold Clean Typography Large */}
-                        <div className="space-y-2">
-                          <h4 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug">
+                        {/* Bold Clean Typography */}
+                        <div className="space-y-1 sm:space-y-2">
+                          <h4 className="text-xs sm:text-xl md:text-2xl font-black text-white tracking-tight leading-snug">
                             {sol.title}
                           </h4>
-                          <p className="text-sm sm:text-base text-white/80 font-medium leading-relaxed">
+                          <p className="text-[10px] sm:text-sm md:text-base text-white/80 font-medium leading-relaxed line-clamp-4 sm:line-clamp-none">
                             {sol.desc}
                           </p>
                         </div>
@@ -446,19 +446,19 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
                 </div>
               </div>
 
-              {/* 4. Pure Transparent Tech Ecosystem Logos (Clean Transparent Background & Extra Large Size) */}
-              <div className="pt-8 border-t border-white/15 space-y-5 text-center">
-                <h4 className="text-xs sm:text-sm font-black text-white/90 tracking-widest uppercase">
+              {/* 4. Pure Transparent Tech Ecosystem Logos (Clean Transparent Background & Responsive Scaling) */}
+              <div className="pt-6 sm:pt-8 border-t border-white/15 space-y-4 sm:space-y-5 text-center">
+                <h4 className="text-[10px] sm:text-sm font-black text-white/90 tracking-widest uppercase">
                   Powered by the Google AI Ecosystem & Modern Tech Stack
                 </h4>
 
                 {/* Pure Transparent Extra Large Floating Logos Row */}
-                <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 pt-3">
+                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-8 md:gap-12 pt-2 sm:pt-3">
                   {TECH_LOGOS_TRANSPARENT.map((tech, idx) => (
                     <div
                       key={idx}
                       title={tech.name}
-                      className="h-14 sm:h-18 w-auto min-w-[56px] sm:min-w-[72px] flex items-center justify-center hover:scale-125 transition-all duration-300 cursor-pointer drop-shadow-[0_6px_20px_rgba(0,0,0,0.6)]"
+                      className="h-8 sm:h-14 md:h-18 w-auto min-w-[36px] sm:min-w-[56px] md:min-w-[72px] flex items-center justify-center hover:scale-125 transition-all duration-300 cursor-pointer drop-shadow-[0_6px_20px_rgba(0,0,0,0.6)]"
                     >
                       <img
                         src={tech.logo}

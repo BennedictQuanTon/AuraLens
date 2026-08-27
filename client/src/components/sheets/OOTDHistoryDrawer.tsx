@@ -43,18 +43,27 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
   const [isRendered, setIsRendered] = useState<boolean>(isOpen);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
-  // Smooth Slide-in from Right & Fade-out transition + Load from Vault Storage
+  // Smooth Slide-in from Right & Fade-out transition + Lock Background Scroll
   useEffect(() => {
     if (isOpen) {
       setVaultItems(vaultStorage.getVaultItems() as VaultItem[]);
       setIsRendered(true);
       const timer = setTimeout(() => setIsVisible(true), 20);
+
+      // 100% Lock background page scrolling
       document.body.style.overflow = 'hidden';
-      return () => clearTimeout(timer);
+      document.documentElement.style.overflow = 'hidden';
+
+      return () => {
+        clearTimeout(timer);
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+      };
     } else {
       setIsVisible(false);
       const timer = setTimeout(() => setIsRendered(false), 300);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -96,12 +105,24 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
 
   return (
     <div
+      onWheel={(e) => e.stopPropagation()}
       className={`fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-md transition-opacity duration-300 ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
-      {/* Backdrop Click to Close */}
-      <div className="absolute inset-0" onClick={onClose} />
+      {/* Backdrop Click to Close - Stops scroll bleed-through */}
+      <div
+        className="absolute inset-0"
+        onClick={onClose}
+        onWheel={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      />
 
       {/* Floating Toast Notification */}
       {deleteToast && (
@@ -187,7 +208,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
         {/* ========================================================================= */}
         {/* 2. VAULT ITEMS GRID (Border Color Distinction: Emerald = Drip, Pink = Photo) */}
         {/* ========================================================================= */}
-        <div className="flex-1 p-5 sm:p-6 overflow-y-auto space-y-4">
+        <div className="flex-1 p-5 sm:p-6 overflow-y-auto custom-scrollbar overscroll-contain space-y-4">
           {filteredItems.length === 0 ? (
             <div className="h-64 flex flex-col items-center justify-center text-center p-6 bg-gray-50 rounded-3xl border border-dashed border-gray-200 space-y-2">
               <Sparkles className="w-8 h-8 text-gray-300 animate-pulse" />
