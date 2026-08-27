@@ -402,7 +402,28 @@ export const HeroView: React.FC<HeroViewProps> = ({
       {/* ========================================================================= */}
       {/* 2. TOP KPI CARDS: 3 PERFECTLY BALANCED, UNIFIED HEIGHT DASHBOARD WIDGETS */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
+      <div className="space-y-3">
+        {/* Top Control Bar (Outside the Cards Frame) */}
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-purple-600" />
+            <span className="text-xs font-black uppercase tracking-wider text-gray-500">
+              {isEn ? 'Style & Vibe Intelligence' : 'Chỉ Số Phong Cách & Tọa Độ Vibe'}
+            </span>
+          </div>
+
+          {/* Info Button (i) Placed Outside Above The Card Frame */}
+          <button
+            onClick={() => setIsSpotsInfoOpen(true)}
+            className="py-1.5 px-3.5 rounded-full bg-gray-100/90 hover:bg-gray-200 text-gray-700 hover:text-gray-950 flex items-center gap-1.5 text-xs font-black transition-all cursor-pointer shadow-xs active:scale-95 border border-gray-200/80 group"
+            title={isEn ? 'Vibe Spots & Scalability Architecture' : 'Thông tin Tọa Độ Vibe & Khả năng mở rộng'}
+          >
+            <Info className="w-3.5 h-3.5 text-gray-500 group-hover:text-gray-950 transition-colors" />
+            <span>{isEn ? 'Vibe Spots Info' : 'Thông Tin Tọa Độ Vibe'}</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
         
         {/* CARD 1: STREAK & STYLE STATS (3-Column Clean Stats - Electric Purple Theme) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
@@ -553,15 +574,6 @@ export const HeroView: React.FC<HeroViewProps> = ({
         {/* CARD 3: CURATED VIBE SPOTS (Individual SVG Path Sectors: 100% Reliable Hit Testing) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
-          {/* Top-Right Info Button (i) */}
-          <button
-            onClick={() => setIsSpotsInfoOpen(true)}
-            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-950 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95 z-20 group"
-            title={isEn ? 'Vibe Spots & Scalability Architecture' : 'Thông tin Tọa Độ Vibe & Khả năng mở rộng'}
-          >
-            <Info className="w-4 h-4 text-gray-500 group-hover:text-gray-950 transition-colors" />
-          </button>
-
           {/* Top Section: SVG Donut Chart with Exact SVG Path Sectors */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
@@ -698,6 +710,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
         </div>
 
       </div>
+    </div>
 
       {/* ========================================================================= */}
       {/* 3. MIDDLE SECTION: MULTI-LINE CHART (WITH Y-AXIS) & HCMC VISUAL MAP       */}
