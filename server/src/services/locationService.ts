@@ -55,6 +55,8 @@ export class LocationService {
       this.isLocationOpen(place.openHours, weather.currentHour)
     );
 
+    const isEn = request.language === 'en';
+
     // 3. SCORE & RANK by Aesthetic Match
     const rankedPlaces = candidatePlaces.map((place) => {
       let matchScore = 75;
@@ -62,7 +64,9 @@ export class LocationService {
 
       if (place.aestheticTag === aestheticTag) {
         matchScore = 96;
-        matchReason = `Không gian chuẩn ${aestheticTag} 100%, cực kỳ tương đồng với vibe outfit của bạn.`;
+        matchReason = isEn
+          ? `100% matched with ${aestheticTag} aesthetics, harmonizing perfectly with your outfit aura.`
+          : `Không gian chuẩn ${aestheticTag} 100%, cực kỳ tương đồng với vibe outfit của bạn.`;
       } else {
         // Cross-style affinity
         const relatedAesthetics: Record<VibeStyle, VibeStyle[]> = {
@@ -79,27 +83,57 @@ export class LocationService {
         const isCompatible = relatedAesthetics[aestheticTag]?.includes(place.aestheticTag);
         if (isCompatible) {
           matchScore = 86;
-          matchReason = `Không gian phong cách ${place.aestheticTag} tạo nên sự tương phản nghệ thuật với đồ của bạn.`;
+          matchReason = isEn
+            ? `${place.aestheticTag} environment creates an artistic contrast with your look.`
+            : `Không gian phong cách ${place.aestheticTag} tạo nên sự tương phản nghệ thuật với đồ của bạn.`;
         } else {
           matchScore = 72;
-          matchReason = `Địa điểm đẹp, ánh sáng tự nhiên lý tưởng cho mọi góc chụp.`;
+          matchReason = isEn
+            ? `Beautiful ambiance with great natural lighting for photos.`
+            : `Địa điểm đẹp, ánh sáng tự nhiên lý tưởng cho mọi góc chụp.`;
         }
       }
 
       // Add extra reason if indoor during rain
       if (weather.isRaining && place.isIndoor) {
-        matchReason += ' (Có máy lạnh không gian kín, không lo ướt đồ).';
+        matchReason += isEn
+          ? ' (Full indoor AC, stay safe and dry).'
+          : ' (Có máy lạnh không gian kín, không lo ướt đồ).';
       }
 
-      return {
-        ...place,
+      const localizedPlace: Location = {
+        id: place.id,
+        name: isEn ? (place.nameEn || place.name) : place.name,
+        type: place.type,
+        aestheticTag: place.aestheticTag,
+        gps: {
+          lat: place.gps.lat,
+          lng: place.gps.lng,
+          district: isEn ? (place.districtEn || place.gps.district) : place.gps.district,
+        },
+        address: isEn ? (place.addressEn || place.address) : place.address,
+        isIndoor: place.isIndoor,
+        openHours: place.openHours,
+        signatureDrinkOrDish: isEn
+          ? (place.signatureDrinkOrDishEn || place.signatureDrinkOrDish)
+          : place.signatureDrinkOrDish,
+        bestPhotoSpot: isEn
+          ? (place.bestPhotoSpotEn || place.bestPhotoSpot)
+          : place.bestPhotoSpot,
+        imageUrl: place.imageUrl,
+        mapsLink: place.mapsLink,
+        vibeDescription: isEn
+          ? (place.vibeDescriptionEn || place.vibeDescription)
+          : place.vibeDescription,
         matchScore,
         matchReason,
       };
+
+      return localizedPlace;
     });
 
     // Sort descending by match score
-    rankedPlaces.sort((a, b) => b.matchScore - a.matchScore);
+    rankedPlaces.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
 
     const recommendedPlaces = rankedPlaces.slice(0, limit);
 
@@ -107,14 +141,26 @@ export class LocationService {
     let lumiSuggestion = '';
     const topPlace = recommendedPlaces[0];
 
-    if (weather.isRaining) {
-      lumiSuggestion = `Trời Sài Gòn đang đổ mưa (${weather.temperature}°C) nên Lumi đã lọc sẵn toàn bộ quán trong nhà có máy lạnh mát rượi cho bà rồi nè! Diện đồ ${aestheticTag} thì phi ngay qua ${
-        topPlace ? topPlace.name : 'quán cafe'
-      }, chụp góc "${topPlace ? topPlace.bestPhotoSpot : 'sống ảo'}" bao nghệ luôn!`;
+    if (isEn) {
+      if (weather.isRaining) {
+        lumiSuggestion = `It is raining in Saigon (${weather.temperature}°C)! Lumi pre-filtered cozy indoor spots with full AC. Rocking that ${aestheticTag} fit at ${
+          topPlace ? topPlace.name : 'the cafe'
+        } and snapping at "${topPlace ? topPlace.bestPhotoSpot : 'the photo spot'}" will look absolute fire!`;
+      } else {
+        lumiSuggestion = `Gorgeous sunny weather today (${weather.temperature}°C)! This ${aestheticTag} outfit is begging for a trip to ${
+          topPlace ? topPlace.name : 'our recommended spot'
+        } to sip on "${topPlace ? topPlace.signatureDrinkOrDish : 'their signature drink'}"!`;
+      }
     } else {
-      lumiSuggestion = `Thời tiết hôm nay nắng ráo siêu đẹp (${weather.temperature}°C)! Set đồ ${aestheticTag} này mà ghé ${
-        topPlace ? topPlace.name : 'địa điểm đề xuất'
-      } uống "${topPlace ? topPlace.signatureDrinkOrDish : 'nước ngon'}" và check-in thì đảm bảo cháy máy!`;
+      if (weather.isRaining) {
+        lumiSuggestion = `Trời Sài Gòn đang đổ mưa (${weather.temperature}°C) nên Lumi đã lọc sẵn toàn bộ quán trong nhà có máy lạnh mát rượi cho bà rồi nè! Diện đồ ${aestheticTag} thì phi ngay qua ${
+          topPlace ? topPlace.name : 'quán cafe'
+        }, chụp góc "${topPlace ? topPlace.bestPhotoSpot : 'sống ảo'}" bao nghệ luôn!`;
+      } else {
+        lumiSuggestion = `Thời tiết hôm nay nắng ráo siêu đẹp (${weather.temperature}°C)! Set đồ ${aestheticTag} này mà ghé ${
+          topPlace ? topPlace.name : 'địa điểm đề xuất'
+        } uống "${topPlace ? topPlace.signatureDrinkOrDish : 'nước ngon'}" và check-in thì đảm bảo cháy máy!`;
+      }
     }
 
     return {

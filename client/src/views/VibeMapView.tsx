@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, List, Map as MapIcon, X, Shirt, MapPin, Sun, CloudRain, ChevronRight, Compass } from 'lucide-react';
+import { Sparkles, List, Map as MapIcon, X, Shirt, MapPin, Sun, CloudRain, ChevronRight, Compass, Info } from 'lucide-react';
 import type { Location, PlaceRecommendationResponse, WeatherContext, AIMapAnalysisResponse } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
 import { InteractiveMapView } from '../components/common/InteractiveMapView.js';
+import { MapInfoModal } from '../components/sheets/MapInfoModal.js';
 import { MOCK_HCMC_LOCATIONS } from '../data/mockLocations.js';
 import { apiService } from '../services/api.js';
 
@@ -29,6 +30,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
   const [viewMode, setViewMode] = useState<'list' | 'map'>('map');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [hasAnalyzed, setHasAnalyzed] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [aiReport, setAiReport] = useState<AIMapAnalysisResponse | null>(null);
   const [showReport, setShowReport] = useState(false);
 
@@ -103,7 +105,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
     <div className="space-y-6 animate-fadeIn pb-16 max-w-6xl w-full mx-auto px-2 sm:px-4">
       
       {/* ========================================================================= */}
-      {/* TOP CONTROLLER BAR: MAP/LIST TOGGLE + AI ANALYZE BUTTON                   */}
+      {/* TOP CONTROLLER BAR: MAP/LIST TOGGLE + INFO (i) + AI ANALYZE BUTTON        */}
       {/* ========================================================================= */}
       <div className="flex items-center justify-between gap-3 pt-2">
         {/* View Mode Toggle (Map vs List) */}
@@ -133,15 +135,27 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
           </button>
         </div>
 
-        {/* AI Analyze Action Button */}
-        <button
-          onClick={handleAnalyze}
-          disabled={isAnalyzing}
-          className="py-2.5 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 hover:opacity-95 text-white font-black text-xs sm:text-sm shadow-xl flex items-center gap-2 cursor-pointer active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
-        >
-          <Sparkles className={`w-4 h-4 text-[#D4FF00] ${isAnalyzing ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'}`} />
-          <span>{isAnalyzing ? (isEn ? 'Analyzing...' : 'Đang phân tích...') : 'Analyze'}</span>
-        </button>
+        {/* Right Controller: Gray Info Button (i) + AI Analyze Action Button */}
+        <div className="flex items-center gap-2">
+          {/* Info Button (i) */}
+          <button
+            onClick={() => setIsInfoOpen(true)}
+            className="w-10 h-10 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-950 flex items-center justify-center border border-gray-200/90 shadow-xs transition-all cursor-pointer active:scale-95 group"
+            title={isEn ? 'AI & Map Architecture Info' : 'Thông tin AI & Kiến trúc bản đồ'}
+          >
+            <Info className="w-4 h-4 text-gray-600 group-hover:text-gray-950 transition-colors" />
+          </button>
+
+          {/* AI Analyze Action Button */}
+          <button
+            onClick={handleAnalyze}
+            disabled={isAnalyzing}
+            className="py-2.5 px-6 rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-purple-700 hover:opacity-95 text-white font-black text-xs sm:text-sm shadow-xl flex items-center gap-2 cursor-pointer active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+          >
+            <Sparkles className={`w-4 h-4 text-[#D4FF00] ${isAnalyzing ? 'animate-spin' : 'group-hover:rotate-12 transition-transform'}`} />
+            <span>{isAnalyzing ? (isEn ? 'Analyzing...' : 'Đang phân tích...') : 'Analyze'}</span>
+          </button>
+        </div>
       </div>
 
       {/* ========================================================================= */}
@@ -203,26 +217,21 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
                         />
                       </div>
 
-                      {/* Card Body: Place Name, Score, Vibe & Action Button */}
-                      <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col justify-between">
-                        <div className="space-y-1.5">
-                          {/* Top Row: Type/District & Match Score Badge */}
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <span className="text-[10px] font-black uppercase tracking-wider text-purple-700 block">
-                                {place.type} · {place.gps.district}
-                              </span>
-                              <h3 className="text-base sm:text-lg font-black text-gray-950 leading-tight">
-                                {place.name}
-                              </h3>
-                            </div>
+                      {/* Card Body: Place Name, Score, Vibe & Action Button (No Category Tag, Larger Typography) */}
+                      <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+                        <div className="space-y-2">
+                          {/* Top Row: Place Name & Match Score Badge */}
+                          <div className="flex items-start justify-between gap-3">
+                            <h3 className="text-base sm:text-lg font-black text-gray-950 leading-tight flex-1">
+                              {place.name}
+                            </h3>
                             <span className="px-2.5 py-1 rounded-full bg-gray-950 text-[#D4FF00] text-xs font-black shrink-0 shadow-xs">
                               {place.matchScore ?? 96}% Match
                             </span>
                           </div>
 
-                          {/* 2-line Vibe Description */}
-                          <p className="text-xs text-gray-600 leading-relaxed font-medium line-clamp-2 pt-0.5">
+                          {/* Vibe Description (Large, Clean & Readable) */}
+                          <p className="text-sm sm:text-base text-gray-700 leading-relaxed font-medium line-clamp-2">
                             {place.vibeDescription}
                           </p>
                         </div>
@@ -234,7 +243,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
                               e.stopPropagation();
                               onSelectPlace(place);
                             }}
-                            className="w-full py-2.5 px-4 rounded-xl bg-gray-950 hover:bg-black text-white text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm active:scale-98"
+                            className="w-full py-3 px-4 rounded-xl bg-gray-950 hover:bg-black text-white text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm active:scale-98"
                           >
                             <span>{isEn ? 'View Info' : 'Xem Chi Tiết'}</span>
                             <ChevronRight className="w-4 h-4 text-[#D4FF00]" />
@@ -394,6 +403,15 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ========================================================================= */}
+      {/* 3. MAP & AI ARCHITECTURE INFO MODAL (i Button)                            */}
+      {/* ========================================================================= */}
+      <MapInfoModal
+        isOpen={isInfoOpen}
+        language={language}
+        onClose={() => setIsInfoOpen(false)}
+      />
 
     </div>
   );

@@ -447,14 +447,6 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
             {/* Venue Info & Bullet Points */}
             <div className="flex-1 space-y-3 w-full">
               <div className="pr-8 space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-black text-gray-500 uppercase tracking-wider">
-                    {selectedLocation.type} · {isEn ? (selectedLocation.district_mock_en || selectedLocation.district_mock) : selectedLocation.district_mock}
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-black">
-                    {selectedLocation.aesthetic_tag}
-                  </span>
-                </div>
                 <h4 className="text-xl sm:text-2xl font-black text-gray-950 leading-tight">
                   {selectedLocation.name}
                 </h4>
@@ -480,23 +472,23 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
                 </div>
               </div>
 
-              {/* Clean Concise Bullet Points (No Clutter Emojis) */}
-              <div className="space-y-1.5 text-xs sm:text-sm text-gray-700 font-medium border-t border-gray-100 pt-2.5">
+              {/* Clean Concise Bullet Points (Large & Clear Typography) */}
+              <div className="space-y-2 text-sm sm:text-base text-gray-800 font-medium border-t border-gray-100 pt-3">
                 {selectedLocation.signature_item && (
                   <p className="line-clamp-1">
                     <span className="text-gray-950 font-black">• {isEn ? 'Signature:' : 'Món đặc trưng:'}</span>{' '}
-                    {isEn ? (selectedLocation.signature_item_en || selectedLocation.signature_item) : selectedLocation.signature_item}
+                    <span className="text-amber-800 font-bold">{isEn ? (selectedLocation.signature_item_en || selectedLocation.signature_item) : selectedLocation.signature_item}</span>
                   </p>
                 )}
                 {selectedLocation.best_photo_spot && (
                   <p className="line-clamp-1">
                     <span className="text-gray-950 font-black">• {isEn ? 'Photo Spot:' : 'Góc check-in:'}</span>{' '}
-                    {isEn ? (selectedLocation.best_photo_spot_en || selectedLocation.best_photo_spot) : selectedLocation.best_photo_spot}
+                    <span className="text-pink-700 font-bold">{isEn ? (selectedLocation.best_photo_spot_en || selectedLocation.best_photo_spot) : selectedLocation.best_photo_spot}</span>
                   </p>
                 )}
                 <p className="line-clamp-1">
                   <span className="text-gray-950 font-black">• {isEn ? 'Address:' : 'Địa chỉ:'}</span>{' '}
-                  {isEn ? (selectedLocation.address_mock_en || selectedLocation.address_mock) : selectedLocation.address_mock}
+                  <span className="text-gray-700 font-semibold">{isEn ? (selectedLocation.address_mock_en || selectedLocation.address_mock) : selectedLocation.address_mock}</span>
                 </p>
               </div>
 
