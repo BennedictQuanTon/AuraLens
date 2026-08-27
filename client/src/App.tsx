@@ -413,11 +413,8 @@ export function App() {
       <PlaceDetailModal
         place={selectedPlace}
         isOpen={!!selectedPlace}
+        language={language}
         onClose={() => setSelectedPlace(null)}
-        onGoToPhotobooth={() => {
-          setSelectedPlace(null);
-          setActiveView(4);
-        }}
       />
 
       <MerchantDrawer

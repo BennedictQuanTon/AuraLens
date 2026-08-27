@@ -5,8 +5,6 @@ import {
   Navigation,
   Clock,
   Footprints,
-  CloudRain,
-  Sun,
   X,
   ChevronRight,
   Sparkles,
@@ -193,59 +191,64 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
 
     if (!hasAnalyzed) return;
 
+    // Find highest score venue for Star Badge
+    const highestScore = Math.max(...filteredLocations.map((l) => l.match_score), 0);
+
     filteredLocations.forEach((loc) => {
       const isSelected = selectedLocation?.id === loc.id;
       const isDisabled = loc.status === 'weather_disabled';
+      const isTopStar = loc.is_lumi_pick || (loc.match_score === highestScore && highestScore > 0);
 
-      // Color scheme based on aesthetic tag
-      let badgeBg = '#9333EA'; // Purple default
-      if (loc.aesthetic_tag === 'Cyber-Pop') badgeBg = '#00B4D8';
-      if (loc.aesthetic_tag === 'Y2K') badgeBg = '#FF2E93';
-      if (loc.aesthetic_tag === 'Minimalist') badgeBg = '#7C3AED';
-      if (loc.aesthetic_tag === 'Clean-Fit') badgeBg = '#10B981';
+      // Color accent based on aesthetic tag
+      let ringColor = '#9333EA';
+      if (loc.aesthetic_tag === 'Cyber-Pop') ringColor = '#00F5FF';
+      if (loc.aesthetic_tag === 'Y2K') ringColor = '#FF2E93';
+      if (loc.aesthetic_tag === 'Minimalist') ringColor = '#7C3AED';
+      if (loc.aesthetic_tag === 'Clean-Fit') ringColor = '#10B981';
 
-      // Category Icon
-      let categorySymbol = '☕';
-      if (loc.type === 'Pub' || loc.type === 'Bar' || loc.type === 'Lounge') categorySymbol = '🍸';
-      if (loc.type === 'Museum') categorySymbol = '🎨';
+      // Category Icon Symbol
+      let iconSymbol = '☕';
+      if (loc.type === 'Pub' || loc.type === 'Bar' || loc.type === 'Lounge') iconSymbol = '🍸';
+      if (loc.type === 'Museum') iconSymbol = '🎨';
 
-      const shortName = loc.name.split(' - ')[0].split(' Landmark')[0].slice(0, 14);
-
-      // Sleek Modern 3D Drop-Pin Badge
+      // Sleek Dark Onyx Teardrop Pin (No Name Text, Dark Icon, Score on Top, Star for Top Pick)
       const markerHtml = `
         <div class="relative group cursor-pointer transition-all duration-300 ${
-          isSelected ? 'scale-125 z-50 -translate-y-2' : 'hover:scale-115 -translate-y-1'
+          isSelected ? 'scale-130 z-50 -translate-y-2' : 'hover:scale-115 -translate-y-1'
         } ${isDisabled ? 'opacity-40 grayscale' : ''}">
           
-          <!-- Drop Pin Capsule -->
-          <div class="relative px-2.5 py-1.5 rounded-2xl bg-white border-2 flex items-center gap-1.5 shadow-xl transition-all"
-               style="border-color: ${badgeBg};">
-            <span class="text-xs font-black">${categorySymbol}</span>
-            <span class="text-[11px] font-black text-gray-900 leading-none whitespace-nowrap">${shortName}</span>
-            <span class="px-1.5 py-0.5 rounded-full text-[9px] font-black text-white shadow-xs" style="background-color: ${badgeBg};">
-              ${loc.match_score}%
-            </span>
+          <!-- Score Pill on Top -->
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-1.5 py-0.2 rounded-full bg-gray-950 border text-[9px] font-black text-white whitespace-nowrap shadow-md"
+               style="border-color: ${ringColor};">
+            ${loc.match_score}%
           </div>
 
-          <!-- Pin Tail Arrow -->
-          <div class="w-2.5 h-2.5 bg-white border-r-2 border-b-2 rotate-45 mx-auto -mt-1.5 shadow-xs"
-               style="border-color: ${badgeBg};"></div>
-
+          <!-- Star on Top of Best Spot -->
           ${
-            loc.is_lumi_pick
-              ? `<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-0.2 rounded-full bg-[#D4FF00] border border-gray-950 text-gray-950 text-[8px] font-black uppercase tracking-wider whitespace-nowrap shadow-md">
-                   ⭐ LUMI
+            isTopStar
+              ? `<div class="absolute -top-6 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-[#D4FF00] border border-gray-950 text-gray-950 text-[10px] font-black flex items-center justify-center shadow-lg animate-bounce [animation-duration:2s]">
+                   ⭐
                  </div>`
               : ''
           }
+
+          <!-- Dark Onyx Circular Pin with Category Icon -->
+          <div class="w-10 h-10 rounded-full bg-gray-950 border-2.5 flex items-center justify-center text-white shadow-2xl transition-all"
+               style="border-color: ${ringColor}; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+            <span class="text-sm">${iconSymbol}</span>
+          </div>
+
+          <!-- Pin Bottom Teardrop Arrow -->
+          <div class="w-2.5 h-2.5 bg-gray-950 border-r-2 border-b-2 rotate-45 mx-auto -mt-1.5 shadow-sm"
+               style="border-color: ${ringColor};"></div>
         </div>
       `;
 
       const customIcon = L.divIcon({
         html: markerHtml,
         className: 'custom-venue-pin',
-        iconSize: [40, 40],
-        iconAnchor: [20, 36],
+        iconSize: [38, 38],
+        iconAnchor: [19, 38],
       });
 
       const marker = L.marker([loc.lat, loc.lng], { icon: customIcon }).addTo(map);
@@ -340,10 +343,9 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
     <div className="relative w-full rounded-3xl overflow-hidden bg-slate-100 border border-gray-200 shadow-xl flex flex-col justify-between select-none">
       
       {/* ========================================================================= */}
-      {/* 1. TOP FLOATING FILTER CAPSULE BAR                                         */}
+      {/* 1. TOP FLOATING FILTER CAPSULE BAR (Clean, No Weather Pill)                */}
       {/* ========================================================================= */}
-      <div className="absolute top-4 left-4 right-4 z-[400] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pointer-events-none">
-        {/* Filter Chips */}
+      <div className="absolute top-4 left-4 z-[20] flex items-center pointer-events-none">
         <div className="pointer-events-auto flex items-center gap-1.5 p-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-gray-200 overflow-x-auto">
           {[
             { id: 'all', label: isEn ? 'All' : 'Tất cả', count: hasAnalyzed ? processedLocations.length : 0 },
@@ -386,21 +388,6 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
             );
           })}
         </div>
-
-        {/* Live Weather Status Indicator Badge */}
-        <div className="pointer-events-auto self-start sm:self-auto flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-gray-200 text-xs font-black">
-          {weather.isRaining ? (
-            <>
-              <CloudRain className="w-4 h-4 text-cyan-600 animate-bounce" />
-              <span className="text-cyan-800">{isEn ? 'Rainy · Safe Indoor AC' : 'Trời Mưa · Lọc An Toàn AC'}</span>
-            </>
-          ) : (
-            <>
-              <Sun className="w-4 h-4 text-amber-500 animate-spin" style={{ animationDuration: '8s' }} />
-              <span className="text-amber-800">{isEn ? 'Clear & Sunny · Rooftop Open' : 'Trời Nắng Đẹp · Mở Rooftop'}</span>
-            </>
-          )}
-        </div>
       </div>
 
       {/* ========================================================================= */}
@@ -414,7 +401,7 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
 
       {/* Before Analyze Banner Overlay */}
       {!hasAnalyzed && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[400] max-w-md w-[92%] pointer-events-none animate-fadeIn">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[20] max-w-md w-[92%] pointer-events-none animate-fadeIn">
           <div className="p-4 rounded-2xl bg-white/95 backdrop-blur-xl border-2 border-purple-200/80 shadow-2xl text-center space-y-1">
             <div className="flex items-center justify-center gap-2 text-purple-700 font-black text-sm">
               <Sparkles className="w-4 h-4 text-[#FF2E93] animate-pulse" />
@@ -433,7 +420,7 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
       {/* 3. BOTTOM FLOATING VENUE DRAWER (When Pin is Selected)                    */}
       {/* ========================================================================= */}
       {selectedLocation && (
-        <div className="absolute bottom-4 left-4 right-4 z-[400] max-w-2xl mx-auto animate-slideUp">
+        <div className="absolute bottom-4 left-4 right-4 z-[25] max-w-2xl mx-auto animate-slideUp">
           <div className="p-5 sm:p-6 rounded-3xl bg-white/98 backdrop-blur-2xl border border-gray-200 text-gray-950 shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-center gap-5">
             
             {/* Close Button */}
@@ -462,7 +449,7 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
               <div className="pr-8 space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-black text-gray-500 uppercase tracking-wider">
-                    {selectedLocation.type} · {selectedLocation.district_mock}
+                    {selectedLocation.type} · {isEn ? (selectedLocation.district_mock_en || selectedLocation.district_mock) : selectedLocation.district_mock}
                   </span>
                   <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-black">
                     {selectedLocation.aesthetic_tag}
@@ -497,16 +484,19 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
               <div className="space-y-1.5 text-xs sm:text-sm text-gray-700 font-medium border-t border-gray-100 pt-2.5">
                 {selectedLocation.signature_item && (
                   <p className="line-clamp-1">
-                    <span className="text-gray-950 font-black">• Món đặc trưng:</span> {selectedLocation.signature_item}
+                    <span className="text-gray-950 font-black">• {isEn ? 'Signature:' : 'Món đặc trưng:'}</span>{' '}
+                    {isEn ? (selectedLocation.signature_item_en || selectedLocation.signature_item) : selectedLocation.signature_item}
                   </p>
                 )}
                 {selectedLocation.best_photo_spot && (
                   <p className="line-clamp-1">
-                    <span className="text-gray-950 font-black">• Góc check-in:</span> {selectedLocation.best_photo_spot}
+                    <span className="text-gray-950 font-black">• {isEn ? 'Photo Spot:' : 'Góc check-in:'}</span>{' '}
+                    {isEn ? (selectedLocation.best_photo_spot_en || selectedLocation.best_photo_spot) : selectedLocation.best_photo_spot}
                   </p>
                 )}
                 <p className="line-clamp-1">
-                  <span className="text-gray-950 font-black">• Địa chỉ:</span> {selectedLocation.address_mock}
+                  <span className="text-gray-950 font-black">• {isEn ? 'Address:' : 'Địa chỉ:'}</span>{' '}
+                  {isEn ? (selectedLocation.address_mock_en || selectedLocation.address_mock) : selectedLocation.address_mock}
                 </p>
               </div>
 
@@ -526,7 +516,7 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
 
                 <button
                   onClick={() => {
-                    const placeEntity = convertMockToLocation(selectedLocation);
+                    const placeEntity = convertMockToLocation(selectedLocation, language);
                     onSelectPlace(placeEntity);
                   }}
                   className="py-2.5 px-5 rounded-xl bg-gray-950 hover:bg-black text-white text-xs sm:text-sm font-black flex items-center gap-2 transition-all cursor-pointer shadow-md active:scale-95 ml-auto"

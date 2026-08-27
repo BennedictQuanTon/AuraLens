@@ -1,136 +1,166 @@
-import React from 'react';
-import { X, MapPin, Clock, Coffee, Camera, Navigation, Sparkles } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { X, Navigation, MapPin, Clock } from 'lucide-react';
 import type { Location } from '../../types/entityGraph.js';
+import type { AppLanguage } from '../../types/settings.js';
 
 interface PlaceDetailModalProps {
   place: Location | null;
   isOpen: boolean;
+  language?: AppLanguage;
   onClose: () => void;
-  onGoToPhotobooth: () => void;
+  onGoToPhotobooth?: () => void;
 }
 
 export const PlaceDetailModal: React.FC<PlaceDetailModalProps> = ({
   place,
   isOpen,
+  language = 'en',
   onClose,
-  onGoToPhotobooth,
 }) => {
+  const isEn = language === 'en';
+
+  // Lock body scroll when modal is open to prevent background scrolling
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen || !place) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 bg-black/75 backdrop-blur-md animate-fadeIn select-none">
+      {/* Backdrop */}
       <div className="absolute inset-0" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-100 max-h-[90vh] overflow-y-auto animate-scaleUp">
-        <div className="relative w-full h-52 bg-gray-900">
+      {/* Modal Container */}
+      <div className="relative z-10 w-full max-w-lg bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-200 max-h-[92vh] flex flex-col animate-scaleUp">
+        
+        {/* Clean HD Venue Image (NO Top Badges on Image) */}
+        <div className="relative w-full h-56 sm:h-64 bg-gray-900 shrink-0 overflow-hidden">
           <img
             src={place.imageUrl}
             alt={place.name}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
+          {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 p-2 rounded-full bg-black/50 text-white hover:bg-black/80 transition-all backdrop-blur-md"
+            className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-white hover:bg-black/90 transition-all backdrop-blur-md cursor-pointer z-10"
+            title={isEn ? 'Close' : 'Đóng'}
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
 
-          <div className="absolute top-3 left-3 flex items-center gap-1.5">
-            <span className="px-2.5 py-1 bg-[#D4FF00] text-black font-extrabold text-[10px] rounded-full shadow-md">
-              {place.aestheticTag}
-            </span>
-            <span
-              className={`px-2.5 py-1 text-white font-extrabold text-[10px] rounded-full backdrop-blur-md ${
-                place.isIndoor ? 'bg-blue-600/80' : 'bg-amber-600/80'
-              }`}
-            >
-              {place.isIndoor ? '❄️ Indoor AC' : '🌿 Open Outdoor'}
-            </span>
-          </div>
+          {/* Place Title & Match Badge */}
+          <div className="absolute bottom-4 left-5 right-5 flex items-end justify-between gap-3">
+            <div>
+              <span className="text-xs font-black uppercase tracking-widest text-purple-300 block">
+                {place.type} · {place.gps.district}
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight drop-shadow-md">
+                {place.name}
+              </h2>
+            </div>
 
-          <div className="absolute bottom-3 left-4 right-4">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-purple-300">
-              {place.type} · {place.gps.district}
-            </span>
-            <h2 className="text-xl font-extrabold text-white leading-tight drop-shadow-md">
-              {place.name}
-            </h2>
+            {place.matchScore && (
+              <span className="px-3 py-1 bg-[#D4FF00] text-gray-950 font-black text-xs rounded-full shadow-lg shrink-0">
+                {place.matchScore}% Match
+              </span>
+            )}
           </div>
         </div>
 
-        <div className="p-5 space-y-4">
-          <div className="space-y-1.5 text-xs text-gray-600 pb-3 border-b border-gray-100">
-            <p className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 text-[#FF2E93] shrink-0 mt-0.5" />
-              <span>{place.address}</span>
-            </p>
-            <p className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-purple-600 shrink-0" />
-              <span className="font-semibold text-gray-800">
-                Hours: {place.openHours.open}:00 - {place.openHours.close}:00
-              </span>
-            </p>
-          </div>
-
-          <div>
-            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
-              Atmosphere &amp; Vibe
+        {/* Modal Body: Why Visit & Full Details in Bullet Points (Large & Clear Typography) */}
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1">
+          
+          {/* Section: WHY VISIT / ĐIỂM NỔI BẬT (Bullet Points Format) */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gray-50 border border-gray-200/90 space-y-3">
+            <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-purple-700 block">
+              {isEn ? '✨ Why Visit & Highlights' : '✨ Điểm Nổi Bật & Không Gian'}
             </span>
-            <p className="text-xs text-gray-700 leading-relaxed bg-gray-50 p-3 rounded-2xl border border-gray-100">
-              {place.vibeDescription}
-            </p>
+
+            <ul className="space-y-2.5 text-xs sm:text-sm text-gray-800 leading-relaxed font-semibold">
+              <li className="flex items-start gap-2">
+                <span className="text-purple-600 font-black">•</span>
+                <div>
+                  <span className="text-gray-950 font-black">{isEn ? 'Atmosphere & Vibe:' : 'Không gian & Vibe:'}</span>{' '}
+                  <span className="text-gray-700 font-medium">{place.vibeDescription}</span>
+                </div>
+              </li>
+
+              <li className="flex items-start gap-2">
+                <span className="text-amber-600 font-black">•</span>
+                <div>
+                  <span className="text-gray-950 font-black">{isEn ? 'Signature Drink / Dish:' : 'Món đặc trưng:'}</span>{' '}
+                  <span className="text-amber-800 font-bold">{place.signatureDrinkOrDish}</span>
+                </div>
+              </li>
+
+              <li className="flex items-start gap-2">
+                <span className="text-pink-600 font-black">•</span>
+                <div>
+                  <span className="text-gray-950 font-black">{isEn ? 'Best Photo Spot:' : 'Góc check-in:'}</span>{' '}
+                  <span className="text-pink-800 font-bold">{place.bestPhotoSpot}</span>
+                </div>
+              </li>
+
+              <li className="flex items-start gap-2">
+                <span className="text-blue-600 font-black">•</span>
+                <div>
+                  <span className="text-gray-950 font-black">{isEn ? 'Style & Environment:' : 'Phong cách & Không gian:'}</span>{' '}
+                  <span className="text-gray-700 font-medium">
+                    {place.aestheticTag} · {place.isIndoor ? (isEn ? '❄️ Indoor Air-Conditioned' : '❄️ Trong nhà có máy lạnh') : (isEn ? '🌿 Open Outdoor Terrace' : '🌿 Sân thượng ngoài trời')}
+                  </span>
+                </div>
+              </li>
+            </ul>
           </div>
 
-          <div className="grid grid-cols-1 gap-2.5">
-            <div className="p-3 rounded-2xl bg-amber-50/70 border border-amber-200/60 flex items-start gap-2.5">
-              <Coffee className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+          {/* Section: LOCATION & OPERATING HOURS */}
+          <div className="p-4 rounded-2xl bg-white border border-gray-200/80 space-y-2 text-xs sm:text-sm text-gray-700">
+            <div className="flex items-start gap-2.5">
+              <MapPin className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
               <div>
-                <span className="text-[10px] font-extrabold uppercase text-amber-800 tracking-wider block">
-                  Signature Drink / Dish
-                </span>
-                <span className="text-xs font-bold text-gray-900">
-                  {place.signatureDrinkOrDish}
-                </span>
+                <span className="text-gray-950 font-black">{isEn ? 'Address:' : 'Địa chỉ:'}</span>{' '}
+                <span className="text-gray-800 font-semibold">{place.address}</span>
               </div>
             </div>
 
-            <div className="p-3 rounded-2xl bg-purple-50/70 border border-purple-200/60 flex items-start gap-2.5">
-              <Camera className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+            <div className="flex items-center gap-2.5">
+              <Clock className="w-4 h-4 text-purple-600 shrink-0" />
               <div>
-                <span className="text-[10px] font-extrabold uppercase text-purple-600 tracking-wider block">
-                  Best Photo Spot
-                </span>
-                <span className="text-xs font-bold text-gray-900">
-                  {place.bestPhotoSpot}
+                <span className="text-gray-950 font-black">{isEn ? 'Hours:' : 'Giờ mở cửa:'}</span>{' '}
+                <span className="text-purple-700 font-black">
+                  {typeof place.openHours.open === 'number' ? `${place.openHours.open}:00` : place.openHours.open} -{' '}
+                  {typeof place.openHours.close === 'number' ? `${place.openHours.close}:00` : place.openHours.close}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 pt-2">
+          {/* Full Width Action: Directions on Google Maps App */}
+          <div className="pt-2">
             <a
-              href={place.mapsLink}
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                place.name + ', ' + place.address
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 py-3 px-3 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs active:scale-95 transition-all"
+              className="w-full flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl bg-gray-950 hover:bg-black text-white font-black text-sm shadow-xl active:scale-98 transition-all cursor-pointer"
             >
-              <Navigation className="w-3.5 h-3.5 text-blue-600" />
-              <span>Directions (Maps)</span>
+              <Navigation className="w-4 h-4 text-[#00F5FF]" />
+              <span>{isEn ? 'Get Directions on Google Maps' : 'Mở Chỉ Đường Trên Google Maps'}</span>
             </a>
-
-            <button
-              onClick={() => {
-                onClose();
-                onGoToPhotobooth();
-              }}
-              className="flex items-center justify-center gap-1.5 py-3 px-3 rounded-full bg-gray-950 text-white font-extrabold text-xs shadow-md active:scale-95 transition-all"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#D4FF00]" />
-              <span>Photobooth</span>
-            </button>
           </div>
+
         </div>
       </div>
     </div>

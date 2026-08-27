@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, List, Map as MapIcon, X, Shirt, MapPin, Sun, CloudRain, Moon, Compass } from 'lucide-react';
+import { Sparkles, List, Map as MapIcon, X, Shirt, MapPin, Sun, CloudRain, ChevronRight, Compass } from 'lucide-react';
 import type { Location, PlaceRecommendationResponse, WeatherContext, AIMapAnalysisResponse } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
 import { InteractiveMapView } from '../components/common/InteractiveMapView.js';
+import { MOCK_HCMC_LOCATIONS } from '../data/mockLocations.js';
 import { apiService } from '../services/api.js';
 
 interface VibeMapViewProps {
@@ -31,6 +32,34 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
   const [aiReport, setAiReport] = useState<AIMapAnalysisResponse | null>(null);
   const [showReport, setShowReport] = useState(false);
 
+  // Synchronize & bilingualize recommended places
+  const displayPlaces = useMemo(() => {
+    return recommendedPlaces.map((place) => {
+      const match = MOCK_HCMC_LOCATIONS.find(
+        (m) =>
+          m.id === place.id ||
+          m.name.toLowerCase().includes(place.name.toLowerCase()) ||
+          place.name.toLowerCase().includes(m.name.toLowerCase())
+      );
+      if (match) {
+        return {
+          ...place,
+          gps: {
+            ...place.gps,
+            district: isEn ? (match.district_mock_en || match.district_mock) : match.district_mock,
+          },
+          address: isEn ? (match.address_mock_en || match.address_mock) : match.address_mock,
+          vibeDescription: isEn ? match.vibe_description_en : match.vibe_description,
+          signatureDrinkOrDish: isEn ? match.signature_item_en : match.signature_item,
+          bestPhotoSpot: isEn ? match.best_photo_spot_en : match.best_photo_spot,
+          imageUrl: match.photo_url,
+          matchScore: match.match_score || place.matchScore || 96,
+        };
+      }
+      return place;
+    });
+  }, [recommendedPlaces, isEn]);
+
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
     try {
@@ -49,56 +78,22 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
     }
   };
 
-  // Weather Theme Resolver (Sunlit Day vs Cool Rain vs Midnight Cyan Slate - NOT Purple)
+  // Weather Theme Resolver (Clean Xám Trắng / Frosted White Slate)
   const isRain = weather.isRaining;
-  const isDaytime = weather.currentHour >= 6 && weather.currentHour < 18;
 
   const getThemeClasses = () => {
-    if (isRain) {
-      return {
-        container: 'bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white border-2 border-cyan-400/50 shadow-2xl',
-        card: 'bg-white/10 border border-white/15 text-gray-100',
-        weatherIcon: <CloudRain className="w-5 h-5 text-cyan-400" />,
-        weatherTitle: 'text-cyan-400',
-        outfitIcon: <Shirt className="w-5 h-5 text-[#00F5FF]" />,
-        outfitTitle: 'text-[#00F5FF]',
-        spotIcon: <MapPin className="w-5 h-5 text-pink-400" />,
-        spotTitle: 'text-pink-400',
-        quote: 'text-cyan-300 font-bold',
-        quoteBox: 'border-t border-white/15 bg-white/5 p-3 rounded-2xl',
-        closeBtn: 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white',
-      };
-    }
-
-    if (isDaytime) {
-      return {
-        container: 'bg-gradient-to-br from-amber-50/98 via-white to-orange-50/90 text-gray-950 border-2 border-amber-300 shadow-2xl',
-        card: 'bg-white border border-amber-200/90 text-gray-900 shadow-xs',
-        weatherIcon: <Sun className="w-5 h-5 text-amber-600" />,
-        weatherTitle: 'text-amber-700',
-        outfitIcon: <Shirt className="w-5 h-5 text-blue-700" />,
-        outfitTitle: 'text-blue-700',
-        spotIcon: <MapPin className="w-5 h-5 text-rose-600" />,
-        spotTitle: 'text-rose-700',
-        quote: 'text-amber-950 font-black',
-        quoteBox: 'border-t border-amber-200/80 bg-amber-100/50 p-3 rounded-2xl',
-        closeBtn: 'bg-amber-100 hover:bg-amber-200 text-gray-700 hover:text-gray-950',
-      };
-    }
-
-    // Evening / Night (Clean Midnight Graphite & Cyan Glow - NOT Purple)
     return {
-      container: 'bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900 text-white border-2 border-cyan-400/40 shadow-2xl',
-      card: 'bg-white/10 border border-white/15 text-gray-100',
-      weatherIcon: <Moon className="w-5 h-5 text-[#D4FF00]" />,
-      weatherTitle: 'text-[#D4FF00]',
-      outfitIcon: <Shirt className="w-5 h-5 text-[#00F5FF]" />,
-      outfitTitle: 'text-[#00F5FF]',
-      spotIcon: <MapPin className="w-5 h-5 text-[#FF2E93]" />,
-      spotTitle: 'text-[#FF2E93]',
-      quote: 'text-[#D4FF00] font-bold',
-      quoteBox: 'border-t border-white/10 bg-white/5 p-3 rounded-2xl',
-      closeBtn: 'bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white',
+      container: 'bg-white/95 backdrop-blur-2xl text-gray-950 border border-gray-200 shadow-2xl',
+      card: 'bg-gray-50/90 border border-gray-200/90 text-gray-900 shadow-xs',
+      weatherIcon: isRain ? <CloudRain className="w-5 h-5 text-cyan-600" /> : <Sun className="w-5 h-5 text-amber-500" />,
+      weatherTitle: isRain ? 'text-cyan-700' : 'text-amber-700',
+      outfitIcon: <Shirt className="w-5 h-5 text-purple-600" />,
+      outfitTitle: 'text-purple-700',
+      spotIcon: <MapPin className="w-5 h-5 text-pink-600" />,
+      spotTitle: 'text-pink-700',
+      quote: 'text-gray-900 font-bold',
+      quoteBox: 'border-t border-gray-200/80 bg-gray-100/60 p-3.5 rounded-2xl',
+      closeBtn: 'bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-950',
     };
   };
 
@@ -134,7 +129,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
             }`}
           >
             <List className="w-4 h-4" />
-            <span>{isEn ? `List (${hasAnalyzed ? recommendedPlaces.length : 0})` : `Danh Sách (${hasAnalyzed ? recommendedPlaces.length : 0})`}</span>
+            <span>{isEn ? `List (${hasAnalyzed ? displayPlaces.length : 0})` : `Danh Sách (${hasAnalyzed ? displayPlaces.length : 0})`}</span>
           </button>
         </div>
 
@@ -184,71 +179,66 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
                 <div className="flex items-center justify-between px-1">
                   <span className="text-xs font-black uppercase tracking-wider text-gray-500 flex items-center gap-1">
                     <Sparkles className="w-3.5 h-3.5 text-[#FF2E93]" />
-                    {isEn ? `Recommended Spots (${recommendedPlaces.length} Open Now)` : `Địa Điểm Đề Xuất (${recommendedPlaces.length} Quán Đang Mở)`}
+                    {isEn ? `Recommended Spots (${displayPlaces.length} Open Now)` : `Địa Điểm Đề Xuất (${displayPlaces.length} Quán Đang Mở)`}
                   </span>
                   <span className="text-xs text-gray-400 font-semibold">
-                    {isEn ? 'Click card to view photo spots & signature drinks' : 'Bấm vào thẻ để xem góc chụp ảnh & thức uống đặc trưng'}
+                    {isEn ? 'Click "View Info" to view photo spots & signature drinks' : 'Bấm "Xem Chi Tiết" để xem góc chụp ảnh & thức uống đặc trưng'}
                   </span>
                 </div>
 
-                {/* Place Feed: Pinterest Multi-Column Grid */}
+                {/* Place Feed: Pinterest Multi-Column Grid (Image 3 Redesign) */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {recommendedPlaces.map((place) => (
+                  {displayPlaces.map((place) => (
                     <div
                       key={place.id}
                       onClick={() => onSelectPlace(place)}
-                      className="calm-card-elevated rounded-3xl overflow-hidden hover:shadow-xl active:scale-99 transition-all cursor-pointer group flex flex-col justify-between bg-white border border-gray-100"
+                      className="calm-card-elevated rounded-3xl overflow-hidden hover:shadow-xl active:scale-99 transition-all cursor-pointer group flex flex-col justify-between bg-white border border-gray-200/90 shadow-sm"
                     >
-                      {/* Image Header */}
+                      {/* Clean Image Header (NO Badges, NO Overlay Clutter) */}
                       <div className="relative w-full h-48 bg-gray-900 overflow-hidden">
                         <img
                           src={place.imageUrl}
                           alt={place.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
-
-                        {/* Top Badges */}
-                        <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                          <span className="px-2.5 py-0.5 bg-white text-gray-900 font-bold text-[10px] rounded-full shadow-xs">
-                            {place.aestheticTag}
-                          </span>
-                          <span
-                            className={`px-2.5 py-0.5 text-white font-bold text-[10px] rounded-full backdrop-blur-md ${
-                              place.isIndoor ? 'bg-blue-600/85' : 'bg-amber-600/85'
-                            }`}
-                          >
-                            {place.isIndoor ? '❄️ Indoor AC' : '🌿 Open Outdoor'}
-                          </span>
-                        </div>
-
-                        {/* Match Score Badge */}
-                        <div className="absolute top-3 right-3 px-2.5 py-0.5 bg-black/60 backdrop-blur-md text-[#D4FF00] font-black text-xs rounded-full border border-white/10">
-                          {place.matchScore ?? 96}% Match
-                        </div>
-
-                        {/* Place Name & District */}
-                        <div className="absolute bottom-3 left-3 right-3">
-                          <span className="text-[10px] font-semibold text-gray-300 block">
-                            {place.type} · {place.gps.district}
-                          </span>
-                          <h3 className="text-base font-extrabold text-white leading-snug drop-shadow-sm truncate">
-                            {place.name}
-                          </h3>
-                        </div>
                       </div>
 
-                      {/* Body Content */}
-                      <div className="p-4 space-y-2.5 flex-1 flex flex-col justify-between">
-                        <p className="text-xs text-gray-600 leading-relaxed font-medium">
-                          {place.vibeDescription}
-                        </p>
+                      {/* Card Body: Place Name, Score, Vibe & Action Button */}
+                      <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col justify-between">
+                        <div className="space-y-1.5">
+                          {/* Top Row: Type/District & Match Score Badge */}
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <span className="text-[10px] font-black uppercase tracking-wider text-purple-700 block">
+                                {place.type} · {place.gps.district}
+                              </span>
+                              <h3 className="text-base sm:text-lg font-black text-gray-950 leading-tight">
+                                {place.name}
+                              </h3>
+                            </div>
+                            <span className="px-2.5 py-1 rounded-full bg-gray-950 text-[#D4FF00] text-xs font-black shrink-0 shadow-xs">
+                              {place.matchScore ?? 96}% Match
+                            </span>
+                          </div>
 
-                        <div className="flex items-center justify-between text-xs text-gray-500 font-semibold border-t border-gray-100 pt-2.5">
-                          <span>📍 {place.gps.address}</span>
-                          <span className="text-purple-600 font-bold">
-                            {place.openHours.open} - {place.openHours.close}
-                          </span>
+                          {/* 2-line Vibe Description */}
+                          <p className="text-xs text-gray-600 leading-relaxed font-medium line-clamp-2 pt-0.5">
+                            {place.vibeDescription}
+                          </p>
+                        </div>
+
+                        {/* View Info Action Button */}
+                        <div className="pt-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onSelectPlace(place);
+                            }}
+                            className="w-full py-2.5 px-4 rounded-xl bg-gray-950 hover:bg-black text-white text-xs sm:text-sm font-black flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm active:scale-98"
+                          >
+                            <span>{isEn ? 'View Info' : 'Xem Chi Tiết'}</span>
+                            <ChevronRight className="w-4 h-4 text-[#D4FF00]" />
+                          </button>
                         </div>
                       </div>
                     </div>
