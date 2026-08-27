@@ -10,7 +10,6 @@
   "scripts": {
     "start": "bash start.sh",
     "stop": "bash stop.sh",
-    "postinstall": "npm --prefix client install && npm --prefix server install",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
     "dev": "concurrently -n \"SERVER,CLIENT\" -c \"magenta,cyan\" \"npm run dev:server\" \"npm run dev:client\"",
