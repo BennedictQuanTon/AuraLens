@@ -6,6 +6,7 @@ import { DripCheckView } from './views/DripCheckView.js';
 import { VibeMapView } from './views/VibeMapView.js';
 import { PhotoboothView } from './views/PhotoboothView.js';
 import { SettingsView } from './views/SettingsView.js';
+import { OnboardingLandingView } from './views/OnboardingLandingView.js';
 import { BrandDetailSheet } from './components/sheets/BrandDetailSheet.js';
 import { PlaceDetailModal } from './components/sheets/PlaceDetailModal.js';
 import { MerchantDrawer } from './components/sheets/MerchantDrawer.js';
@@ -112,16 +113,24 @@ export function App() {
   // Navigation State (1: Hero, 2: Scanner, 3: FitScore, 4: VibeMap, 5: Photobooth, 6: Settings)
   const [activeView, setActiveView] = useState<number>(1);
 
+  // Onboarding Landing State (Persisted in localStorage)
+  const [hasOnboarded, setHasOnboarded] = useState<boolean>(() => {
+    return localStorage.getItem('auralens_onboarded') === 'true';
+  });
+
   // App Settings & Customization States
   const [language, setLanguage] = useState<AppLanguage>('en');
   const [colorTheme, setColorTheme] = useState<AppColorTheme>('cyber_pop');
-  const [userProfile, setUserProfile] = useState<UserProfileState>({
-    name: 'Bennedict',
-    handle: 'bennedict',
-    avatarUrl: '',
-    bio: 'Cyber-Pop & Y2K Fashion Explorer in Saigon.',
-    favoriteVibe: 'Cyber-Pop',
-    genderTitle: 'King',
+  const [userProfile, setUserProfile] = useState<UserProfileState>(() => {
+    const savedName = localStorage.getItem('auralens_user_name') || 'Bennedict';
+    return {
+      name: savedName,
+      handle: savedName.toLowerCase().replace(/\s+/g, ''),
+      avatarUrl: '',
+      bio: 'Cyber-Pop & Y2K Fashion Explorer in Saigon.',
+      favoriteVibe: 'Cyber-Pop',
+      genderTitle: 'King',
+    };
   });
 
   // App Context & Scenario States
@@ -304,6 +313,19 @@ export function App() {
 
   const currentVibe: VibeStyle = dripResult?.breakdown?.detectedStyle || 'Cyber-Pop';
 
+  // Render full-page Onboarding Flow if not yet completed
+  if (!hasOnboarded) {
+    return (
+      <OnboardingLandingView
+        initialProfile={userProfile}
+        onComplete={(updatedProfile) => {
+          setUserProfile(updatedProfile);
+          setHasOnboarded(true);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen pb-24 md:pb-12 flex flex-col items-center justify-start text-gray-900 relative">
       {/* Sync Toast Notification */}
@@ -392,6 +414,7 @@ export function App() {
             colorTheme={colorTheme}
             onSelectTheme={setColorTheme}
             onOpenMerchant={() => setIsMerchantOpen(true)}
+            onReopenOnboarding={() => setHasOnboarded(false)}
           />
         )}
       </main>

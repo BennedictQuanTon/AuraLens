@@ -11,6 +11,7 @@ interface SettingsViewProps {
   colorTheme: AppColorTheme;
   onSelectTheme: (theme: AppColorTheme) => void;
   onOpenMerchant: () => void;
+  onReopenOnboarding?: () => void;
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
@@ -21,6 +22,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   colorTheme,
   onSelectTheme,
   onOpenMerchant,
+  onReopenOnboarding,
 }) => {
   const [activeTab, setActiveTab] = useState<'profile' | 'appearance' | 'language' | 'merchant'>('profile');
   const [name, setName] = useState(userProfile.name);
@@ -268,6 +270,29 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   </button>
                 </div>
               </form>
+
+              {/* Onboarding Tour Replay */}
+              {onReopenOnboarding && (
+                <div className="pt-6 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h4 className="text-sm font-black text-gray-900">
+                      {isEn ? 'Onboarding & Architecture Tour' : 'Xem Lại Tour Chào Mừng & Kiến Trúc'}
+                    </h4>
+                    <p className="text-xs text-gray-500 font-medium mt-0.5">
+                      {isEn
+                        ? 'Replay the 2-step setup, privacy guarantee, and roadmap vision.'
+                        : 'Mở lại phần giới thiệu 2 bước, bảo mật thiết bị và định hướng dự án.'}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={onReopenOnboarding}
+                    className="py-2.5 px-5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-950 text-xs font-black transition-all cursor-pointer border border-gray-200 shadow-xs shrink-0"
+                  >
+                    {isEn ? 'Revisit Tour' : 'Xem Lại Tour'}
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
