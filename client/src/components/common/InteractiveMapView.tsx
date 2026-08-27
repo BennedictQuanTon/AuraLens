@@ -117,11 +117,31 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
       attributionControl: false,
     });
 
-    // CartoDB Dark Matter Tile Layer (Modern Cyberpunk Sleek Dark Mode)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      subdomains: 'abcd',
+    // OpenStreetMap Standard Light Tiles (100% Free, Official, Zero API Key, Zero Watermark)
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
       maxZoom: 19,
+      minZoom: 11,
+      subdomains: ['a', 'b', 'c'],
+      attribution: '© OpenStreetMap contributors',
     }).addTo(map);
+
+    // Multi-Tick Invalidates to guarantee immediate rendering inside Framer Motion containers
+    const triggerInvalidate = () => {
+      if (map) map.invalidateSize();
+    };
+    triggerInvalidate();
+    const t1 = setTimeout(triggerInvalidate, 50);
+    const t2 = setTimeout(triggerInvalidate, 200);
+    const t3 = setTimeout(triggerInvalidate, 600);
+
+    // ResizeObserver on map container
+    let resizeObserver: ResizeObserver | null = null;
+    if (mapContainerRef.current && window.ResizeObserver) {
+      resizeObserver = new ResizeObserver(() => {
+        triggerInvalidate();
+      });
+      resizeObserver.observe(mapContainerRef.current);
+    }
 
     // Zoom control at bottom right
     L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -156,6 +176,10 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
     mapInstanceRef.current = map;
 
     return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      if (resizeObserver) resizeObserver.disconnect();
       map.remove();
       mapInstanceRef.current = null;
     };
@@ -304,14 +328,14 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
   };
 
   return (
-    <div className="relative w-full min-h-[72vh] rounded-3xl overflow-hidden bg-[#090D16] border-2 border-white/10 shadow-2xl flex flex-col justify-between select-none">
+    <div className="relative w-full rounded-3xl overflow-hidden bg-slate-100 border border-gray-200 shadow-xl flex flex-col justify-between select-none">
       
       {/* ========================================================================= */}
       {/* 1. TOP FLOATING FILTER CAPSULE BAR                                         */}
       {/* ========================================================================= */}
       <div className="absolute top-4 left-4 right-4 z-[400] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pointer-events-none">
         {/* Filter Chips */}
-        <div className="pointer-events-auto flex items-center gap-1.5 p-1.5 rounded-full bg-gray-950/85 backdrop-blur-md shadow-xl border border-white/15 overflow-x-auto">
+        <div className="pointer-events-auto flex items-center gap-1.5 p-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-gray-200 overflow-x-auto">
           {[
             { id: 'all', label: isEn ? 'All' : 'Tất cả', count: processedLocations.length },
             {
@@ -337,14 +361,14 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
                 onClick={() => setFilterType(chip.id as any)}
                 className={`py-1.5 px-3.5 rounded-full text-xs font-black transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
                   isActive
-                    ? 'bg-[#D4FF00] text-gray-950 shadow-[0_0_12px_rgba(212,255,0,0.6)] scale-102'
-                    : 'text-gray-300 hover:text-white hover:bg-white/10'
+                    ? 'bg-gray-950 text-white shadow-md scale-102'
+                    : 'text-gray-700 hover:text-black hover:bg-gray-100'
                 }`}
               >
                 <span>{chip.label}</span>
                 <span
                   className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                    isActive ? 'bg-black/20 text-gray-950' : 'bg-white/10 text-gray-400'
+                    isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
                   }`}
                 >
                   {chip.count}
@@ -355,16 +379,16 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
         </div>
 
         {/* Live Weather Status Indicator Badge */}
-        <div className="pointer-events-auto self-start sm:self-auto flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gray-950/85 backdrop-blur-md shadow-xl border border-white/15 text-xs font-black">
+        <div className="pointer-events-auto self-start sm:self-auto flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-gray-200 text-xs font-black">
           {weather.isRaining ? (
             <>
-              <CloudRain className="w-4 h-4 text-cyan-400 animate-bounce" />
-              <span className="text-cyan-300">{isEn ? 'Rainy · Safe Indoor AC' : 'Trời Mưa · Lọc An Toàn AC'}</span>
+              <CloudRain className="w-4 h-4 text-cyan-600 animate-bounce" />
+              <span className="text-cyan-800">{isEn ? 'Rainy · Safe Indoor AC' : 'Trời Mưa · Lọc An Toàn AC'}</span>
             </>
           ) : (
             <>
-              <Sun className="w-4 h-4 text-amber-400 animate-spin" style={{ animationDuration: '8s' }} />
-              <span className="text-amber-300">{isEn ? 'Clear & Sunny · Rooftop Open' : 'Trời Nắng Đẹp · Mở Rooftop'}</span>
+              <Sun className="w-4 h-4 text-amber-500 animate-spin" style={{ animationDuration: '8s' }} />
+              <span className="text-amber-800">{isEn ? 'Clear & Sunny · Rooftop Open' : 'Trời Nắng Đẹp · Mở Rooftop'}</span>
             </>
           )}
         </div>
@@ -373,31 +397,35 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
       {/* ========================================================================= */}
       {/* 2. LEAFLET MAP CANVAS CONTAINER                                           */}
       {/* ========================================================================= */}
-      <div ref={mapContainerRef} className="w-full h-full min-h-[72vh] z-0" />
+      <div
+        ref={mapContainerRef}
+        style={{ width: '100%', height: '620px', minHeight: '620px' }}
+        className="w-full relative z-0 rounded-3xl overflow-hidden"
+      />
 
       {/* ========================================================================= */}
       {/* 3. BOTTOM FLOATING VENUE DRAWER (When Pin is Selected)                    */}
       {/* ========================================================================= */}
       {selectedLocation && (
         <div className="absolute bottom-4 left-4 right-4 z-[400] max-w-2xl mx-auto animate-slideUp">
-          <div className="p-4 sm:p-5 rounded-3xl bg-gray-950/95 backdrop-blur-xl border border-white/20 text-white shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-center gap-4">
+          <div className="p-4 sm:p-5 rounded-3xl bg-white/95 backdrop-blur-xl border border-gray-200 text-gray-950 shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-center gap-4">
             
             {/* Close Button */}
             <button
               onClick={handleCloseDrawer}
-              className="absolute top-3 right-3 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-400 hover:text-white transition-colors cursor-pointer z-10"
+              className="absolute top-3 right-3 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-950 transition-colors cursor-pointer z-10"
             >
               <X className="w-4 h-4" />
             </button>
 
             {/* Venue Image */}
-            <div className="relative w-full sm:w-36 h-32 sm:h-32 rounded-2xl overflow-hidden shrink-0 bg-gray-900 border border-white/10">
+            <div className="relative w-full sm:w-36 h-32 sm:h-32 rounded-2xl overflow-hidden shrink-0 bg-gray-100 border border-gray-200">
               <img
                 src={selectedLocation.photo_url}
                 alt={selectedLocation.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-black text-[#D4FF00] border border-white/10">
+              <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-gray-950/80 backdrop-blur-md text-[10px] font-black text-[#D4FF00] border border-white/10">
                 {selectedLocation.match_score}% Match
               </div>
             </div>
@@ -406,21 +434,21 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
             <div className="flex-1 space-y-2 w-full">
               <div className="pr-6">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
                     {selectedLocation.type} · {selectedLocation.district_mock}
                   </span>
-                  <span className="px-2 py-0.2 rounded-full bg-purple-500/30 text-purple-300 text-[10px] font-black">
+                  <span className="px-2 py-0.2 rounded-full bg-purple-100 text-purple-700 text-[10px] font-black">
                     {selectedLocation.aesthetic_tag}
                   </span>
                 </div>
-                <h4 className="text-base sm:text-lg font-black text-white leading-tight truncate">
+                <h4 className="text-base sm:text-lg font-black text-gray-950 leading-tight truncate">
                   {selectedLocation.name}
                 </h4>
               </div>
 
               {/* Pedestrian Walking Route ETA Badge */}
               <div className="flex items-center gap-3 py-1 text-xs">
-                <div className="flex items-center gap-1.5 text-[#00F5FF] font-black">
+                <div className="flex items-center gap-1.5 text-purple-700 font-black">
                   <Footprints className="w-4 h-4" />
                   <span>
                     {isLoadingRoute ? (
@@ -432,22 +460,22 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
                     )}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 text-gray-400 font-semibold">
+                <div className="flex items-center gap-1 text-gray-500 font-semibold">
                   <Clock className="w-3.5 h-3.5" />
                   <span>{selectedLocation.open_hours.open} - {selectedLocation.open_hours.close}</span>
                 </div>
               </div>
 
               {/* Signature Drink & Photo Spot */}
-              <div className="space-y-0.5 text-xs text-gray-300 font-medium">
+              <div className="space-y-0.5 text-xs text-gray-600 font-medium">
                 {selectedLocation.signature_item && (
                   <p className="truncate">
-                    <span className="text-gray-400 font-bold">🍹 Signature:</span> {selectedLocation.signature_item}
+                    <span className="text-gray-950 font-bold">🍹 Signature:</span> {selectedLocation.signature_item}
                   </p>
                 )}
                 {selectedLocation.best_photo_spot && (
                   <p className="truncate">
-                    <span className="text-gray-400 font-bold">📸 Photo Spot:</span> {selectedLocation.best_photo_spot}
+                    <span className="text-gray-950 font-bold">📸 Photo Spot:</span> {selectedLocation.best_photo_spot}
                   </p>
                 )}
               </div>
@@ -458,9 +486,9 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
                   href={`https://www.google.com/maps/dir/?api=1&origin=${USER_LOCATION.lat},${USER_LOCATION.lng}&destination=${selectedLocation.lat},${selectedLocation.lng}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-2 px-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-black flex items-center gap-1.5 border border-white/15 transition-all cursor-pointer shadow-xs active:scale-95"
+                  className="py-2 px-3.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs font-black flex items-center gap-1.5 border border-gray-200 transition-all cursor-pointer shadow-xs active:scale-95"
                 >
-                  <Navigation className="w-3.5 h-3.5 text-[#00F5FF]" />
+                  <Navigation className="w-3.5 h-3.5 text-blue-600" />
                   <span>{isEn ? 'Google Maps App' : 'Mở Google Maps'}</span>
                 </a>
 
@@ -469,10 +497,10 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
                     const placeEntity = convertMockToLocation(selectedLocation);
                     onSelectPlace(placeEntity);
                   }}
-                  className="py-2 px-4 rounded-xl bg-[#D4FF00] hover:bg-[#c2eb00] text-gray-950 text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-[0_0_12px_rgba(212,255,0,0.5)] active:scale-95 ml-auto"
+                  className="py-2 px-4 rounded-xl bg-gray-950 hover:bg-black text-white text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-md active:scale-95 ml-auto"
                 >
                   <span>{isEn ? 'View Spot' : 'Xem Quán'}</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-3.5 h-3.5 text-[#D4FF00]" />
                 </button>
               </div>
             </div>

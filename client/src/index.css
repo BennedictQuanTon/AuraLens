@@ -134,10 +134,10 @@
   animation: cyberScan 2.5s infinite ease-in-out;
 }
 
-/* Leaflet Dark Dopamine Custom Styling */
+/* Leaflet Custom Styling */
 .leaflet-container {
   font-family: 'Outfit', sans-serif !important;
-  background-color: #090D16 !important;
+  background-color: #E2E8F0 !important;
   width: 100%;
   height: 100%;
   border-radius: 1.5rem;
