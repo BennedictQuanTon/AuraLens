@@ -1,16 +1,15 @@
-# ⚡ AuraLens — Personalized AI Stylist & Experience Map for Gen Z
+#  AuraLens — Multimodal AI Outfit Aura Evaluator & Contextual Lifestyle Experience Engine for Gen Z
 
 <div align="center">
 
 [![Build with Google AI](https://img.shields.io/badge/Build%20with%20Google%20AI-2026%20Hackathon-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com/)
-[![Google Gemini](https://img.shields.io/badge/Powered%20By-Gemini%203.5%20%26%202.5%20Flash-FF2E93?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
+[![Google Gemini](https://img.shields.io/badge/Powered%20By-Gemini%203.5%20Flash-FF2E93?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
 [![Google Cloud Run](https://img.shields.io/badge/Deployed%20on-Google%20Cloud%20Run-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
 [![React 19](https://img.shields.io/badge/React%2019-Vite%20%2B%20TS-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![Zero Leaks](https://img.shields.io/badge/Security-0%20Exposed%20Keys-D4FF00?style=for-the-badge&logo=shieldsdotio&logoColor=black)](https://github.com)
 
 <br/>
 
-**AuraLens** is an end-to-end multimodal AI fashion companion and real-world experience guide designed for Gen Z. It fuses **Google Gemini Multimodal Vision**, **Deterministic Weather & Location Grounding**, and an **Interactive AI Photobooth Engine** to solve outfit insecurity and venue decision fatigue with zero AI hallucinations.
+**AuraLens** is a next-generation multimodal AI platform that evaluates real-time outfit aesthetics and "Aura Index" scores to orchestrate hyper-personalized fashion, weather-grounded lifestyle, and urban hangout experiences for Gen Z. Powered by **Google Gemini Multimodal Vision**, **Deterministic Spatio-Temporal & Weather Grounding**, and a **Generative AI Photobooth Studio**, AuraLens bridges visual intelligence with real-world lifestyle discovery—with zero AI hallucinations.
 
 [Live Demo](#-live-demo--deployment) • [Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Getting Started](#-getting-started) • [Security & Privacy](#-security--privacy)
 
