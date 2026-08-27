@@ -11,6 +11,7 @@ import {
 import type { VibeStyle } from '../../types/entityGraph.js';
 import type { AppLanguage } from '../../types/settings.js';
 import { VaultInfoModal } from './VaultInfoModal.js';
+import { vaultStorage } from '../../services/vaultStorage.js';
 
 interface OOTDHistoryDrawerProps {
   isOpen: boolean;
@@ -42,9 +43,10 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
   const [isRendered, setIsRendered] = useState<boolean>(isOpen);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
-  // Smooth Slide-in from Right & Fade-out transition
+  // Smooth Slide-in from Right & Fade-out transition + Load from Vault Storage
   useEffect(() => {
     if (isOpen) {
+      setVaultItems(vaultStorage.getVaultItems() as VaultItem[]);
       setIsRendered(true);
       const timer = setTimeout(() => setIsVisible(true), 20);
       document.body.style.overflow = 'hidden';
@@ -57,73 +59,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
     }
   }, [isOpen]);
 
-  const initialVaultItems: VaultItem[] = [
-    {
-      id: 'vault-1',
-      type: 'ootd',
-      dateVi: 'Hôm nay, 20:30',
-      dateEn: 'Today, 20:30',
-      style: 'Cyber-Pop',
-      score: 96,
-      image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 'vault-2',
-      type: 'photobooth',
-      dateVi: 'Hôm qua, 16:45',
-      dateEn: 'Yesterday, 16:45',
-      style: 'Y2K',
-      score: 92,
-      image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 'vault-3',
-      type: 'ootd',
-      dateVi: '24 Tháng 8, 14:15',
-      dateEn: 'Aug 24, 14:15',
-      style: 'Minimalist',
-      score: 94,
-      image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 'vault-4',
-      type: 'photobooth',
-      dateVi: '22 Tháng 8, 21:00',
-      dateEn: 'Aug 22, 21:00',
-      style: 'Cyber-Pop',
-      score: 95,
-      image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 'vault-5',
-      type: 'ootd',
-      dateVi: '20 Tháng 8, 17:30',
-      dateEn: 'Aug 20, 17:30',
-      style: 'Y2K',
-      score: 91,
-      image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 'vault-6',
-      type: 'photobooth',
-      dateVi: '18 Tháng 8, 15:30',
-      dateEn: 'Aug 18, 15:30',
-      style: 'Minimalist',
-      score: 89,
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80',
-    },
-    {
-      id: 'vault-7',
-      type: 'ootd',
-      dateVi: '16 Tháng 8, 18:45',
-      dateEn: 'Aug 16, 18:45',
-      style: 'Cyber-Pop',
-      score: 97,
-      image: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=600&auto=format&fit=crop&q=80',
-    },
-  ];
-
-  const [vaultItems, setVaultItems] = useState<VaultItem[]>(initialVaultItems);
+  const [vaultItems, setVaultItems] = useState<VaultItem[]>(() => vaultStorage.getVaultItems() as VaultItem[]);
 
   if (!isRendered) return null;
 
@@ -137,7 +73,8 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
   // Action: Delete Item from History
   const handleDeleteItem = (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    setVaultItems((prev) => prev.filter((item) => item.id !== id));
+    vaultStorage.deleteItem(id);
+    setVaultItems(vaultStorage.getVaultItems() as VaultItem[]);
     if (selectedItem?.id === id) {
       setSelectedItem(null);
     }

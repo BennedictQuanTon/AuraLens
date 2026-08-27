@@ -4,6 +4,7 @@ import { locationService } from '../services/locationService.js';
 import { MOCK_FASHION_ITEMS } from '../data/mockBrands.js';
 import { MOCK_PHOTOBOOTH_FRAMES } from '../data/mockPhotoboothFrames.js';
 import { DripCheckRequest, PlaceRecommendationRequest, WeatherContext } from '../types/entityGraph.js';
+import { rateLimiter, rateLimiterMiddleware } from '../middleware/rateLimiter.js';
 
 export const apiRouter = Router();
 
@@ -20,10 +21,18 @@ apiRouter.get('/health', (_req: Request, res: Response) => {
 });
 
 /**
- * POST /api/v1/drip-check
- * Evaluates outfit from image/context, returns score, breakdown, Lumi comment, and alternatives.
+ * GET /api/v1/stats/quota
+ * Real-time usage and rate limiting statistics
  */
-apiRouter.post('/drip-check', async (req: Request, res: Response) => {
+apiRouter.get('/stats/quota', (_req: Request, res: Response) => {
+  return res.status(200).json(rateLimiter.getStats());
+});
+
+/**
+ * POST /api/v1/drip-check
+ * Evaluates outfit from image/context with Gemini Vision (Rate-limited: 3 req/min/user, 15 global RPM)
+ */
+apiRouter.post('/drip-check', rateLimiterMiddleware, async (req: Request, res: Response) => {
   try {
     const body: DripCheckRequest = req.body;
     const context = body.context || 'Cafe sống ảo';
@@ -93,7 +102,7 @@ apiRouter.get('/photobooth/frames', (_req: Request, res: Response) => {
  * POST /api/v1/photobooth/ai-template
  * Synthesizes a full Photobooth template using Gemini 3.5 Flash Lite from natural language prompt.
  */
-apiRouter.post('/photobooth/ai-template', async (req: Request, res: Response) => {
+apiRouter.post('/photobooth/ai-template', rateLimiterMiddleware, async (req: Request, res: Response) => {
   try {
     const { aiTemplateService } = await import('../services/aiTemplateService.js');
     const template = await aiTemplateService.generateTemplate(req.body);
@@ -108,7 +117,7 @@ apiRouter.post('/photobooth/ai-template', async (req: Request, res: Response) =>
  * POST /api/v1/map/ai-analyze
  * Analyzes weather and vibe to generate Gemini outfit and destination recommendations.
  */
-apiRouter.post('/map/ai-analyze', async (req: Request, res: Response) => {
+apiRouter.post('/map/ai-analyze', rateLimiterMiddleware, async (req: Request, res: Response) => {
   try {
     const { aestheticTag = 'Cyber-Pop', weather, language = 'vi' } = req.body;
     const isEn = language === 'en';
@@ -188,7 +197,7 @@ Ngữ cảnh:
         );
 
         if (geminiRes.ok) {
-          const data = await geminiRes.json();
+          const data = (await geminiRes.json()) as any;
           const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (rawText) {
             const parsed = JSON.parse(rawText);

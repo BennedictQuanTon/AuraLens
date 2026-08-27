@@ -101,7 +101,7 @@ export class LocationService {
           : ' (Có máy lạnh không gian kín, không lo ướt đồ).';
       }
 
-      const localizedPlace: Location = {
+      const localizedPlace: Location & { matchScore: number; matchReason: string } = {
         id: place.id,
         name: isEn ? (place.nameEn || place.name) : place.name,
         type: place.type,

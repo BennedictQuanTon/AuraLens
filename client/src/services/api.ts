@@ -11,10 +11,39 @@ import type {
   VibeStyle,
   WeatherContext,
 } from '../types/entityGraph.js';
+import { getOrCreateDeviceId } from './vaultStorage.js';
 
 const API_BASE_URL = '/api/v1';
 
+export type RateLimitCallback = (info: { message: string; retryAfterSeconds: number }) => void;
+let rateLimitHandler: RateLimitCallback | null = null;
+
+export function setRateLimitHandler(handler: RateLimitCallback | null) {
+  rateLimitHandler = handler;
+}
+
 export class ApiService {
+  private getHeaders(): Record<string, string> {
+    return {
+      'Content-Type': 'application/json',
+      'X-Device-Id': getOrCreateDeviceId(),
+    };
+  }
+
+  private async checkRateLimit(response: Response): Promise<void> {
+    if (response.status === 429) {
+      try {
+        const errData = await response.clone().json();
+        if (rateLimitHandler) {
+          rateLimitHandler({
+            message: errData.message || 'Rate limit exceeded: Max 3 calls/min per user.',
+            retryAfterSeconds: errData.retryAfterSeconds || 60,
+          });
+        }
+      } catch (e) {}
+    }
+  }
+
   /**
    * Evaluates outfit via backend API or fallback mock
    */
@@ -22,9 +51,11 @@ export class ApiService {
     try {
       const response = await fetch(`${API_BASE_URL}/drip-check`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getHeaders(),
         body: JSON.stringify(request),
       });
+
+      await this.checkRateLimit(response);
 
       if (response.ok) {
         return await response.json();
@@ -47,9 +78,11 @@ export class ApiService {
     try {
       const response = await fetch(`${API_BASE_URL}/recommend-places`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getHeaders(),
         body: JSON.stringify({ aestheticTag, weather }),
       });
+
+      await this.checkRateLimit(response);
 
       if (response.ok) {
         return await response.json();
@@ -66,7 +99,9 @@ export class ApiService {
    */
   public async getBrandItems(): Promise<FashionItem[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/brands/items`);
+      const response = await fetch(`${API_BASE_URL}/brands/items`, {
+        headers: this.getHeaders(),
+      });
       if (response.ok) {
         const data = await response.json();
         return data.items;
@@ -82,7 +117,9 @@ export class ApiService {
    */
   public async getPhotoboothFrames(): Promise<PhotoboothFrame[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/photobooth/frames`);
+      const response = await fetch(`${API_BASE_URL}/photobooth/frames`, {
+        headers: this.getHeaders(),
+      });
       if (response.ok) {
         const data = await response.json();
         return data.frames;
@@ -100,9 +137,11 @@ export class ApiService {
     try {
       const response = await fetch(`${API_BASE_URL}/photobooth/ai-template`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getHeaders(),
         body: JSON.stringify(request),
       });
+
+      await this.checkRateLimit(response);
 
       if (response.ok) {
         return await response.json();

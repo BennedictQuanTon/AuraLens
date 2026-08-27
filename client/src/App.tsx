@@ -11,7 +11,8 @@ import { BrandDetailSheet } from './components/sheets/BrandDetailSheet.js';
 import { PlaceDetailModal } from './components/sheets/PlaceDetailModal.js';
 import { MerchantDrawer } from './components/sheets/MerchantDrawer.js';
 import { OOTDHistoryDrawer } from './components/sheets/OOTDHistoryDrawer.js';
-import { apiService } from './services/api.js';
+import { apiService, setRateLimitHandler } from './services/api.js';
+import { vaultStorage } from './services/vaultStorage.js';
 import type {
   DripCheckResponse,
   EventContext,
@@ -251,6 +252,16 @@ export function App() {
     loadInitialAssets();
   }, []);
 
+  const [rateLimitWarning, setRateLimitWarning] = useState<{ message: string; retryAfterSeconds: number } | null>(null);
+
+  useEffect(() => {
+    setRateLimitHandler((info) => {
+      setRateLimitWarning(info);
+      setTimeout(() => setRateLimitWarning(null), 8000);
+    });
+    return () => setRateLimitHandler(null);
+  }, []);
+
   // Handle Photo Capture & Drip Check Evaluation
   const handleCapture = async (imageDataUrl: string): Promise<DripCheckResponse> => {
     setIsLoading(true);
@@ -264,6 +275,16 @@ export function App() {
       });
 
       setDripResult(evaluation);
+
+      // Auto-save capture to real user device vault
+      vaultStorage.saveCapture({
+        type: 'ootd',
+        image: imageDataUrl,
+        score: evaluation.score,
+        style: evaluation.breakdown.detectedStyle,
+        weatherSnapshot: weather,
+        lumiComment: evaluation.lumiComment,
+      });
 
       // Refresh place recommendations with newly evaluated style
       const placeRecs = await apiService.recommendPlaces(
@@ -335,6 +356,20 @@ export function App() {
 
   return (
     <div className="min-h-screen pb-24 md:pb-12 flex flex-col items-center justify-start text-gray-900 relative">
+      {/* Rate Limit Warning Notification Banner */}
+      {rateLimitWarning && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-60 animate-bounce flex items-center gap-3 px-5 py-3.5 bg-gray-950 text-white rounded-full shadow-2xl border border-amber-400 text-xs sm:text-sm font-bold backdrop-blur-md">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
+          <span>⚠️ {rateLimitWarning.message}</span>
+          <button
+            onClick={() => setRateLimitWarning(null)}
+            className="p-1 hover:bg-white/20 rounded-full text-white/80 cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* Sync Toast Notification */}
       {syncToast && (
         <div className="fixed top-20 right-4 sm:right-8 z-50 animate-bounce flex items-center gap-2.5 px-4 py-3 bg-gray-950/95 text-white rounded-2xl shadow-2xl border border-purple-500/40 backdrop-blur-md text-xs font-black">

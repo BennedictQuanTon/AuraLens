@@ -26,6 +26,7 @@ import {
 import type { PhotoboothFrame, VibeStyle, AITemplateResponse } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
 import { apiService } from '../services/api.js';
+import { vaultStorage } from '../services/vaultStorage.js';
 
 // Available Aspect Ratios
 export type AspectRatioType = '9:16' | '4:5' | '1:1' | '16:9' | '4:3';
@@ -1121,10 +1122,21 @@ export const PhotoboothView: React.FC<PhotoboothViewProps> = ({
     }
 
     // Export & trigger browser download
+    const exportDataUrl = canvas.toDataURL('image/png', 0.95);
     const link = document.createElement('a');
     link.download = `AuraLens_Photobooth_${selectedRatio.replace(':', 'x')}_${Date.now()}.png`;
-    link.href = canvas.toDataURL('image/png', 0.95);
+    link.href = exportDataUrl;
     link.click();
+
+    // Auto-save capture to local user vault
+    vaultStorage.saveCapture({
+      type: 'photobooth',
+      image: exportDataUrl,
+      score: 96,
+      style: selectedFrame?.vibeTag || 'Cyber-Pop',
+      title: selectedFrame?.name || 'Photobooth Strip',
+      lumiComment: 'Custom framed Y2K Photobooth memory in Saigon!',
+    });
 
     setIsExporting(false);
     setDownloadSuccess(true);

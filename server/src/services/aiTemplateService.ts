@@ -183,7 +183,7 @@ Trả về DUY NHẤT 1 đối tượng JSON hợp lệ 100% TIẾNG VIỆT theo
       throw new Error(`Gemini API error (${response.status}): ${errText}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as any;
     const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!candidateText) {

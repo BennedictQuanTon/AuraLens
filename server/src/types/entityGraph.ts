@@ -46,6 +46,7 @@ export interface FashionItem {
 export interface Location {
   id: string;
   name: string;
+  nameEn?: string;
   type: 'Cafe' | 'Pub' | 'Bar' | 'Photospot' | 'Restaurant' | 'Studio';
   aestheticTag: VibeStyle;
   gps: {
@@ -53,17 +54,24 @@ export interface Location {
     lng: number;
     district: string;
   };
+  districtEn?: string;
   address: string;
+  addressEn?: string;
   isIndoor: boolean;
   openHours: {
     open: number; // 0 - 24 (e.g. 7 for 07:00)
     close: number; // 0 - 24 (e.g. 23 for 23:00 or 2 for 02:00 next day)
   };
   signatureDrinkOrDish: string;
+  signatureDrinkOrDishEn?: string;
   bestPhotoSpot: string;
+  bestPhotoSpotEn?: string;
   imageUrl: string;
   mapsLink: string;
   vibeDescription: string;
+  vibeDescriptionEn?: string;
+  matchScore?: number;
+  matchReason?: string;
 }
 
 export interface RuleEngine {
@@ -165,6 +173,7 @@ export interface PlaceRecommendationRequest {
     lng: number;
   };
   limit?: number;
+  language?: 'en' | 'vi';
 }
 
 export interface PlaceRecommendationResponse {
