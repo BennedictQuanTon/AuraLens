@@ -403,23 +403,15 @@ export const HeroView: React.FC<HeroViewProps> = ({
       {/* 2. TOP KPI CARDS: 3 PERFECTLY BALANCED, UNIFIED HEIGHT DASHBOARD WIDGETS */}
       {/* ========================================================================= */}
       <div className="space-y-3">
-        {/* Top Control Bar (Outside the Cards Frame) */}
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-600" />
-            <span className="text-xs font-black uppercase tracking-wider text-gray-500">
-              {isEn ? 'Style & Vibe Intelligence' : 'Chỉ Số Phong Cách & Tọa Độ Vibe'}
-            </span>
-          </div>
-
-          {/* Info Button (i) Placed Outside Above The Card Frame */}
+        {/* Top Control Bar: Large Info Button Outside The Card Frame */}
+        <div className="flex justify-end px-1">
           <button
             onClick={() => setIsSpotsInfoOpen(true)}
-            className="py-1.5 px-3.5 rounded-full bg-gray-100/90 hover:bg-gray-200 text-gray-700 hover:text-gray-950 flex items-center gap-1.5 text-xs font-black transition-all cursor-pointer shadow-xs active:scale-95 border border-gray-200/80 group"
-            title={isEn ? 'Vibe Spots & Scalability Architecture' : 'Thông tin Tọa Độ Vibe & Khả năng mở rộng'}
+            className="py-2 px-4.5 rounded-2xl bg-gray-100 hover:bg-gray-200 text-gray-800 hover:text-gray-950 flex items-center gap-2 text-sm font-black transition-all cursor-pointer shadow-xs active:scale-95 border border-gray-200/90 group"
+            title={isEn ? 'Architecture & Engine Info' : 'Thông tin Kiến Trúc & Động Cơ'}
           >
-            <Info className="w-3.5 h-3.5 text-gray-500 group-hover:text-gray-950 transition-colors" />
-            <span>{isEn ? 'Vibe Spots Info' : 'Thông Tin Tọa Độ Vibe'}</span>
+            <Info className="w-4.5 h-4.5 text-gray-600 group-hover:text-gray-950 transition-colors" />
+            <span>{isEn ? 'Info' : 'Thông Tin'}</span>
           </button>
         </div>
 

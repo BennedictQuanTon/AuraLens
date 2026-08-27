@@ -6,9 +6,11 @@ import {
   Download,
   Trash2,
   Flame,
+  Info,
 } from 'lucide-react';
 import type { VibeStyle } from '../../types/entityGraph.js';
 import type { AppLanguage } from '../../types/settings.js';
+import { VaultInfoModal } from './VaultInfoModal.js';
 
 interface OOTDHistoryDrawerProps {
   isOpen: boolean;
@@ -36,6 +38,7 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
   const [activeTab, setActiveTab] = useState<'all' | 'ootd' | 'photobooth'>('all');
   const [selectedItem, setSelectedItem] = useState<VaultItem | null>(null);
   const [deleteToast, setDeleteToast] = useState<string | null>(null);
+  const [isVaultInfoOpen, setIsVaultInfoOpen] = useState<boolean>(false);
   const [isRendered, setIsRendered] = useState<boolean>(isOpen);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
@@ -194,13 +197,23 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
               </div>
             </div>
 
-            <button
-              onClick={onClose}
-              className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-950 transition-all cursor-pointer shadow-xs"
-              title={isEn ? 'Close Vault' : 'Đóng Vault'}
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsVaultInfoOpen(true)}
+                className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-950 transition-all cursor-pointer shadow-xs active:scale-95 group"
+                title={isEn ? 'Vault & Storage Info' : 'Thông tin Kho Lưu Trữ & Đám Mây'}
+              >
+                <Info className="w-5 h-5 text-gray-600 group-hover:text-gray-950 transition-colors" />
+              </button>
+
+              <button
+                onClick={onClose}
+                className="p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-950 transition-all cursor-pointer shadow-xs active:scale-95"
+                title={isEn ? 'Close Vault' : 'Đóng Vault'}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           {/* 3 Clean Filter Tabs */}
@@ -406,6 +419,13 @@ export const OOTDHistoryDrawer: React.FC<OOTDHistoryDrawerProps> = ({
           </div>
         </div>
       )}
+
+      {/* VAULT STORAGE & ARCHITECTURE INFO MODAL */}
+      <VaultInfoModal
+        isOpen={isVaultInfoOpen}
+        language={language}
+        onClose={() => setIsVaultInfoOpen(false)}
+      />
 
     </div>
   );
