@@ -432,8 +432,11 @@ export const InteractiveWelcomeParticles: React.FC<InteractiveWelcomeParticlesPr
     resizeObserver.observe(container);
     window.addEventListener('resize', applySize);
 
+    let lastTime = performance.now();
     renderer.setAnimationLoop(() => {
-      const delta = clock.getDelta();
+      const now = performance.now();
+      const delta = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
       touch.update();
       uniforms.uTime.value += delta;
       renderer.render(scene, camera);
