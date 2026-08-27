@@ -2,20 +2,14 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
-  Sparkles,
   Navigation,
   Clock,
   Footprints,
   CloudRain,
   Sun,
   X,
-  ExternalLink,
   ChevronRight,
-  Coffee,
-  Wine,
-  Camera,
-  Palette,
-  Compass,
+  Sparkles,
 } from 'lucide-react';
 import type { WeatherContext, Location } from '../../types/entityGraph.js';
 import type { AppLanguage } from '../../types/settings.js';
@@ -28,6 +22,7 @@ import {
 interface InteractiveMapViewProps {
   weather: WeatherContext;
   language?: AppLanguage;
+  hasAnalyzed?: boolean;
   onSelectPlace: (place: Location) => void;
   onGoToPhotobooth?: () => void;
 }
@@ -41,6 +36,7 @@ const USER_LOCATION = {
 export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
   weather,
   language = 'en',
+  hasAnalyzed = false,
   onSelectPlace,
 }) => {
   const isEn = language === 'en';
@@ -97,15 +93,16 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
 
   // Filtered venues based on active pill
   const filteredLocations = useMemo(() => {
+    if (!hasAnalyzed) return [];
     return processedLocations.filter((loc) => {
       if (filterType === 'open') return loc.isOpen && !loc.isWeatherDisabled;
       if (filterType === 'indoor') return loc.is_indoor;
       if (filterType === 'outdoor') return !loc.is_indoor;
       return true;
     });
-  }, [processedLocations, filterType]);
+  }, [processedLocations, filterType, hasAnalyzed]);
 
-  // Initialize Leaflet Map with CartoDB Dark Matter Tiles (100% Free, 0 Key)
+  // Initialize Leaflet Map with OpenStreetMap Standard Light Tiles
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return;
 
@@ -149,27 +146,27 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
     // User Location Glowing Marker (Cyan Pulsing Ring)
     const userHtml = `
       <div class="relative flex items-center justify-center">
-        <div class="absolute w-10 h-10 rounded-full bg-[#00F5FF]/30 animate-ping"></div>
-        <div class="relative w-7 h-7 rounded-full bg-[#00F5FF] border-2 border-white shadow-[0_0_15px_#00F5FF] flex items-center justify-center">
-          <div class="w-2.5 h-2.5 rounded-full bg-gray-950"></div>
+        <div class="absolute w-12 h-12 rounded-full bg-[#00F5FF]/40 animate-ping"></div>
+        <div class="relative w-8 h-8 rounded-full bg-[#00F5FF] border-3 border-white shadow-[0_0_20px_#00F5FF] flex items-center justify-center">
+          <div class="w-3 h-3 rounded-full bg-gray-950"></div>
         </div>
       </div>
     `;
     const userIcon = L.divIcon({
       html: userHtml,
       className: 'custom-user-marker',
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
     });
 
     L.marker([USER_LOCATION.lat, USER_LOCATION.lng], { icon: userIcon, zIndexOffset: 1000 })
       .addTo(map)
       .bindPopup(
-        `<div class="p-3 text-center">
-          <span class="text-xs font-black text-[#00F5FF] uppercase block">📍 ${
+        `<div class="p-3 text-center font-sans">
+          <span class="text-xs font-black text-purple-700 uppercase block">📍 ${
             isEn ? 'Your Location' : 'Vị Trí Của Bạn'
           }</span>
-          <span class="text-xs text-white font-semibold">Phố đi bộ Nguyễn Huệ, Quận 1</span>
+          <span class="text-xs text-gray-900 font-bold">Phố đi bộ Nguyễn Huệ, Quận 1</span>
         </div>`
       );
 
@@ -194,38 +191,50 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
     Object.values(markersRef.current).forEach((m) => m.remove());
     markersRef.current = {};
 
+    if (!hasAnalyzed) return;
+
     filteredLocations.forEach((loc) => {
       const isSelected = selectedLocation?.id === loc.id;
       const isDisabled = loc.status === 'weather_disabled';
 
-      // Color scheme based on vibe
-      let glowColor = '#00F5FF'; // Cyan default
-      if (loc.aesthetic_tag === 'Cyber-Pop') glowColor = '#D4FF00';
-      if (loc.aesthetic_tag === 'Y2K') glowColor = '#FF2E93';
-      if (loc.aesthetic_tag === 'Minimalist') glowColor = '#A855F7';
-      if (loc.aesthetic_tag === 'Vintage') glowColor = '#F59E0B';
+      // Color scheme based on aesthetic tag
+      let badgeBg = '#9333EA'; // Purple default
+      if (loc.aesthetic_tag === 'Cyber-Pop') badgeBg = '#00B4D8';
+      if (loc.aesthetic_tag === 'Y2K') badgeBg = '#FF2E93';
+      if (loc.aesthetic_tag === 'Minimalist') badgeBg = '#7C3AED';
+      if (loc.aesthetic_tag === 'Clean-Fit') badgeBg = '#10B981';
 
-      // Icon emoji / category icon
-      let categoryEmoji = '☕';
-      if (loc.type === 'Pub' || loc.type === 'Bar' || loc.type === 'Lounge') categoryEmoji = '🍸';
-      if (loc.type === 'Museum') categoryEmoji = '🎨';
+      // Category Icon
+      let categorySymbol = '☕';
+      if (loc.type === 'Pub' || loc.type === 'Bar' || loc.type === 'Lounge') categorySymbol = '🍸';
+      if (loc.type === 'Museum') categorySymbol = '🎨';
 
+      const shortName = loc.name.split(' - ')[0].split(' Landmark')[0].slice(0, 14);
+
+      // Sleek Modern 3D Drop-Pin Badge
       const markerHtml = `
-        <div class="relative group cursor-pointer transition-transform duration-300 ${
-          isSelected ? 'scale-125 z-50' : 'hover:scale-115'
-        } ${isDisabled ? 'opacity-35 grayscale' : ''}">
-          <div class="w-9 h-9 rounded-2xl bg-gray-950/90 border-2 flex items-center justify-center shadow-lg backdrop-blur-md"
-               style="border-color: ${glowColor}; box-shadow: 0 0 14px ${glowColor}80;">
-            <span class="text-base">${categoryEmoji}</span>
+        <div class="relative group cursor-pointer transition-all duration-300 ${
+          isSelected ? 'scale-125 z-50 -translate-y-2' : 'hover:scale-115 -translate-y-1'
+        } ${isDisabled ? 'opacity-40 grayscale' : ''}">
+          
+          <!-- Drop Pin Capsule -->
+          <div class="relative px-2.5 py-1.5 rounded-2xl bg-white border-2 flex items-center gap-1.5 shadow-xl transition-all"
+               style="border-color: ${badgeBg};">
+            <span class="text-xs font-black">${categorySymbol}</span>
+            <span class="text-[11px] font-black text-gray-900 leading-none whitespace-nowrap">${shortName}</span>
+            <span class="px-1.5 py-0.5 rounded-full text-[9px] font-black text-white shadow-xs" style="background-color: ${badgeBg};">
+              ${loc.match_score}%
+            </span>
           </div>
-          <div class="absolute -top-2 -right-2 px-1.5 py-0.2 rounded-full bg-gray-950 border text-[9px] font-black text-white"
-               style="border-color: ${glowColor};">
-            ${loc.match_score}%
-          </div>
+
+          <!-- Pin Tail Arrow -->
+          <div class="w-2.5 h-2.5 bg-white border-r-2 border-b-2 rotate-45 mx-auto -mt-1.5 shadow-xs"
+               style="border-color: ${badgeBg};"></div>
+
           ${
             loc.is_lumi_pick
-              ? `<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.2 rounded-full bg-[#D4FF00] text-gray-950 text-[8px] font-black uppercase tracking-tighter whitespace-nowrap shadow-xs">
-                  ✨ LUMI
+              ? `<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-2 py-0.2 rounded-full bg-[#D4FF00] border border-gray-950 text-gray-950 text-[8px] font-black uppercase tracking-wider whitespace-nowrap shadow-md">
+                   ⭐ LUMI
                  </div>`
               : ''
           }
@@ -235,8 +244,8 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
       const customIcon = L.divIcon({
         html: markerHtml,
         className: 'custom-venue-pin',
-        iconSize: [36, 36],
-        iconAnchor: [18, 18],
+        iconSize: [40, 40],
+        iconAnchor: [20, 36],
       });
 
       const marker = L.marker([loc.lat, loc.lng], { icon: customIcon }).addTo(map);
@@ -247,7 +256,7 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
 
       markersRef.current[loc.id] = marker;
     });
-  }, [filteredLocations, selectedLocation, isEn]);
+  }, [filteredLocations, selectedLocation, isEn, hasAnalyzed]);
 
   // Handle Venue Selection & Fetch Pedestrian Route from OSRM
   const handleSelectVenue = async (loc: MockLocation) => {
@@ -277,11 +286,11 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
         if (route && route.geometry?.coordinates && map) {
           const latLngs = route.geometry.coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
 
-          // Draw Glowing Neon Cyan/Lime Pedestrian Polyline
+          // RED Pedestrian Walking Polyline (Crimson Red with dashed styling)
           const polyline = L.polyline(latLngs, {
-            color: '#00F5FF',
+            color: '#EF4444', // Red Route Line
             weight: 5,
-            opacity: 0.9,
+            opacity: 0.95,
             dashArray: '8, 8',
             lineCap: 'round',
             lineJoin: 'round',
@@ -304,9 +313,9 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
             [loc.lat, loc.lng],
           ],
           {
-            color: '#D4FF00',
+            color: '#EF4444', // Red fallback
             weight: 4,
-            opacity: 0.8,
+            opacity: 0.9,
             dashArray: '6, 6',
           }
         ).addTo(map);
@@ -337,21 +346,21 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
         {/* Filter Chips */}
         <div className="pointer-events-auto flex items-center gap-1.5 p-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-gray-200 overflow-x-auto">
           {[
-            { id: 'all', label: isEn ? 'All' : 'Tất cả', count: processedLocations.length },
+            { id: 'all', label: isEn ? 'All' : 'Tất cả', count: hasAnalyzed ? processedLocations.length : 0 },
             {
               id: 'open',
               label: isEn ? 'Open Now' : 'Đang mở',
-              count: processedLocations.filter((l) => l.status === 'open_fit').length,
+              count: hasAnalyzed ? processedLocations.filter((l) => l.status === 'open_fit').length : 0,
             },
             {
               id: 'indoor',
               label: isEn ? 'Indoor (AC)' : 'Trong nhà (AC)',
-              count: processedLocations.filter((l) => l.is_indoor).length,
+              count: hasAnalyzed ? processedLocations.filter((l) => l.is_indoor).length : 0,
             },
             {
               id: 'outdoor',
               label: isEn ? 'Outdoor' : 'Ngoài trời',
-              count: processedLocations.filter((l) => !l.is_indoor).length,
+              count: hasAnalyzed ? processedLocations.filter((l) => !l.is_indoor).length : 0,
             },
           ].map((chip) => {
             const isActive = filterType === chip.id;
@@ -403,52 +412,70 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
         className="w-full relative z-0 rounded-3xl overflow-hidden"
       />
 
+      {/* Before Analyze Banner Overlay */}
+      {!hasAnalyzed && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[400] max-w-md w-[92%] pointer-events-none animate-fadeIn">
+          <div className="p-4 rounded-2xl bg-white/95 backdrop-blur-xl border-2 border-purple-200/80 shadow-2xl text-center space-y-1">
+            <div className="flex items-center justify-center gap-2 text-purple-700 font-black text-sm">
+              <Sparkles className="w-4 h-4 text-[#FF2E93] animate-pulse" />
+              <span>{isEn ? 'Discover Matching Spots' : 'Khám Phá Quán Hợp Outfit'}</span>
+            </div>
+            <p className="text-xs text-gray-600 font-medium">
+              {isEn
+                ? 'Tap the "Analyze" button above to scan current weather & unlock your personalized hangout spots!'
+                : 'Bấm nút "Analyze" ở góc trên để quét thời tiết & mở khóa các địa điểm sống ảo phù hợp outfit của bạn!'}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ========================================================================= */}
       {/* 3. BOTTOM FLOATING VENUE DRAWER (When Pin is Selected)                    */}
       {/* ========================================================================= */}
       {selectedLocation && (
         <div className="absolute bottom-4 left-4 right-4 z-[400] max-w-2xl mx-auto animate-slideUp">
-          <div className="p-4 sm:p-5 rounded-3xl bg-white/95 backdrop-blur-xl border border-gray-200 text-gray-950 shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-center gap-4">
+          <div className="p-5 sm:p-6 rounded-3xl bg-white/98 backdrop-blur-2xl border border-gray-200 text-gray-950 shadow-2xl relative overflow-hidden flex flex-col sm:flex-row items-center gap-5">
             
             {/* Close Button */}
             <button
               onClick={handleCloseDrawer}
-              className="absolute top-3 right-3 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-950 transition-colors cursor-pointer z-10"
+              className="absolute top-3.5 right-3.5 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-950 transition-colors cursor-pointer z-10"
+              title="Close"
             >
               <X className="w-4 h-4" />
             </button>
 
             {/* Venue Image */}
-            <div className="relative w-full sm:w-36 h-32 sm:h-32 rounded-2xl overflow-hidden shrink-0 bg-gray-100 border border-gray-200">
+            <div className="relative w-full sm:w-44 h-40 sm:h-40 rounded-2xl overflow-hidden shrink-0 bg-gray-100 border border-gray-200 shadow-inner">
               <img
                 src={selectedLocation.photo_url}
                 alt={selectedLocation.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-gray-950/80 backdrop-blur-md text-[10px] font-black text-[#D4FF00] border border-white/10">
+              <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-gray-950/85 backdrop-blur-md text-[11px] font-black text-[#D4FF00] border border-white/10 shadow-xs">
                 {selectedLocation.match_score}% Match
               </div>
             </div>
 
-            {/* Venue Info & Route ETA */}
-            <div className="flex-1 space-y-2 w-full">
-              <div className="pr-6">
+            {/* Venue Info & Bullet Points */}
+            <div className="flex-1 space-y-3 w-full">
+              <div className="pr-8 space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                  <span className="text-xs font-black text-gray-500 uppercase tracking-wider">
                     {selectedLocation.type} · {selectedLocation.district_mock}
                   </span>
-                  <span className="px-2 py-0.2 rounded-full bg-purple-100 text-purple-700 text-[10px] font-black">
+                  <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-black">
                     {selectedLocation.aesthetic_tag}
                   </span>
                 </div>
-                <h4 className="text-base sm:text-lg font-black text-gray-950 leading-tight truncate">
+                <h4 className="text-xl sm:text-2xl font-black text-gray-950 leading-tight">
                   {selectedLocation.name}
                 </h4>
               </div>
 
-              {/* Pedestrian Walking Route ETA Badge */}
-              <div className="flex items-center gap-3 py-1 text-xs">
-                <div className="flex items-center gap-1.5 text-purple-700 font-black">
+              {/* Pedestrian Walking Route ETA & Hours Badge */}
+              <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
+                <div className="flex items-center gap-1.5 text-red-600 font-black">
                   <Footprints className="w-4 h-4" />
                   <span>
                     {isLoadingRoute ? (
@@ -460,35 +487,40 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
                     )}
                   </span>
                 </div>
-                <div className="flex items-center gap-1 text-gray-500 font-semibold">
-                  <Clock className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-1.5 text-gray-500 font-bold">
+                  <Clock className="w-4 h-4" />
                   <span>{selectedLocation.open_hours.open} - {selectedLocation.open_hours.close}</span>
                 </div>
               </div>
 
-              {/* Signature Drink & Photo Spot */}
-              <div className="space-y-0.5 text-xs text-gray-600 font-medium">
+              {/* Clean Concise Bullet Points (No Clutter Emojis) */}
+              <div className="space-y-1.5 text-xs sm:text-sm text-gray-700 font-medium border-t border-gray-100 pt-2.5">
                 {selectedLocation.signature_item && (
-                  <p className="truncate">
-                    <span className="text-gray-950 font-bold">🍹 Signature:</span> {selectedLocation.signature_item}
+                  <p className="line-clamp-1">
+                    <span className="text-gray-950 font-black">• Món đặc trưng:</span> {selectedLocation.signature_item}
                   </p>
                 )}
                 {selectedLocation.best_photo_spot && (
-                  <p className="truncate">
-                    <span className="text-gray-950 font-bold">📸 Photo Spot:</span> {selectedLocation.best_photo_spot}
+                  <p className="line-clamp-1">
+                    <span className="text-gray-950 font-black">• Góc check-in:</span> {selectedLocation.best_photo_spot}
                   </p>
                 )}
+                <p className="line-clamp-1">
+                  <span className="text-gray-950 font-black">• Địa chỉ:</span> {selectedLocation.address_mock}
+                </p>
               </div>
 
-              {/* Action Buttons: Navigate on Google Maps & View Details */}
-              <div className="pt-2 flex items-center gap-2">
+              {/* Action Buttons */}
+              <div className="pt-2 flex items-center gap-3">
                 <a
-                  href={`https://www.google.com/maps/dir/?api=1&origin=${USER_LOCATION.lat},${USER_LOCATION.lng}&destination=${selectedLocation.lat},${selectedLocation.lng}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    selectedLocation.name + ', ' + selectedLocation.address_mock
+                  )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-2 px-3.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs font-black flex items-center gap-1.5 border border-gray-200 transition-all cursor-pointer shadow-xs active:scale-95"
+                  className="py-2.5 px-4 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-900 text-xs sm:text-sm font-black flex items-center gap-2 border border-gray-200 transition-all cursor-pointer shadow-xs active:scale-95"
                 >
-                  <Navigation className="w-3.5 h-3.5 text-blue-600" />
+                  <Navigation className="w-4 h-4 text-blue-600" />
                   <span>{isEn ? 'Google Maps App' : 'Mở Google Maps'}</span>
                 </a>
 
@@ -497,10 +529,10 @@ export const InteractiveMapView: React.FC<InteractiveMapViewProps> = ({
                     const placeEntity = convertMockToLocation(selectedLocation);
                     onSelectPlace(placeEntity);
                   }}
-                  className="py-2 px-4 rounded-xl bg-gray-950 hover:bg-black text-white text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-md active:scale-95 ml-auto"
+                  className="py-2.5 px-5 rounded-xl bg-gray-950 hover:bg-black text-white text-xs sm:text-sm font-black flex items-center gap-2 transition-all cursor-pointer shadow-md active:scale-95 ml-auto"
                 >
-                  <span>{isEn ? 'View Spot' : 'Xem Quán'}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-[#D4FF00]" />
+                  <span>{isEn ? 'View Spot' : 'Xem Chi Tiết'}</span>
+                  <ChevronRight className="w-4 h-4 text-[#D4FF00]" />
                 </button>
               </div>
             </div>
