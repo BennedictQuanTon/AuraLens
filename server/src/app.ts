@@ -7,7 +7,10 @@ import { apiRouter } from './routes/api.js';
 dotenv.config();
 
 export const app = express();
-const PORT = process.env.PORT || 8080;
+
+// In development, server always uses 8080 so Vite can use 3000 without conflict
+// In production (Cloud Run), server uses process.env.PORT (or 8080)
+const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT || 8080 : process.env.SERVER_PORT || 8080;
 
 // Security Headers with Helmet
 app.use(
