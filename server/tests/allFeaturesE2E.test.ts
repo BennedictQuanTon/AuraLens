@@ -30,13 +30,13 @@ describe('Complete All-Features End-to-End System Test Suite', () => {
   });
 
   // -------------------------------------------------------------
-  // 1. HEALTH & SYSTEM ROOT
+  // 1. HEALTH & SYSTEM ROOT (SPA SERVING)
   // -------------------------------------------------------------
-  it('Feature 1: System Health & Root Documentation Endpoints', async () => {
+  it('Feature 1: System Health & Root SPA Serving Endpoints', async () => {
     const rootRes = await fetch(`${baseUrl}/`);
     expect(rootRes.status).toBe(200);
-    const rootData = (await rootRes.json()) as any;
-    expect(rootData.version).toBe('1.0.0');
+    const rootText = await rootRes.text();
+    expect(rootText).toContain('<!doctype html>');
 
     const healthRes = await fetch(`${baseUrl}/api/v1/health`);
     expect(healthRes.status).toBe(200);

@@ -39,15 +39,30 @@ app.use(
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDistPath = path.resolve(__dirname, '../../client/dist');
+
+// Serve static frontend assets if present
+app.use(express.static(clientDistPath));
+
 // Mount API routes
 app.use('/api/v1', apiRouter);
 
-// Root route
-app.get('/', (_req, res) => {
-  res.json({
-    message: '✨ Welcome to AuraLens AI Stylist & Experience Map API ✨',
-    version: '1.0.0',
-    documentation: '/api/v1/health',
+// Root / Frontend SPA fallback
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+  res.sendFile(path.join(clientDistPath, 'index.html'), (err) => {
+    if (err) {
+      res.json({
+        message: '✨ Welcome to AuraLens AI Stylist & Experience Map API ✨',
+        version: '1.0.0',
+        documentation: '/api/v1/health',
+      });
+    }
   });
 });
 

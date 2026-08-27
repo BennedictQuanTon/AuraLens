@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "description": "AuraLens — Personalized AI Stylist & Experience Map for Gen Z (Google Cloud & Gemini Multimodal)",
   "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "start": "bash start.sh",
     "stop": "bash stop.sh",
+    "postinstall": "npm --prefix client install && npm --prefix server install",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
     "dev": "concurrently -n \"SERVER,CLIENT\" -c \"magenta,cyan\" \"npm run dev:server\" \"npm run dev:client\"",
@@ -15,7 +20,10 @@
     "test:server": "npm --prefix server test",
     "test": "npm run test:server"
   },
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^9.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.5"
   }
 }

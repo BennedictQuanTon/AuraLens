@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    host: true, // Exposes server on 0.0.0.0 for Google AI Studio / Project IDX preview iframe
     port: 3000,
     proxy: {
       '/api': {

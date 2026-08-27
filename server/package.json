@@ -1,6 +1,7 @@
 {
   "name": "auralens-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "AuraLens AI Stylist & Experience Map Orchestrator Backend",
   "main": "dist/app.js",
   "scripts": {
