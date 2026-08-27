@@ -21,7 +21,7 @@ export interface VisionAnalysisResult {
 
 export class VisionService {
   private geminiApiKey: string | null = process.env.GEMINI_API_KEY || null;
-  private geminiModel: string = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  private geminiModel: string = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
 
   /**
    * Parses and evaluates outfit from photo using Google Gemini Multimodal API with Few-Shot Prompting or Mock Engine.
