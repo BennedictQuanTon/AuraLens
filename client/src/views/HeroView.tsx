@@ -13,9 +13,11 @@ import {
   X,
   Sparkles,
   ShoppingBag,
+  Info,
 } from 'lucide-react';
 import type { AppLanguage, UserProfileState } from '../types/settings.js';
 import { HCMCVisualMap } from '../components/common/HCMCVisualMap.js';
+import { VibeSpotsInfoModal } from '../components/sheets/VibeSpotsInfoModal.js';
 
 interface HeroViewProps {
   userProfile: UserProfileState;
@@ -92,6 +94,7 @@ export const HeroView: React.FC<HeroViewProps> = ({
   // Section Category Filter & AI Analytics State for Fashion Items
   const [selectedFashionCategory, setSelectedFashionCategory] = useState<'all' | 'outerwear' | 'tops' | 'bottoms' | 'accessories'>('all');
   const [showFashionAnalytics, setShowFashionAnalytics] = useState<boolean>(false);
+  const [isSpotsInfoOpen, setIsSpotsInfoOpen] = useState<boolean>(false);
 
   // Background Scroll Locking when Fashion Analytics Modal is open
   useEffect(() => {
@@ -550,6 +553,15 @@ export const HeroView: React.FC<HeroViewProps> = ({
         {/* CARD 3: CURATED VIBE SPOTS (Individual SVG Path Sectors: 100% Reliable Hit Testing) */}
         <div className="calm-card-elevated p-6 lg:p-7 rounded-3xl flex flex-col justify-between relative overflow-hidden bg-white shadow-xl border border-gray-100 space-y-5 h-full">
           
+          {/* Top-Right Info Button (i) */}
+          <button
+            onClick={() => setIsSpotsInfoOpen(true)}
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-950 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95 z-20 group"
+            title={isEn ? 'Vibe Spots & Scalability Architecture' : 'Thông tin Tọa Độ Vibe & Khả năng mở rộng'}
+          >
+            <Info className="w-4 h-4 text-gray-500 group-hover:text-gray-950 transition-colors" />
+          </button>
+
           {/* Top Section: SVG Donut Chart with Exact SVG Path Sectors */}
           <div className="flex flex-col items-center text-center space-y-2 pt-1">
             
@@ -1204,6 +1216,13 @@ export const HeroView: React.FC<HeroViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* VIBE SPOTS & SCALABILITY INFO MODAL */}
+      <VibeSpotsInfoModal
+        isOpen={isSpotsInfoOpen}
+        language={language}
+        onClose={() => setIsSpotsInfoOpen(false)}
+      />
 
     </div>
   );
