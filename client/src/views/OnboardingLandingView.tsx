@@ -20,6 +20,17 @@ import {
   X,
   Lock,
   Code2,
+  TrendingDown,
+  Clock,
+  Layers,
+  ArrowDownRight,
+  Sparkle,
+  Shirt,
+  Compass,
+  Smile,
+  Frown,
+  Sliders,
+  Sparkles as SparklesIcon,
 } from 'lucide-react';
 import type { VibeStyle } from '../types/entityGraph.js';
 import type { UserProfileState } from '../types/settings.js';
@@ -68,55 +79,49 @@ const GENZ_PERSONAS = [
   },
 ];
 
-// 6 Core Features organized into (3 Core Problems Tackled + 3 Values Brought)
-const CORE_FEATURES = [
+// SECTION B: WHY CHOOSE AURALENS (6 Minimalist Solutions styled like Image 2)
+const WHY_CHOOSE_SOLUTIONS = [
   {
     icon: Zap,
-    color: 'text-purple-400 bg-purple-500/20 border-purple-500/30',
     title: 'Multimodal Drip Check',
-    desc: 'Powered by Gemini to instantly score color harmony, silhouette proportions, and reflective metallic contrasts.',
+    desc: 'Google Gemini Multimodal evaluates silhouette proportions, color harmony, and reflective textures in seconds, turning subjective doubts into objective scores.',
   },
   {
     icon: CloudSun,
-    color: 'text-amber-400 bg-amber-500/20 border-amber-500/30',
     title: 'Real-Time Weather Grounding',
-    desc: 'Adapts recommendations dynamically to Saigon temperature, rain radar probability, and UV heat indices.',
+    desc: 'Never get sent to an outdoor rooftop during a Saigon rainstorm. Recommendations are hard-locked to live temperature, rain probability, and UV heat radar.',
   },
   {
     icon: MapPin,
-    color: 'text-pink-400 bg-pink-500/20 border-pink-500/30',
     title: 'Tone-Sur-Tone Spot Matching',
-    desc: 'Curates aesthetic cafes, speakeasy bars, and photo spots that match your exact outfit vibe and lighting.',
+    desc: 'Zero fake seeding. Every recommended cafe and speakeasy is tone-matched to your outfit palette based on our verified Knowledge Graph.',
   },
   {
     icon: Target,
-    color: 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30',
     title: 'Instant Style Confidence',
-    desc: 'Eliminates outfit anxiety with actionable styling advice, color wheel pairing, and local brand item recommendations.',
+    desc: 'Turn hesitation into instant action. Lumi pinpoints exactly what item to swap, color pairings to add, and connects you directly with trending Local Brands.',
   },
   {
     icon: Camera,
-    color: 'text-cyan-400 bg-cyan-500/20 border-cyan-500/30',
     title: 'Aura Photobooth Studio',
-    desc: 'Generates custom 3-cut film strips and Y2K sticker souvenirs ready to save or share on social media.',
+    desc: 'Instantly package your outing into a 9:16 custom-framed film strip with aesthetic Y2K stickers, ready for viral story sharing with no extra editing.',
   },
   {
     icon: Globe2,
-    color: 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30',
     title: 'Production Scalability Roadmap',
-    desc: 'Engineered with zero-cost mock data for hackathon testing, ready to scale globally via Google Maps Platform.',
+    desc: 'Engineered for longevity with Zero-Cost Google Cloud Run architecture and an enterprise Google Maps Platform pipeline scaling to Tokyo and Seoul.',
   },
 ];
 
-// Pure Tech Ecosystem Logos (Enlarged Icons)
-const TECH_LOGOS = [
-  { name: 'Google Gemini', logo: '/logos/gemini.png' },
-  { name: 'Google Maps Platform', logo: '/logos/google_map.png' },
-  { name: 'Google Cloud Storage', logo: '/logos/google_cloud.webp' },
-  { name: 'Firebase', logo: '/logos/firebase.png' },
-  { name: 'Google Antigravity', logo: '/logos/antigravity.webp' },
-  { name: 'React 19', logo: '/logos/react.png' },
-  { name: 'TypeScript', logo: '/logos/typescript.jpeg' },
+// Pure Transparent Logos (No White Box Background)
+const TECH_LOGOS_TRANSPARENT = [
+  { name: 'Google Gemini', logo: '/logos/gemini_transparent.png' },
+  { name: 'Google Maps Platform', logo: '/logos/google_map_transparent.png' },
+  { name: 'Google Cloud Storage', logo: '/logos/google_cloud_transparent.png' },
+  { name: 'Firebase', logo: '/logos/firebase_transparent.png' },
+  { name: 'Google Antigravity', logo: '/logos/antigravity_transparent.png' },
+  { name: 'React 19', logo: '/logos/react_transparent.png' },
+  { name: 'TypeScript 5.7', logo: '/logos/typescript_transparent.png' },
 ];
 
 /**
@@ -291,7 +296,7 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
           )}
 
           {/* ===================================================================== */}
-          {/* PAGE 2: WHAT IS AURALENS (SurveyMonkey Style Centered 3x2 Grid)      */}
+          {/* PAGE 2: ABOUT AURALENS (Problem Layout [Image 1] + Solution [Image 2]) */}
           {/* ===================================================================== */}
           {step === 2 && (
             <motion.div
@@ -300,68 +305,184 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: -20 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="w-full space-y-9 max-w-6xl mx-auto py-2"
+              className="w-full space-y-12 max-w-6xl mx-auto py-2"
             >
-              {/* 1. Centered Header */}
+              {/* 1. Centered Main Header: ABOUT AURALENS */}
               <div className="text-center space-y-3 max-w-3xl mx-auto">
-                <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-                  Why Choose <span className="bg-gradient-to-r from-[#D4FF00] via-[#FF2E93] to-[#00F5FF] bg-clip-text text-transparent">AuraLens</span>?
+                <h2 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+                  About <span className="bg-gradient-to-r from-[#D4FF00] via-[#FF2E93] to-[#00F5FF] bg-clip-text text-transparent">AuraLens</span>
                 </h2>
                 <p className="text-sm sm:text-base text-white/80 font-medium max-w-2xl mx-auto leading-relaxed">
-                  The World’s 1st Multimodal AI Fashion Agent designed to solve outfit dilemma, align with real-time weather, and curate Saigon tone-sur-tone spots.
+                  The World’s 1st Multimodal AI Fashion & Lifestyle Discovery Agent connecting OOTD checks, Saigon weather, and tone-sur-tone spots.
                 </p>
               </div>
 
-              {/* 2. 6 Core Pillars in 3x2 Grid (SurveyMonkey Reference Style) */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 pt-1">
-                {CORE_FEATURES.map((feat, idx) => {
-                  const Icon = feat.icon;
-                  return (
-                    <div
-                      key={idx}
-                      className="p-6 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 hover:border-white/30 shadow-xl space-y-3 transition-all duration-300 hover:scale-102 flex flex-col justify-start"
-                    >
-                      <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center shrink-0 shadow-sm ${feat.color}`}>
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div className="space-y-1.5">
-                        <h3 className="text-lg font-black text-white leading-snug">
-                          {feat.title}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-white/75 font-medium leading-relaxed">
-                          {feat.desc}
-                        </p>
+              {/* 2. SECTION A: THE CURRENT STRUGGLE (100% Exact Image 2 Layout) */}
+              <div className="space-y-6">
+                <div className="text-center space-y-2 max-w-4xl mx-auto">
+                  <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                    Why Styling & Spot Discovery is Broken Today
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 pt-2">
+                  
+                  {/* Card 1: Outfit Anxiety (Pinned bottom-left white widget like Image 2) */}
+                  <div className="rounded-3xl bg-gradient-to-b from-[#3a3a44] to-[#1e1e24] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[460px] sm:min-h-[500px] hover:border-pink-400/50 transition-all duration-300">
+                    <div className="p-7 sm:p-9 space-y-3 z-10">
+                      <h4 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                        Outfit Anxiety
+                      </h4>
+                      <p className="text-sm sm:text-base text-white/80 font-medium leading-relaxed">
+                        You spend 15-20 minutes every morning standing in front of your wardrobe, yet end up repeating old outfits because you can't tell if the fit truly works for the venue.
+                      </p>
+                    </div>
+
+                    {/* Image 2 style: Corner-pinned white widget bleeding to bottom-left */}
+                    <div className="mt-auto pr-6 z-10">
+                      <div className="bg-white text-gray-950 rounded-tr-3xl rounded-br-2xl p-5 sm:p-6 shadow-2xl border-t border-r border-gray-100 space-y-2.5 max-w-[92%]">
+                        <div className="text-base font-black text-gray-950 leading-tight">
+                          Wardrobe Dilemma
+                        </div>
+                        <div className="text-xs font-bold text-red-600 flex items-center gap-1.5">
+                          <Frown className="w-4 h-4 shrink-0" />
+                          <span>0 Confidence · Repeating old fits 3+ times</span>
+                        </div>
+                        <div className="flex items-center gap-2 pt-2 border-t border-gray-100 text-xs font-black text-gray-600">
+                          <span className="px-2 py-0.5 rounded-md bg-gray-100">📌 Pinterest</span>
+                          <span className="px-2 py-0.5 rounded-md bg-gray-100">🔄 TikTok</span>
+                          <span className="text-purple-600 font-bold ml-auto">20m Lost</span>
+                        </div>
                       </div>
                     </div>
-                  );
-                })}
+                  </div>
+
+                  {/* Card 2: Seeding Fatigue (Full-bleed bottom photo like Image 2) */}
+                  <div className="rounded-3xl bg-gradient-to-b from-[#4a3528] via-[#2f2219] to-[#1a120c] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[460px] sm:min-h-[500px] hover:border-amber-400/50 transition-all duration-300">
+                    <div className="p-7 sm:p-9 space-y-3 z-10 relative">
+                      <h4 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                        Seeding Fatigue
+                      </h4>
+                      <p className="text-sm sm:text-base text-white/80 font-medium leading-relaxed">
+                        Viral social reviews turn out to be paid seeding. You arrive only to find the spot closed, poorly lit, or outdoor in sudden monsoon downpours.
+                      </p>
+                    </div>
+
+                    {/* Image 2 style: Full bleed bottom photo of person using laptop/phone */}
+                    <div className="relative w-full h-56 sm:h-64 mt-auto overflow-hidden">
+                      <img
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80"
+                        alt="Seeding Disappointment"
+                        className="w-full h-full object-cover object-top filter contrast-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-[#2f2219]" />
+                      
+                      <div className="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between p-2.5 rounded-xl bg-black/85 backdrop-blur-md border border-red-500/40 text-xs font-black text-red-400">
+                        <span>❌ Paid Seeding · 5.0 ★</span>
+                        <span className="text-white font-black bg-red-600 px-2 py-0.5 rounded text-[10px]">Closed / Storm</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Fragmented Flow (Stepped Red Bars + Floating Metric Pill like Image 2) */}
+                  <div className="rounded-3xl bg-gradient-to-b from-[#3d1922] via-[#2d1219] to-[#1a080d] border border-white/15 overflow-hidden shadow-2xl flex flex-col justify-between min-h-[460px] sm:min-h-[500px] hover:border-rose-400/50 transition-all duration-300">
+                    <div className="p-7 sm:p-9 space-y-3 z-10 relative">
+                      <h4 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                        Fragmented Flow
+                      </h4>
+                      <p className="text-sm sm:text-base text-white/80 font-medium leading-relaxed">
+                        Planning one outing forces you to juggle 4–5 disconnected apps for weather radar, fit inspiration, map discovery, and photo filters.
+                      </p>
+                    </div>
+
+                    {/* Image 2 style: Descending Stepped Red Bars & Floating Stat Pill */}
+                    <div className="relative w-full h-56 mt-auto flex flex-col items-center justify-end px-6 pb-0 overflow-hidden">
+                      
+                      {/* Floating Pink/Red Stat Pill */}
+                      <div className="relative z-20 mb-3 px-6 py-2 rounded-2xl bg-[#ffccd5] text-[#d90429] font-black text-xl sm:text-2xl shadow-2xl flex items-center gap-2">
+                        <span>-45%</span>
+                        <span className="text-base">▼</span>
+                      </div>
+
+                      {/* Descending red stepped rounded bars rising from bottom */}
+                      <div className="w-full flex items-end justify-center gap-3 relative z-10">
+                        <div className="w-1/3 h-20 bg-[#ef233c] rounded-t-2xl opacity-90 shadow-md" />
+                        <div className="w-1/3 h-32 bg-[#d90429] rounded-t-2xl opacity-95 shadow-lg flex items-center justify-center">
+                          <span className="text-[10px] font-black text-white uppercase tracking-wider -rotate-90">Time Lost</span>
+                        </div>
+                        <div className="w-1/3 h-14 bg-[#ff4d6d] rounded-t-2xl opacity-85 shadow-sm" />
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
               </div>
 
-              {/* 3. Pure Tech Ecosystem Logos (Enlarged Icons Only) */}
+              {/* 3. SECTION B: WHY CHOOSE AURALENS (Styled like Image 2 - Minimalist Dark Cards, Large Font) */}
+              <div className="space-y-6 pt-4">
+                <div className="text-center space-y-2 max-w-3xl mx-auto">
+                  <h3 className="text-2xl sm:text-4xl font-black tracking-tight text-white uppercase">
+                    Why Choose <span className="text-[#D4FF00]">AuraLens</span>?
+                  </h3>
+                  <p className="text-xs sm:text-sm text-white/70 font-medium max-w-xl mx-auto">
+                    A unified multimodal AI agent designed to turn outfit uncertainty into confidence and curate your perfect Saigon outing.
+                  </p>
+                </div>
+
+                {/* 6 Minimalist Dark Cards in 3x2 Grid (Image 2 style: White icon box, Bold title, 2-line summary) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-1">
+                  {WHY_CHOOSE_SOLUTIONS.map((sol, idx) => {
+                    const Icon = sol.icon;
+                    return (
+                      <div
+                        key={idx}
+                        className="p-6 rounded-2xl bg-black/50 border border-white/10 hover:border-white/30 backdrop-blur-xl shadow-xl space-y-3.5 transition-all duration-300 hover:scale-102 flex flex-col justify-start"
+                      >
+                        {/* Minimalist White Icon Box like Image 2 */}
+                        <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white shrink-0 shadow-sm">
+                          <Icon className="w-5 h-5" />
+                        </div>
+
+                        {/* Bold Clean Typography */}
+                        <div className="space-y-1.5">
+                          <h4 className="text-lg sm:text-xl font-black text-white tracking-tight leading-snug">
+                            {sol.title}
+                          </h4>
+                          <p className="text-xs sm:text-sm text-white/70 font-medium leading-relaxed">
+                            {sol.desc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 4. Pure Transparent Tech Ecosystem Logos (No White Background Box like Image 3) */}
               <div className="pt-6 border-t border-white/15 space-y-4 text-center">
                 <h4 className="text-xs sm:text-sm font-black text-white/90 tracking-widest uppercase">
                   Powered by the Google AI Ecosystem & Modern Tech Stack
                 </h4>
 
-                {/* Pure Enlarged Logos Row */}
-                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 pt-1">
-                  {TECH_LOGOS.map((tech, idx) => (
+                {/* Pure Transparent Floating Logos Row */}
+                <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-8 pt-2">
+                  {TECH_LOGOS_TRANSPARENT.map((tech, idx) => (
                     <div
                       key={idx}
                       title={tech.name}
-                      className="w-13 h-13 sm:w-16 sm:h-16 rounded-2xl bg-white/95 p-2.5 flex items-center justify-center shadow-lg border border-white/20 hover:scale-110 hover:shadow-[0_0_20px_rgba(212,255,0,0.4)] transition-all duration-300 cursor-pointer"
+                      className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center hover:scale-125 transition-all duration-300 cursor-pointer drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
                     >
                       <img
                         src={tech.logo}
                         alt={tech.name}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-contain filter brightness-105"
                       />
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* 4. Navigation Action Buttons with Info (i) next to Continue */}
+              {/* 5. Navigation Action Buttons with Info (i) next to Continue */}
               <div className="flex items-center justify-between pt-2">
                 <button
                   onClick={() => setStep(1)}
