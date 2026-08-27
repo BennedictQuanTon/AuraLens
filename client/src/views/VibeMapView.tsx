@@ -46,6 +46,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
       if (match) {
         return {
           ...place,
+          name: isEn ? (match.name_en || match.name) : match.name,
           gps: {
             ...place.gps,
             district: isEn ? (match.district_mock_en || match.district_mock) : match.district_mock,
