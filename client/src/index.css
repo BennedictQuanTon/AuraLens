@@ -133,3 +133,51 @@
   box-shadow: 0 0 12px #00F5FF, 0 0 20px #D4FF00;
   animation: cyberScan 2.5s infinite ease-in-out;
 }
+
+/* Leaflet Dark Dopamine Custom Styling */
+.leaflet-container {
+  font-family: 'Outfit', sans-serif !important;
+  background-color: #090D16 !important;
+  width: 100%;
+  height: 100%;
+  border-radius: 1.5rem;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  color: #FFFFFF !important;
+  border-radius: 1.25rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.95) !important;
+}
+
+.leaflet-bar {
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 9999px !important;
+  overflow: hidden !important;
+}
+
+.leaflet-bar a {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: #0F172A !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+  font-weight: 900 !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: #D4FF00 !important;
+  color: #090D16 !important;
+}
+

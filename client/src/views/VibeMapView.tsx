@@ -4,6 +4,7 @@ import { Sparkles, List, Map as MapIcon, X, Shirt, MapPin, Sun, CloudRain, Moon 
 import type { Location, PlaceRecommendationResponse, WeatherContext, AIMapAnalysisResponse } from '../types/entityGraph.js';
 import type { AppLanguage } from '../types/settings.js';
 import { MapViewMock } from '../components/common/MapViewMock.js';
+import { InteractiveMapView } from '../components/common/InteractiveMapView.js';
 import { apiService } from '../services/api.js';
 
 interface VibeMapViewProps {
@@ -298,7 +299,7 @@ export const VibeMapView: React.FC<VibeMapViewProps> = ({
             transition={{ duration: 0.25 }}
             className="w-full"
           >
-            <MapViewMock
+            <InteractiveMapView
               weather={weather}
               language={language}
               onSelectPlace={onSelectPlace}
