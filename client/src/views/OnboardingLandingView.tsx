@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight,
@@ -20,17 +20,11 @@ import {
   X,
   Lock,
   Code2,
-  TrendingDown,
-  Clock,
-  Layers,
-  ArrowDownRight,
-  Sparkle,
-  Shirt,
-  Compass,
-  Smile,
   Frown,
-  Sliders,
-  Sparkles as SparklesIcon,
+  Compass,
+  Upload,
+  ImageIcon,
+  Trash2,
 } from 'lucide-react';
 import type { VibeStyle } from '../types/entityGraph.js';
 import type { UserProfileState } from '../types/settings.js';
@@ -40,44 +34,6 @@ interface OnboardingLandingViewProps {
   initialProfile: UserProfileState;
   onComplete: (updatedProfile: UserProfileState) => void;
 }
-
-const AURA_STYLES: { id: VibeStyle; label: string }[] = [
-  { id: 'Cyber-Pop', label: 'Cyber-Pop' },
-  { id: 'Y2K', label: 'Y2K Retro' },
-  { id: 'Streetwear', label: 'Streetwear' },
-  { id: 'Clean-Fit', label: 'Clean-Fit' },
-  { id: 'Old Money', label: 'Old Money' },
-  { id: 'Minimalist', label: 'Minimalist' },
-  { id: 'Vintage', label: 'Vintage 90s' },
-  { id: 'Goth-Chic', label: 'Goth-Chic' },
-];
-
-const GENZ_PERSONAS = [
-  {
-    id: 'speakeasy',
-    title: 'Nightlife Speakeasy Hunter',
-    desc: 'Loves dim neon lights, secret doors, and craft cocktails.',
-    icon: Zap,
-  },
-  {
-    id: 'cafe_hopper',
-    title: 'Aesthetic Cafe Hopper',
-    desc: 'Always hunting for high ceilings, natural sunlight, and matcha.',
-    icon: Coffee,
-  },
-  {
-    id: 'ootd_creator',
-    title: 'Streetwear & OOTD Creator',
-    desc: 'Captures daily fits, tests photobooth strips, and tracks style streak.',
-    icon: Camera,
-  },
-  {
-    id: 'art_lover',
-    title: 'Art Exhibition & Vintage Fan',
-    desc: 'Passionate about heritage spots, 90s retro cassettes, and thrifting.',
-    icon: Palette,
-  },
-];
 
 // SECTION B: WHY CHOOSE AURALENS (6 Minimalist Solutions styled like Image 2)
 const WHY_CHOOSE_SOLUTIONS = [
@@ -198,28 +154,45 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
   onComplete,
 }) => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [userName, setUserName] = useState<string>(initialProfile.name || 'Bennedict');
-  const [userHandle, setUserHandle] = useState<string>(initialProfile.handle || 'bennedict');
-  const [selectedVibe, setSelectedVibe] = useState<VibeStyle>(initialProfile.favoriteVibe || 'Cyber-Pop');
-  const [selectedPersona, setSelectedPersona] = useState<string>('ootd_creator');
+  const [userName, setUserName] = useState<string>('');
+  const [userBio, setUserBio] = useState<string>('');
+  const [userAvatar, setUserAvatar] = useState<string>(initialProfile.avatarUrl || '');
   const [isSecurityInfoOpen, setIsSecurityInfoOpen] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setUserAvatar(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleFinish = () => {
+    if (!userName.trim() || !userBio.trim()) return;
     const updatedProfile: UserProfileState = {
       ...initialProfile,
-      name: userName.trim() || 'Bennedict',
-      handle: userHandle.trim() || 'bennedict',
-      favoriteVibe: selectedVibe,
-      bio: `${selectedVibe} Explorer in Saigon.`,
+      name: userName.trim(),
+      handle: userName.trim().toLowerCase().replace(/\s+/g, ''),
+      bio: userBio.trim(),
+      avatarUrl: userAvatar || '',
     };
     localStorage.setItem('auralens_user_name', updatedProfile.name);
+    localStorage.setItem('auralens_user_profile', JSON.stringify(updatedProfile));
     localStorage.setItem('auralens_onboarded', 'true');
     onComplete(updatedProfile);
   };
 
+  const isFormValid = userName.trim().length > 0 && userBio.trim().length > 0;
+
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden text-white flex flex-col justify-between select-none bg-gradient-to-br from-[#12041c] via-[#2f0d40] to-[#5a1445]">
-
+      
       {/* ========================================================================= */}
       {/* DYNAMIC AMBIENT MESH GRADIENT LAYERS (Smooth Magenta-Purple Wave)         */}
       {/* ========================================================================= */}
@@ -229,13 +202,13 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
           className="absolute -top-32 -left-32 w-[520px] sm:w-[700px] h-[520px] sm:h-[700px] bg-gradient-to-br from-[#ff6b35]/35 via-[#ff2e93]/25 to-transparent rounded-full blur-3xl animate-pulse"
           style={{ animationDuration: '9s' }}
         />
-
+        
         {/* Layer 2: Deep Electric Cyber Violet Orb */}
         <div
           className="absolute top-1/4 -right-32 w-[560px] sm:w-[780px] h-[560px] sm:h-[780px] bg-gradient-to-tl from-[#9333ea]/35 via-[#7c3aed]/25 to-transparent rounded-full blur-3xl animate-pulse"
           style={{ animationDuration: '11s' }}
         />
-
+        
         {/* Layer 3: Ambient Center Flare */}
         <div className="absolute -bottom-40 left-1/3 w-[600px] h-[600px] bg-gradient-to-tr from-[#d4ff00]/12 via-[#ff2e93]/18 to-transparent rounded-full blur-3xl" />
       </div>
@@ -246,12 +219,13 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
           {[1, 2, 3].map((s) => (
             <div
               key={s}
-              className={`h-2 rounded-full transition-all duration-300 ${step === s
+              className={`h-2 rounded-full transition-all duration-300 ${
+                step === s
                   ? 'w-10 bg-[#D4FF00] shadow-[0_0_12px_#D4FF00]'
                   : step > s
-                    ? 'w-3.5 bg-white/60'
-                    : 'w-3.5 bg-white/20'
-                }`}
+                  ? 'w-3.5 bg-white/60'
+                  : 'w-3.5 bg-white/20'
+              }`}
             />
           ))}
         </div>
@@ -262,7 +236,7 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
       {/* ========================================================================= */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col justify-center items-center">
         <AnimatePresence mode="wait">
-
+          
           {/* ===================================================================== */}
           {/* PAGE 1: HEROIC WELCOME SCREEN (Minimalist, Centered, 2-Line Title)   */}
           {/* ===================================================================== */}
@@ -529,7 +503,7 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
           )}
 
           {/* ===================================================================== */}
-          {/* PAGE 3: SETUP PROFILE & GEN Z PERSONA (Setup once, active everywhere) */}
+          {/* PAGE 3: LET'S SET UP YOUR PROFILE (Clean 3 Fields Layout)             */}
           {/* ===================================================================== */}
           {step === 3 && (
             <motion.div
@@ -538,100 +512,108 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
-              className="w-full space-y-6 max-w-5xl mx-auto py-2"
+              className="w-full space-y-8 max-w-2xl mx-auto py-4"
             >
               {/* Header */}
-              <div className="text-center space-y-2 max-w-xl mx-auto">
+              <div className="text-center space-y-2">
                 <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-                  Quick Profile Setup
+                  Let's set up your profile
                 </h2>
-                <p className="text-xs sm:text-sm text-white/80 font-medium">
-                  Personalize your name and style persona. This will configure your greetings and live recommendations.
-                </p>
               </div>
 
-              {/* Main Setup Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Minimalist Profile Card */}
+              <div className="p-8 sm:p-10 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl space-y-7">
 
-                {/* Left: Name & Vibe Guess */}
-                <div className="p-6 sm:p-7 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl space-y-4">
-                  {/* Name input */}
+                {/* 1. Set your display photo (Optional) */}
+                <div className="space-y-3">
                   <div>
-                    <label className="block text-xs font-black uppercase tracking-wider text-[#D4FF00] mb-1.5 flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5" />
-                      <span>Your Display Name</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
-                      placeholder="Enter your name (e.g. Bennedict)"
-                      className="w-full py-3.5 px-4 rounded-2xl bg-black/40 border border-white/20 text-white font-black text-base focus:outline-hidden focus:border-[#D4FF00] transition-all placeholder:text-white/40"
-                    />
+                    <h3 className="text-base sm:text-lg font-black text-white leading-tight">
+                      Set your display photo
+                    </h3>
                   </div>
 
-                  {/* Vibe Chips */}
-                  <div className="space-y-2.5 pt-2 border-t border-white/10">
-                    <label className="block text-xs font-black uppercase tracking-wider text-white/90">
-                      Your Aesthetic Vibe Guess: <span className="text-[#D4FF00] font-black">{selectedVibe}</span>
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {AURA_STYLES.map((v) => {
-                        const isSelected = selectedVibe === v.id;
-                        return (
-                          <button
-                            key={v.id}
-                            type="button"
-                            onClick={() => setSelectedVibe(v.id)}
-                            className={`py-2.5 px-3 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 border ${isSelected
-                                ? 'bg-[#D4FF00] text-gray-950 border-[#D4FF00] shadow-[0_0_15px_rgba(212,255,0,0.4)] scale-102 font-black'
-                                : 'bg-black/30 hover:bg-black/50 text-white/80 border-white/15'
-                              }`}
-                          >
-                            {isSelected && <Check className="w-3.5 h-3.5 text-gray-950" />}
-                            <span>{v.label}</span>
-                          </button>
-                        );
-                      })}
+                  <div className="flex items-center gap-4 pt-1">
+                    {/* Photo Box Preview */}
+                    <div className="w-20 h-20 rounded-2xl bg-white/95 border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-md shrink-0">
+                      {userAvatar ? (
+                        <img
+                          src={userAvatar}
+                          alt="User Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <ImageIcon className="w-8 h-8 text-gray-400" />
+                      )}
+                    </div>
+
+                    {/* Upload / Remove Actions */}
+                    <div className="flex items-center gap-2.5">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarUpload}
+                        className="hidden"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="py-3 px-5 rounded-2xl bg-white text-gray-950 hover:bg-gray-100 font-black text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer active:scale-95"
+                      >
+                        <Upload className="w-4 h-4 text-gray-900" />
+                        <span>{userAvatar ? 'Change Photo' : 'Upload'}</span>
+                      </button>
+
+                      {userAvatar && (
+                        <button
+                          type="button"
+                          onClick={() => setUserAvatar('')}
+                          className="p-3 rounded-2xl bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 transition-colors cursor-pointer"
+                          title="Remove photo"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
 
-                {/* Right: Gen Z Explorer Persona */}
-                <div className="p-6 sm:p-7 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl space-y-3">
-                  <label className="block text-xs font-black uppercase tracking-wider text-white/90">
-                    What kind of Gen Z explorer are you?
-                  </label>
+                <div className="border-t border-white/15" />
 
-                  <div className="space-y-2.5">
-                    {GENZ_PERSONAS.map((p) => {
-                      const isSelected = selectedPersona === p.id;
-                      const Icon = p.icon;
-                      return (
-                        <div
-                          key={p.id}
-                          onClick={() => setSelectedPersona(p.id)}
-                          className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center gap-3.5 select-none ${isSelected
-                              ? 'bg-black/60 border-[#D4FF00] ring-1 ring-[#D4FF00] shadow-sm'
-                              : 'bg-black/25 hover:bg-black/40 border-white/10'
-                            }`}
-                        >
-                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? 'bg-[#D4FF00] text-gray-950' : 'bg-white/10 text-white'
-                            }`}>
-                            <Icon className="w-4.5 h-4.5" />
-                          </div>
-                          <div className="space-y-0.5">
-                            <h4 className={`text-xs sm:text-sm font-black leading-tight ${isSelected ? 'text-[#D4FF00]' : 'text-white'}`}>
-                              {p.title}
-                            </h4>
-                            <p className="text-[11px] text-white/70 font-medium leading-tight">
-                              {p.desc}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
+                {/* 2. Display Name (Required) */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-base sm:text-lg font-black text-white leading-tight">
+                      Your Display Name <span className="text-[#D4FF00]">*</span>
+                    </label>
+                    <span className="text-[11px] text-[#D4FF00] font-black uppercase tracking-wider">Required</span>
                   </div>
+                  <input
+                    type="text"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    placeholder="Ex: Lumi"
+                    className="w-full py-4 px-5 rounded-2xl bg-black/50 border border-white/20 text-white font-black text-base sm:text-lg focus:outline-hidden focus:border-[#D4FF00] transition-all placeholder:text-white/30"
+                  />
+                </div>
+
+                <div className="border-t border-white/15" />
+
+                {/* 3. Bio / Vibe Statement (Required) */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-base sm:text-lg font-black text-white leading-tight">
+                      Your Bio / Vibe Statement <span className="text-[#D4FF00]">*</span>
+                    </label>
+                    <span className="text-[11px] text-[#D4FF00] font-black uppercase tracking-wider">Required</span>
+                  </div>
+                  <textarea
+                    value={userBio}
+                    onChange={(e) => setUserBio(e.target.value)}
+                    placeholder="Ex: Cyber-Pop & Y2K Fashion Explorer in Saigon."
+                    rows={3}
+                    className="w-full py-3.5 px-5 rounded-2xl bg-black/50 border border-white/20 text-white font-bold text-sm sm:text-base focus:outline-hidden focus:border-[#D4FF00] transition-all placeholder:text-white/30 resize-none"
+                  />
                 </div>
 
               </div>
@@ -640,7 +622,7 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
               <div className="flex items-center justify-between pt-2">
                 <button
                   onClick={() => setStep(2)}
-                  className="py-3 px-6 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-bold flex items-center gap-2 transition-all cursor-pointer"
+                  className="py-3 px-6 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back</span>
@@ -648,10 +630,14 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
 
                 <button
                   onClick={handleFinish}
-                  className="py-4 px-10 rounded-full bg-black/90 hover:bg-black text-[#D4FF00] text-base font-black border-2 border-[#D4FF00] shadow-[0_0_25px_rgba(212,255,0,0.4)] hover:shadow-[0_0_35px_rgba(212,255,0,0.6)] active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer group"
+                  disabled={!isFormValid}
+                  className={`py-4 px-10 rounded-full font-black text-base border-2 transition-all flex items-center gap-2.5 cursor-pointer shadow-xl ${
+                    isFormValid
+                      ? 'bg-black/90 hover:bg-black text-[#D4FF00] border-[#D4FF00] shadow-[0_0_30px_rgba(212,255,0,0.4)] hover:shadow-[0_0_40px_rgba(212,255,0,0.6)] active:scale-95'
+                      : 'bg-black/40 text-white/30 border-white/10 cursor-not-allowed'
+                  }`}
                 >
-                  <span>🚀 Launch AuraLens Experience</span>
-                  <Sparkles className="w-4.5 h-4.5 text-[#D4FF00] group-hover:rotate-12 transition-transform" />
+                  <span>Launch AuraLens Experience</span>
                 </button>
               </div>
             </motion.div>
@@ -698,7 +684,7 @@ export const OnboardingLandingView: React.FC<OnboardingLandingViewProps> = ({
 
             {/* 2 Clear Sections */}
             <div className="space-y-4 text-xs sm:text-sm text-gray-700 font-medium leading-relaxed">
-
+              
               {/* Point 1: Privacy Guarantee */}
               <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-2">
                 <div className="flex items-center gap-2 text-emerald-900 font-black">

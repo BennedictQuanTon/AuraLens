@@ -122,7 +122,14 @@ export function App() {
   const [language, setLanguage] = useState<AppLanguage>('en');
   const [colorTheme, setColorTheme] = useState<AppColorTheme>('cyber_pop');
   const [userProfile, setUserProfile] = useState<UserProfileState>(() => {
-    const savedName = localStorage.getItem('auralens_user_name') || 'Bennedict';
+    const savedProfile = localStorage.getItem('auralens_user_profile');
+    if (savedProfile) {
+      try {
+        const parsed = JSON.parse(savedProfile);
+        if (parsed && parsed.name) return parsed;
+      } catch (e) {}
+    }
+    const savedName = localStorage.getItem('auralens_user_name') || 'Lumi Explorer';
     return {
       name: savedName,
       handle: savedName.toLowerCase().replace(/\s+/g, ''),

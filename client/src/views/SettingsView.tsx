@@ -84,9 +84,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               <p className="text-sm text-gray-500 font-bold truncate">
                 @{userProfile.handle}
               </p>
-              <span className="inline-block mt-2 px-3 py-1 bg-gray-100 text-gray-800 text-xs font-black rounded-full">
-                {userProfile.favoriteVibe} Vibe
-              </span>
             </div>
           </div>
 
